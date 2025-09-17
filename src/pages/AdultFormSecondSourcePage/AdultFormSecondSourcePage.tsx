@@ -405,7 +405,7 @@ const AdultFormSecondSourcePage = () => {
                             <Flex
                                 align={"center"}
                                 id="bg-div"
-                                className={`font-roboto w-full text-white m-auto relative z-10`}
+                                className={`absolute font-roboto w-full text-white m-auto z-[999]`}
                             >
                                 <QuestionnaireCompleted />
                             </Flex>
