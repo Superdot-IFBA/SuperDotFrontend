@@ -13,6 +13,7 @@ interface UsersTableProps {
     currentPage: number;
     setCurrentPage: (newPage: number) => void;
     onClickPencil: (itemId: string) => void;
+
 }
 
 const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersTableProps) => {
@@ -47,40 +48,48 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                 </Table.Header>
                 {loading ? (
                     <SkeletonTableBody itens={PAGE_SIZE} columns={4} />
-                ) : (
+                ) : data?.researchers && data.researchers.length > 0 ? (
                     <Table.Body>
-                        {data?.researchers?.map((user) => (
-                            <Table.Row
-                                align="center"
-                                key={user._id}>
-
-                                <Table.Cell justify="center">{user.fullname} </Table.Cell>
-                                <Table.Cell justify="center" >{user.email}</Table.Cell>
+                        {data.researchers.map((user) => (
+                            <Table.Row key={user._id} align="center">
+                                <Table.Cell justify="center">{user.fullname}</Table.Cell>
+                                <Table.Cell justify="center">{user.email}</Table.Cell>
                                 <Table.Cell justify="center">{user.role}</Table.Cell>
                                 <Table.Cell justify="center">
                                     <div className="flex justify-center">
                                         <Tooltip content="Alterar perfil do usuário.">
-                                            <IconButton variant="surface" radius="full" onClick={() => onClickPencil(user._id)} className="hover:cursor-pointer">
+                                            <IconButton
+                                                variant="surface"
+                                                radius="full"
+                                                onClick={() => onClickPencil(user._id)}
+                                                className="hover:cursor-pointer"
+                                            >
                                                 <Icon.Pencil />
                                             </IconButton>
                                         </Tooltip>
                                     </div>
                                 </Table.Cell>
-
-
                             </Table.Row>
                         ))}
                         <Table.Row>
                             <Pagination
                                 currentPage={currentPage}
                                 pageSize={PAGE_SIZE}
-                                totalCount={data?.totalResearchers || 1}
-                                onPageChange={(page: number) => setCurrentPage(page)}
+                                totalCount={data.totalResearchers}
+                                onPageChange={(page) => setCurrentPage(page)}
                             />
-
+                        </Table.Row>
+                    </Table.Body>
+                ) : (
+                    <Table.Body>
+                        <Table.Row>
+                            <Table.Cell colSpan={4} align="center">
+                                Nenhum usuário encontrado.
+                            </Table.Cell>
                         </Table.Row>
                     </Table.Body>
                 )}
+
 
             </Table.Root>
             {loading ? (

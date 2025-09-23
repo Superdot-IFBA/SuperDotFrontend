@@ -22,6 +22,7 @@ const UsersPage = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({ resolver: yupResolver(usersPageSearchFormSchema) });
 
@@ -111,42 +112,11 @@ const UsersPage = () => {
                 className="bg-green-400"
             >
 
-                {/* <Box className="w-full pt-10 pb-10 ">
-                    <Form.Root
-                        onSubmit={handleSubmit((data) => setFilters(data))}
-                        className="flex flex-col sm:flex-row items-center justify-between px-10 py-10 pt-0 pb-1 ">
-                        <Form.Submit asChild>
-                            <Button className="items-center w-[200px]" title="Filtrar" children={<Icon.Funnel size={20} color="white" />} color="primary" size={"Large"}>
 
-                            </Button>
-                        </Form.Submit>
-                        <InputField
-                            label="Pesquisar pelo nome do usuário"
-                            placeholder="Digite o nome do usuário"
-                            icon={<Icon.MagnifyingGlass />}
-                            type="text"
-                            errorMessage={errors.userName?.message}
-                            {...register("userName")}
-                        />
-                        <InputField
-                            label="Pesquisar pelo e-mail do usuário"
-                            placeholder="Digite o e-mail do usuário"
-                            type="email"
-                            icon={<Icon.MagnifyingGlass />}
-                            errorMessage={errors.userEmail?.message}
-                            {...register("userEmail")}
-                        />
-                        <Button onClick={() => setFilters({})}
-                            title="Limpar Filtro"
-                            color="primary" size={"Large"} />
-
-                        <Flex >
-                        </Flex>
-                    </Form.Root>
-                </Box> */}
                 <Box className="w-full  pt-10 pb-10 max-xl:pt-2 max-xl:pb-2">
                     <Form.Root
                         onSubmit={handleSubmit((data) => {
+                            setCurrentTablePage(1);
                             setFilters({
                                 ...data,
                             });
@@ -188,7 +158,7 @@ const UsersPage = () => {
                                     <InputField
                                         label="Pesquisar Pelo Nome do Usuário"
                                         icon={<Icon.MagnifyingGlass />}
-                                        placeholder="Digite o e-mail do usuário"
+                                        placeholder="Digite o nome do usuário"
                                         errorMessage={errors.userName?.message}
                                         {...register("userName")}
                                     />
@@ -212,7 +182,11 @@ const UsersPage = () => {
 
                                     <Button
                                         size="Large"
-                                        onClick={() => setFilters({})}
+                                        onClick={() => {
+                                            setCurrentTablePage(1);
+                                            setFilters({});
+                                            reset({ userName: "", userEmail: "" });
+                                        }}
                                         type="reset"
                                         className="items-center w-full xl:w-[300px] xl:mt-2"
                                         color="primary"

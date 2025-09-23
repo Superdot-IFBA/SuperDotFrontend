@@ -136,6 +136,21 @@ export interface DashboardInfo {
     collectionStatus: {
         completed: number;
         pending: number;
+        rejected: number; // Nova propriedade adicionada
+    };
+    ageDistribution: {
+        labels: string[];
+        series: number[];
+    };
+    knowledgeAreaDistribution: {
+        labels: string[];
+        series: number[];
+    };
+    participantProgress: {
+        "Não iniciado": number;
+        "Preenchendo": number;
+        "Aguardando 2ª fonte": number;
+        "Finalizado": number;
     };
 }
 
@@ -152,7 +167,7 @@ export const getinfoDashboard = async () => {
             `${import.meta.env.VITE_BACKEND_HOST}/api/sample/load-Information-dashboard`
         );
 
-        return response.data; // já vem no formato DashboardInfo
+        return response.data;
     } catch (error) {
         console.error("Erro ao fazer requisição para obter dados: ", error);
         throw error;

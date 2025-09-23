@@ -111,7 +111,8 @@ const RegisterPage = () => {
                 <Flex className="desktop w-full">
                     <BackgroundComponent />
                 </Flex>
-                <Flex direction="column" className="h-full w-full justify-center overflow-auto bg-offwhite text-[#4F4F4F]">
+                <Flex direction="column" className="p-4 h-full w-full justify-center overflow-auto bg-offwhite text-[#4F4F4F]">
+
                     <Stepper ref={stepperRef}
                         initialStep={1}
                         footerClassName="hidden"

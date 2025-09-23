@@ -9,6 +9,18 @@ import ChartContainer from "../../components/Charts/ChartContainer";
 import NewUser from "../../components/NewUser/NewUser";
 import { useLocation } from "react-router-dom";
 
+
+
+interface IAdultForm {
+    startFillFormAt?: string;
+    endFillFormAt?: string;
+}
+
+interface IParticipant {
+    adultForm?: IAdultForm;
+    secondSources?: { adultForm?: IAdultForm }[];
+}
+type TFormFillStatus = "Não iniciado" | "Preenchendo" | "Aguardando 2ª fonte" | "Finalizado";
 function DashBoardPage() {
     const [dados, setDados] = useState<DashboardInfo | null>(null);
     const [loading, setLoading] = useState(true);
@@ -21,11 +33,41 @@ function DashBoardPage() {
     const location = useLocation();
     const isNewUser = location.state?.isNewUser || false;
     const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
+    const [participantProgress, setParticipantProgress] = useState<Record<TFormFillStatus, number>>({
+        "Não iniciado": 0,
+        "Preenchendo": 0,
+        "Aguardando 2ª fonte": 0,
+        "Finalizado": 0
+    });
+
+
+
 
     useEffect(() => {
         const shouldOpen = isNewUser && !localStorage.getItem('dontShowWelcome');
         setIsWelcomeOpen(shouldOpen);
     }, [isNewUser]);
+
+    const getParticipantProgress = (participant: IParticipant): TFormFillStatus => {
+        if (!participant.adultForm?.startFillFormAt) {
+            return "Não iniciado";
+        }
+
+        if (!participant.adultForm?.endFillFormAt) {
+            return "Preenchendo";
+        }
+
+        const oneSecSourceFinishTheForm = participant.secondSources?.some(
+            (secSource) => secSource.adultForm?.endFillFormAt
+        );
+
+        if (!oneSecSourceFinishTheForm) {
+            return "Aguardando 2ª fonte";
+        }
+
+        return "Finalizado";
+    };
+
 
     useEffect(() => {
         const fetchDados = async () => {
@@ -47,7 +89,8 @@ function DashBoardPage() {
         fetchDados();
     }, []);
 
-    // Configurações dos gráficos
+
+    // Configurações dos gráficos existentes
     const genderChartOptions: ApexOptions = {
         chart: {
             type: 'donut',
@@ -107,17 +150,13 @@ function DashBoardPage() {
         xaxis: {
             categories: (dados?.monthlyProgress ?? []).map((item: MonthlyProgressItem) => item.month),
         },
-        yaxis: {
-            title: {
-                text: 'Quantidade'
-            }
-        },
+
         tooltip: {
             shared: true,
             intersect: false,
             y: {
                 formatter: function (val: number) {
-                    return val + " unidades";
+                    return val;
                 }
             }
         },
@@ -126,6 +165,8 @@ function DashBoardPage() {
             horizontalAlign: 'right'
         }
     };
+
+    const labels = dados?.institutionDistribution?.labels || [];
 
     const barChartOptions: ApexOptions = {
         chart: {
@@ -152,20 +193,33 @@ function DashBoardPage() {
             colors: ['transparent']
         },
         xaxis: {
-            categories: dados?.institutionDistribution?.labels || [],
+            categories: labels.map(label => {
+                const parts = label.split(" ");
+                return parts.length > 1
+                    ? `${parts[0]} ${parts[1]}...`
+                    : `${parts[0]}...`;
+            }),
+            tooltip: {
+                enabled: true
+            }
         },
         yaxis: {
             title: {
-                text: 'Quantidade de Amostras'
+                text: ''
             }
         },
         fill: {
             opacity: 1
         },
         tooltip: {
+            x: {
+                formatter: function (_: string, { dataPointIndex }: any) {
+                    return labels[dataPointIndex];
+                }
+            },
             y: {
                 formatter: function (val: number) {
-                    return val + " amostras";
+                    return val;
                 }
             }
         }
@@ -176,7 +230,7 @@ function DashBoardPage() {
             type: 'radialBar',
             height: 350,
         },
-        colors: ['#4CAF50', '#FF9800'],
+        colors: ['#4CAF50', '#FF9800', '#F44336'],
         plotOptions: {
             radialBar: {
                 startAngle: -135,
@@ -212,7 +266,7 @@ function DashBoardPage() {
         stroke: {
             dashArray: 4
         },
-        labels: ['Completas', 'Pendentes'],
+        labels: ['Autorizadas', 'Pendentes', 'Rejeitadas'],
     };
 
     const regionalDistributionOptions: ApexOptions = {
@@ -247,12 +301,134 @@ function DashBoardPage() {
         tooltip: {
             y: {
                 formatter: function (val: number) {
-                    return val + " amostras";
+                    return val;
                 }
             }
         }
     };
 
+    const ageDistributionOptions: ApexOptions = {
+        chart: {
+            type: 'bar',
+            height: 350,
+            toolbar: {
+                show: true
+            }
+        },
+        colors: ['#546E7A'],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '70%',
+                borderRadius: 4
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: dados?.ageDistribution?.labels || [],
+            title: {
+                text: ''
+            }
+        },
+        yaxis: {
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val: number) {
+                    return val;
+                }
+            }
+        }
+    };
+
+    const knowledgeAreaDistributionOptions: ApexOptions = {
+        chart: {
+            type: 'bar',
+            height: 350,
+            toolbar: {
+                show: true
+            }
+        },
+        colors: ['#2E93fA'],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                borderRadius: 4,
+                dataLabels: {
+                    position: 'top'
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val: string) {
+                return val;
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
+        },
+        xaxis: {
+            categories: dados?.knowledgeAreaDistribution?.labels || [],
+            title: {
+                text: ''
+            }
+        },
+        yaxis: {
+            labels: {
+                show: false
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val: number) {
+                    return val;
+                }
+            }
+        }
+    };
+    const participantProgressOptions: ApexOptions = {
+        chart: {
+            type: 'donut',
+            fontFamily: 'Roboto, sans-serif',
+        },
+        labels: ['Finalizado', 'Preenchendo', 'Aguardando 2ª fonte', 'Não iniciado'],
+        colors: ['#4CAF50', '#FF9800', '#9C27B0', '#F44336'],
+        dataLabels: {
+            style: {
+                fontSize: '14px',
+                fontWeight: 500,
+            }
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '65%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            fontSize: '16px'
+                        }
+                    }
+                }
+            }
+        },
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'center'
+        }
+    };
+
+    // Séries dos gráficos
     const genderSeries = [
         dados?.count_female ?? 0,
         dados?.count_male ?? 0
@@ -269,10 +445,49 @@ function DashBoardPage() {
         }
     ];
 
+
+    const completedCount = dados?.collectionStatus?.completed || 0;
+    const pendingCount = dados?.collectionStatus?.pending || 0;
+    const rejectedCount = dados?.collectionStatus?.rejected || 0;
+    const totalCount = completedCount + pendingCount + rejectedCount;
+    const completedPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+    const pendingPercentage = totalCount > 0 ? (pendingCount / totalCount) * 100 : 0;
+    const rejectedPercentage = totalCount > 0 ? (rejectedCount / totalCount) * 100 : 0;
     const collectionStatusSeries = [
-        dados?.collectionStatus?.completed ?? 0,
-        dados?.collectionStatus?.pending ?? 0
+        completedPercentage,
+        pendingPercentage,
+        rejectedPercentage
     ];
+
+    const ageDistributionSeries = [
+        {
+            name: 'Participantes',
+            data: dados?.ageDistribution?.series || []
+        }
+    ];
+
+    const knowledgeAreaDistributionSeries = [
+        {
+            name: 'Participantes',
+            data: dados?.knowledgeAreaDistribution?.series || []
+        }
+    ];
+
+    const participantProgressSeries = [
+        dados?.participantProgress?.["Finalizado"] || 0,
+        dados?.participantProgress?.["Preenchendo"] || 0,
+        dados?.participantProgress?.["Aguardando 2ª fonte"] || 0,
+        dados?.participantProgress?.["Não iniciado"] || 0,
+    ];
+
+    const totalParticipants =
+        (dados?.participantProgress?.["Não iniciado"] || 0) +
+        (dados?.participantProgress?.["Preenchendo"] || 0) +
+        (dados?.participantProgress?.["Aguardando 2ª fonte"] || 0) +
+        (dados?.participantProgress?.["Finalizado"] || 0);
+
+    const completionRate = totalParticipants > 0 ? (dados?.participantProgress?.["Finalizado"] || 0) / totalParticipants * 100 : 0;
+
     const calculateGrowth = () => {
         const progress = dados?.monthlyProgress ?? [];
         if (progress.length < 6) return 0;
@@ -284,6 +499,15 @@ function DashBoardPage() {
         return (((last3 - prev3) / prev3) * 100).toFixed(0);
     };
     const activeDays = (dados?.monthlyProgress ?? []).length;
+
+    const barChartSeries = [
+        {
+            name: "Amostras",
+            data: dados?.institutionDistribution?.series || []
+        }
+    ];
+
+
     return (
         <>
             <Notify
@@ -331,7 +555,7 @@ function DashBoardPage() {
                 <Dcard
                     loading={loading}
                     title="Taxa de Completude"
-                    value={`${dados?.collectionStatus?.completed ?? 0}%`}
+                    value={`${completionRate.toFixed(0)}%`}
                     icon={<Icon.ChartLineUp size={32} />}
                     style="bg-green-500"
                 />
@@ -374,7 +598,7 @@ function DashBoardPage() {
                 >
                     <ApexChart
                         options={barChartOptions}
-                        series={[{ data: dados?.institutionDistribution?.series || [] }]}
+                        series={barChartSeries}
                         type="bar"
                         height={350}
                     />
@@ -396,7 +620,7 @@ function DashBoardPage() {
                 <ChartContainer
                     title="Status das Coletas"
                     loading={loading}
-                    tooltip="Porcentagem de coletas completas vs pendentes"
+                    tooltip="Porcentagem de coletas Autorizadas"
                 >
                     <ApexChart
                         options={radialChartOptions}
@@ -405,6 +629,50 @@ function DashBoardPage() {
                         height={350}
                     />
                 </ChartContainer>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <ChartContainer
+                    title="Distribuição por Faixa Etária"
+                    loading={loading}
+                    tooltip="Distribuição de participantes por faixa etária"
+                >
+                    <ApexChart
+                        options={ageDistributionOptions}
+                        series={ageDistributionSeries}
+                        type="bar"
+                        height={350}
+                    />
+                </ChartContainer>
+
+                <ChartContainer
+                    title="Distribuição por Área de Conhecimento"
+                    loading={loading}
+                    tooltip="Distribuição de participantes por área de conhecimento"
+                >
+                    <ApexChart
+                        options={knowledgeAreaDistributionOptions}
+                        series={knowledgeAreaDistributionSeries}
+                        type="bar"
+                        height={350}
+                    />
+                </ChartContainer>
+
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <ChartContainer
+                    title="Status de Preenchimento"
+                    loading={loading}
+                    tooltip="Distribuição dos participantes por status de preenchimento do questionário"
+                >
+                    <ApexChart
+                        options={participantProgressOptions}
+                        series={participantProgressSeries}
+                        type="donut"
+                        height={350}
+                    />
+                </ChartContainer>
+
             </div>
 
 

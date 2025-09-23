@@ -394,8 +394,7 @@ const MySamplesPage = () => {
                                         <Card.Actions className=" flex gap-4 justify-between max-sm:flex-col">
                                             <Card.Action
                                                 disabled={
-                                                    sample.status !== "Autorizado" ||
-                                                    sample.qttParticipantsAuthorized === sample.participants?.length
+                                                    sample.status !== "Autorizado"
                                                 }
                                                 onClick={() => handleRegisterPeople(sample._id as string)}
                                             >
