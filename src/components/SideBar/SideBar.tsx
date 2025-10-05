@@ -6,14 +6,12 @@ import UserInfo from "../UserInfo/UserInfo";
 import { Flex } from "@radix-ui/themes";
 import { useMenu } from "../UseMenu/UseMenu ";
 import React from "react";
-import logo from "../../assets/Logo-GRUPAC.png"
 interface SideBarProps {
     userRole?: USER_ROLE;
 }
 
 const SideBar = ({ userRole }: SideBarProps) => {
     const [expanded, setExpanded] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
     const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useMenu();
 
     useEffect(() => {
@@ -204,7 +202,10 @@ const SideBar = ({ userRole }: SideBarProps) => {
                         <Link
                             key={idx}
                             to={menu.link}
-                            onClick={toggleMobileMenu}
+                            onClick={() => {
+                                toggleMobileMenu();
+                                setExpanded(!expanded);
+                            }}
                             className={`flex items-center gap-4 p-3 rounded-md text-white btn-primary ${menu.paths?.includes(location.pathname) ? "bg-white/20 shadow-lg backdrop-blur-sm" : ""}  ? "bg-white/20 backdrop-blur-lg" : ""}`}
                         >
                             {menu.icon}
@@ -215,7 +216,10 @@ const SideBar = ({ userRole }: SideBarProps) => {
                     {userRole?.match(/Revisor|Administrador/) && (
                         <Link
                             to="/app/review-requests"
-                            onClick={toggleMobileMenu}
+                            onClick={() => {
+                                toggleMobileMenu();
+                                setExpanded(!expanded);
+                            }}
                             className={`flex items-center gap-2 p-2 rounded-md text-white  btn-primary ${isActive("/app/review-requests") ? "bg-white/20 backdrop-blur-lgs" : ""}`}
                         >
                             <Icon.Check size={24} weight={`${isActiveIcon("/app/review-requests")}`} />
@@ -226,7 +230,10 @@ const SideBar = ({ userRole }: SideBarProps) => {
                     {userRole === "Administrador" && (
                         <Link
                             to="/app/users"
-                            onClick={toggleMobileMenu}
+                            onClick={() => {
+                                toggleMobileMenu();
+                                setExpanded(!expanded);
+                            }}
                             className={`flex items-center gap-4 p-3 rounded-md text-white  btn-primary ${isActive("/app/users") ? "bg-white/20 backdrop-blur-lg" : ""}`}
                         >
                             <Icon.UserGear size={24} weight={`${isActiveIcon("/app/users")}`} />

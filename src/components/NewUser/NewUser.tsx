@@ -1,6 +1,7 @@
 import * as Icon from "@phosphor-icons/react";
 import Modal from "../Modal/Modal";
 import { useEffect, useState } from "react";
+import { Link } from "@radix-ui/themes";
 
 interface WelcomeModalProps {
   open: boolean;
@@ -79,9 +80,11 @@ const WelcomeModal = ({ open, setOpen, isNewUser }: WelcomeModalProps) => {
                   <button
                     onClick={handleClose}
                     className="flex items-center bg-white/20 hover:bg-white/30 px-6 py-3 max-sm:px-4 max-sm:py-2 rounded-xl max-sm:rounded-lg text-white font-semibold max-sm:text-sm transition-all duration-300 w-full justify-center"
-                  >
-                    <Icon.Rocket className="mr-2 max-sm:mr-1 max-sm:w-4 max-sm:h-4" />
-                    Começar Jornada
+                  ><Icon.Rocket className="mr-2 max-sm:mr-1 max-sm:w-4 max-sm:h-4" />
+                    <a href="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      Começar pela Documentação</a>
                   </button>
 
                   {/* Checkbox para não mostrar novamente */}

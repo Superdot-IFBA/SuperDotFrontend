@@ -112,33 +112,27 @@ export const ProfileEdit = ({
     try {
       const formData = new FormData();
 
-      // Adicionar dados pessoais
       formData.append("personalData[fullName]", name);
 
-      // Adicionar arquivo de avatar se existir
       if (avatarFile) {
         formData.append("profilePhoto", avatarFile);
       }
-      // Enviar o nome do arquivo atual se existir
       if (currentUser.profilePhoto) {
         formData.append("existingProfilePhoto", currentUser.profilePhoto);
       }
 
-      // Adicionar dados de senha se fornecidos
       if (newPassword) {
         formData.append("currentPassword", currentPassword);
         formData.append("password", newPassword);
         formData.append("passwordConfirmation", confirmPassword);
       }
 
-      console.log("🔹 Dados enviados para backend:");
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
       }
 
       const updatedUser = await updateUser(formData);
 
-      // Limpar campos de senha após sucesso
       setNewPassword('');
       setConfirmPassword('');
       setCurrentPassword('');
@@ -150,7 +144,6 @@ export const ProfileEdit = ({
         profilePhoto: updatedUser.personalData.profilePhoto,
       });
     } catch (err: any) {
-      // ... tratamento de erro permanece igual
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +151,6 @@ export const ProfileEdit = ({
 
 
 
-  // Função para verificar se um campo tem erro
   const hasFieldError = (fieldName: string): boolean => {
     return error.field === fieldName;
   };

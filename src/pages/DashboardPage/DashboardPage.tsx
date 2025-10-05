@@ -9,18 +9,6 @@ import ChartContainer from "../../components/Charts/ChartContainer";
 import NewUser from "../../components/NewUser/NewUser";
 import { useLocation } from "react-router-dom";
 
-
-
-interface IAdultForm {
-    startFillFormAt?: string;
-    endFillFormAt?: string;
-}
-
-interface IParticipant {
-    adultForm?: IAdultForm;
-    secondSources?: { adultForm?: IAdultForm }[];
-}
-type TFormFillStatus = "Não iniciado" | "Preenchendo" | "Aguardando 2ª fonte" | "Finalizado";
 function DashBoardPage() {
     const [dados, setDados] = useState<DashboardInfo | null>(null);
     const [loading, setLoading] = useState(true);
@@ -33,41 +21,11 @@ function DashBoardPage() {
     const location = useLocation();
     const isNewUser = location.state?.isNewUser || false;
     const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
-    const [participantProgress, setParticipantProgress] = useState<Record<TFormFillStatus, number>>({
-        "Não iniciado": 0,
-        "Preenchendo": 0,
-        "Aguardando 2ª fonte": 0,
-        "Finalizado": 0
-    });
-
-
-
 
     useEffect(() => {
         const shouldOpen = isNewUser && !localStorage.getItem('dontShowWelcome');
         setIsWelcomeOpen(shouldOpen);
     }, [isNewUser]);
-
-    const getParticipantProgress = (participant: IParticipant): TFormFillStatus => {
-        if (!participant.adultForm?.startFillFormAt) {
-            return "Não iniciado";
-        }
-
-        if (!participant.adultForm?.endFillFormAt) {
-            return "Preenchendo";
-        }
-
-        const oneSecSourceFinishTheForm = participant.secondSources?.some(
-            (secSource) => secSource.adultForm?.endFillFormAt
-        );
-
-        if (!oneSecSourceFinishTheForm) {
-            return "Aguardando 2ª fonte";
-        }
-
-        return "Finalizado";
-    };
-
 
     useEffect(() => {
         const fetchDados = async () => {
@@ -89,8 +47,6 @@ function DashBoardPage() {
         fetchDados();
     }, []);
 
-
-    // Configurações dos gráficos existentes
     const genderChartOptions: ApexOptions = {
         chart: {
             type: 'donut',
@@ -428,7 +384,6 @@ function DashBoardPage() {
         }
     };
 
-    // Séries dos gráficos
     const genderSeries = [
         dados?.count_female ?? 0,
         dados?.count_male ?? 0
@@ -444,7 +399,6 @@ function DashBoardPage() {
             data: (dados?.monthlyProgress ?? []).map((item: MonthlyProgressItem) => item.participants)
         }
     ];
-
 
     const completedCount = dados?.collectionStatus?.completed || 0;
     const pendingCount = dados?.collectionStatus?.pending || 0;
@@ -498,6 +452,7 @@ function DashBoardPage() {
         if (prev3 === 0) return last3 > 0 ? 100 : 0;
         return (((last3 - prev3) / prev3) * 100).toFixed(0);
     };
+
     const activeDays = (dados?.monthlyProgress ?? []).length;
 
     const barChartSeries = [
@@ -506,7 +461,6 @@ function DashBoardPage() {
             data: dados?.institutionDistribution?.series || []
         }
     ];
-
 
     return (
         <>
