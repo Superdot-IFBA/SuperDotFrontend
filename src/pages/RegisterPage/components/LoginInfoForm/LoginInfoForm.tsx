@@ -60,7 +60,7 @@ const LoginInfoForm = ({
             <div className="mt-8 grid gap-5 max-md:gap-2">
                 <div className="gap-2 flex max-md:block mb-1">
                     <Form.Field name="email" className="w-full max-md:mb-3">
-                        <Form.Control placeholder="E-mail*" type="email" {...register("email")}></Form.Control>
+                        <Form.Control placeholder="E-mail*" type="email" autoComplete="email" {...register("email")}></Form.Control>
                         {errors?.email && <Form.Message className="error-message">{errors.email.message}</Form.Message>}
                     </Form.Field>
 
@@ -68,6 +68,7 @@ const LoginInfoForm = ({
                         <Form.Control
                             type="email"
                             placeholder="Confirmar e-mail*"
+                            autoComplete="off"
                             {...register("emailConfirmation")}
                         ></Form.Control>
                         {errors?.emailConfirmation && (
@@ -77,7 +78,7 @@ const LoginInfoForm = ({
                 </div>
                 <div className="gap-2 flex max-md:block">
                     <Form.Field name="password" className="w-full max-md:mb-3">
-                        <Form.Control type="password" placeholder="Senha*" {...register("password")}></Form.Control>
+                        <Form.Control type="password" placeholder="Senha*" autoComplete="new-password" {...register("password")}></Form.Control>
                         {errors?.password && (
                             <Form.Message className="error-message">{errors.password.message}</Form.Message>
                         )}
@@ -95,26 +96,28 @@ const LoginInfoForm = ({
                     </Form.Field>
                 </div>
                 <Form.Field name="acceptUseTerm">
-                    <div className="flex items-center">
+                    <div className="flex items-start gap-2 mt-4">
                         <Checkbox.Root
-                            onCheckedChange={handleCheckUseTerm}
                             id="acceptUseTerm"
-                            className="border-mauve9 shadow-blackA7 hover:bg-violet3 flex h-[20px] min-w-[20px] rounded-[4px] border bg-white shadow-[0_2px_10px] focus:shadow-[0_0_0_2px_black]"
+                            onCheckedChange={handleCheckUseTerm}
+                            className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-mauve9 bg-white shadow-sm hover:bg-violet3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet7 focus-visible:ring-offset-2"
                         >
-                            <Checkbox.Indicator className=" text-violet11">
-                                <CheckIcon className="h-[20px] w-[20px]" />
+                            <Checkbox.Indicator className="text-violet11">
+                                <CheckIcon className="h-4 w-4" />
                             </Checkbox.Indicator>
                         </Checkbox.Root>
+
                         <label
                             htmlFor="acceptUseTerm"
-                            className="pl-[15px] text-left text-[15px] leading-none  "
+                            className="text-[15px] text-justify leading-relaxed text-gray-800 select-none cursor-pointer"
                         >
-                            <p>
-                                Estou ciente de que todos os <b>dados de pesquisa</b> que forem cadastrados na
-                                plataforma poderão ser disponibilizados publicamente.
-                            </p>
+                            Estou ciente de que as estatísticas das pesquisas realizadas poderão ser acessadas publicamente, em conformidade com a
+                            <strong> Lei Geral de Proteção de Dados (LGPD)</strong>, com o propósito de subsidiar a melhoria e a implementação de políticas
+                            públicas voltadas à população da educação especial, além de contribuir para a ampliação dos dados do
+                            <strong> Censo Escolar brasileiro</strong>.
                         </label>
                     </div>
+
                     {errorUseTerm && <Form.Message className="error-message mt-7">{errorUseTerm}</Form.Message>}
                 </Form.Field>
                 <div className="mt-8 flex gap-x-2">

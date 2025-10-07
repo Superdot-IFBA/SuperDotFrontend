@@ -81,7 +81,7 @@ export const LoginPage = () => {
                             <p className=" text-[16px]">Faça login ou registre-se para começar a sua pesquisa ainda hoje.</p>
                         </Box>
                         <Box className="mb-4">
-                            <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />}  {...register("email")} errorMessage={errors?.email && (
+                            <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />} autoComplete="email"  {...register("email")} errorMessage={errors?.email && (
                                 <Form.Message className="error-message">{errors.email.message}</Form.Message>
                             )}></InputField>
                         </Box>
@@ -91,6 +91,7 @@ export const LoginPage = () => {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Senha"
                                 icon={<Icon.Key color="gray" />}
+                                autoComplete="current-password"
                                 {...register("password")}
                                 errorMessage={errors?.password && (
                                     <Form.Message className="error-message">{errors.password.message}</Form.Message>

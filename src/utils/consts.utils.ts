@@ -54,7 +54,7 @@ export const FILES_AVAILABLE_TO_CREATE_SAMPLE = [
     {
         key: "researchCep[researchDocument]",
         jsonFileKey: "researchDocument",
-        label: "Projeto de pesquisa*",
+        label: "Parecer do CEP*",
         required: true,
     },
     {

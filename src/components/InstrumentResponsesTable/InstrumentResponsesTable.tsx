@@ -198,10 +198,10 @@ export default function InstrumentResponsesList() {
         </div>
         <div className="grid grid-cols-2 gap-x-2 text-xs mt-1">
           <div>
-            <span className="font-medium">OIIAHSD-Adulto:</span> 132
+            <span className="font-medium">QIIAHSD-Adulto:</span> 132
           </div>
           <div>
-            <span className="font-medium">OIIAHSD-Adulto-2ª Fonte:</span> 138
+            <span className="font-medium">QIIAHSD-Adulto-2ª Fonte:</span> 138
           </div>
         </div>
       </DataList.Item>

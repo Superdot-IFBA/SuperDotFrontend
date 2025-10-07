@@ -47,6 +47,7 @@ const DetailsForm = ({ handleOnSubmit, setStepData, currentData }: DetailsFormPr
                     <Form.Field name="personalData.fullName" className="col-span-3">
                         <Form.Control
                             placeholder="Nome completo*"
+                            autoComplete="name"
                             {...register("personalData.fullName")}
                         ></Form.Control>
                         {errors?.personalData?.fullName && (
@@ -58,7 +59,7 @@ const DetailsForm = ({ handleOnSubmit, setStepData, currentData }: DetailsFormPr
                 </div>
                 <div className="gap-2 flex max-sm:flex-col max-sm:gap-4">
                     <Form.Field name="personalData.phone" className="w-full">
-                        <Form.Control placeholder="Telefone*" {...register("personalData.phone")}></Form.Control>
+                        <Form.Control placeholder="Telefone*" autoComplete="tel" {...register("personalData.phone")}></Form.Control>
                         {errors?.personalData?.phone && (
                             <Form.Message className="error-message">{errors.personalData.phone.message}</Form.Message>
                         )}
@@ -67,6 +68,7 @@ const DetailsForm = ({ handleOnSubmit, setStepData, currentData }: DetailsFormPr
                     <Form.Field name="personalData.birthDate" className="w-full">
                         <Flatpicker
                             placeholder="Data de nascimento*"
+                            autoComplete="bday"
                             multiple={false}
                             onChange={([date]) => setValue("personalData.birthDate", date)}
                             options={{

@@ -164,7 +164,7 @@ const SampleReviewPage = () => {
 
 
                                         <Button
-                                            onClick={() => handleSeeAttachment(attachmentsToDisplay.researchDocument || "")} title={"Projeto de pesquisa"}
+                                            onClick={() => handleSeeAttachment(attachmentsToDisplay.researchDocument || "")} title={"Parecer do CEP"}
                                             children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >
 
                                         </Button>
