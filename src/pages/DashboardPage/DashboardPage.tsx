@@ -32,7 +32,6 @@ function DashBoardPage() {
             try {
                 const response = await getinfoDashboard();
                 setDados(response);
-                console.log(response);
                 setLoading(false);
             } catch (error: any) {
                 setError(error.message);

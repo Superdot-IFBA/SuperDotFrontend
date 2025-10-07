@@ -112,9 +112,7 @@ const LoginInfoForm = ({
                             className="text-[15px] text-justify leading-relaxed text-gray-800 select-none cursor-pointer"
                         >
                             Estou ciente de que as estatísticas das pesquisas realizadas poderão ser acessadas publicamente, em conformidade com a
-                            <strong> Lei Geral de Proteção de Dados (LGPD)</strong>, com o propósito de subsidiar a melhoria e a implementação de políticas
-                            públicas voltadas à população da educação especial, além de contribuir para a ampliação dos dados do
-                            <strong> Censo Escolar brasileiro</strong>.
+                            <strong> Lei Geral de Proteção de Dados (LGPD)</strong>, com o propósito de subsidiar a melhoria e a implementação de políticas públicas voltadas à população com altas habilidades/superdotação, e de contribuir para a ampliação dos dados do <strong> Censo Escolar brasileiro</strong>.
                         </label>
                     </div>
 

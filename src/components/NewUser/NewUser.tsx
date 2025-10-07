@@ -1,7 +1,6 @@
 import * as Icon from "@phosphor-icons/react";
 import Modal from "../Modal/Modal";
 import { useEffect, useState } from "react";
-import { Link } from "@radix-ui/themes";
 
 interface WelcomeModalProps {
   open: boolean;
@@ -70,7 +69,7 @@ const WelcomeModal = ({ open, setOpen, isNewUser }: WelcomeModalProps) => {
               </h2>
 
               <p className="text-lg max-sm:text-[14px] text-purple-100/90 font-medium leading-relaxed max-sm:leading-snug">
-                Agora você tem acesso ao <strong className="!font-roboto">Superdot</strong> — uma plataforma inovadora voltada à identificação
+                Agora você tem acesso ao <strong className="!font-roboto  text-white">SuperDot</strong> — uma plataforma inovadora voltada à identificação
                 de pessoas com Altas Habilidades/Superdotação. Este software foi desenvolvido para apoiar pesquisadores
                 especializados no processo de cadastro, análise e comparação de dados entre participantes.
               </p>
@@ -80,7 +79,7 @@ const WelcomeModal = ({ open, setOpen, isNewUser }: WelcomeModalProps) => {
                   <button
                     onClick={handleClose}
                     className="flex items-center bg-white/20 hover:bg-white/30 px-6 py-3 max-sm:px-4 max-sm:py-2 rounded-xl max-sm:rounded-lg text-white font-semibold max-sm:text-sm transition-all duration-300 w-full justify-center"
-                  ><Icon.Rocket className="mr-2 max-sm:mr-1 max-sm:w-4 max-sm:h-4" />
+                  ><Icon.Rocket size={28} className="mr-2 max-sm:mr-1 max-sm:w-6 max-sm:h-6" />
                     <a href="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
                       target="_blank"
                       rel="noopener noreferrer">
