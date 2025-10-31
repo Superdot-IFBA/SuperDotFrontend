@@ -14,26 +14,47 @@ interface InputFieldProps extends React.PropsWithRef<React.JSX.IntrinsicElements
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ({ label, placeholder, name, errorMessage, type, className, icon, actionButton, ...rest }, ref) => {
 
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (type === "number") {
+                if (e.key === "-" || e.key === "e" || e.key === "+") {
+                    e.preventDefault();
+                }
+            }
+
+            if (rest.onKeyDown) {
+                rest.onKeyDown(e);
+            }
+        };
+
         return (
             <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"}  rounded-lg ${className}`} name={name}>
-                <Form.Label className={`block text-left text-xs font-bold uppercase tracking-wide `}>
-                    {label}
-                </Form.Label>
-                <Flex justify="center" align="center" className={`border rounded-md bg-white`}>
+                {label && (
+                    <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                        {label}
+                    </Form.Label>
+                )}
+
+                <Flex justify="center" align="center" className="border rounded-md bg-white">
                     {icon && <Flex className="p-2">{icon}</Flex>}
-                    <Form.Control asChild className={`h-10 w-full`}>
 
-                        <input placeholder={placeholder} ref={ref} type={type} {...rest} className="bg-white border-none max-sm:placeholder:text-[12px] max-sm:p-2 !font-roboto" />
-
+                    <Form.Control asChild className="h-10 w-full">
+                        <input
+                            placeholder={placeholder}
+                            ref={ref}
+                            type={type}
+                            min={type === "number" ? 0 : undefined} // garante que o input HTML não aceite negativos
+                            onKeyDown={handleKeyDown}
+                            {...rest}
+                            className="bg-white border-none max-sm:placeholder:text-[12px] max-sm:p-2 !font-roboto"
+                        />
                     </Form.Control>
-                    {actionButton && (
-                        <Flex className=" p-1 pr-3">
-                            {actionButton}
-                        </Flex>
-                    )}
+
+                    {actionButton && <Flex className="p-1 pr-3">{actionButton}</Flex>}
                 </Flex>
+
                 {errorMessage && <Form.Message className="error-message">{errorMessage}</Form.Message>}
             </Form.Field>
         );
     }
 );
+

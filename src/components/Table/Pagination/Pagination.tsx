@@ -1,77 +1,74 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
-import { usePagination } from "./usePagination";
-import { DOTS } from "../../../utils/consts.utils";
+import * as Theme from "@radix-ui/themes"
+import { useEffect } from "react";
 
 interface PaginationProps {
     currentPage: number;
     totalCount: number;
-    siblingCount?: number;
     pageSize: number;
-    onPageChange: (newPage: number) => void;
+    onPageChange: (page: number) => void;
 }
 
-const Pagination = ({ currentPage, totalCount, siblingCount = 1, pageSize, onPageChange }: PaginationProps) => {
-    const paginationRange = usePagination({
-        currentPage,
-        totalCount,
-        siblingCount,
-        pageSize,
-    });
+const Pagination = ({
+    currentPage,
+    totalCount,
+    pageSize,
+    onPageChange,
+}: PaginationProps) => {
+    const totalPages = Math.ceil(totalCount / pageSize);
 
-    if (currentPage === 0) {
-        return null;
-    }
+    useEffect(() => {
+        const scrollContainer = document.querySelector(
+            '[data-radix-scroll-area-viewport]'
+        ) as HTMLElement | null;
 
-    if (paginationRange && paginationRange.length < 2) {
-        return null;
-    }
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [currentPage]);
 
-    const onNext = () => {
-        onPageChange(currentPage + 1);
+    if (!totalPages || totalPages <= 1) return null;
+
+    const handlePageChange = (pageNumber: number) => {
+        const newPage = Math.max(1, Math.min(pageNumber, totalPages));
+        onPageChange(newPage);
     };
-
-    const onPrevious = () => {
-        onPageChange(currentPage - 1);
-    };
-
-    let lastPage = 1;
-    if (paginationRange) {
-        lastPage = Number(paginationRange[paginationRange.length - 1]);
-    }
 
     return (
-        <nav aria-label="Paginação">
-            <ul className="inline-flex -space-x-px text-sm">
-                <li
-                    onClick={onPrevious}
-                    className={`${currentPage === 1 ? "hidden" : ""
-                        } flex h-8 cursor-pointer items-center rounded-l-lg border border-gray-300 px-3 leading-tight text-white hover:bg-gray-100 hover:text-gray-700`}
-                >
-                    <ArrowLeftIcon />
-                </li>
-                {paginationRange?.map((pageNumber) => {
-                    if (pageNumber === DOTS) {
-                        return <li>&#8230;</li>;
-                    }
+        <nav
+            aria-label="Paginação"
+            className="flex items-center justify-center gap-2 mt-4"
+        >
+            <Theme.Button
+                variant="surface"
+                className="hover:cursor-pointer"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+            >
+                <ArrowLeftIcon />
+            </Theme.Button>
 
-                    return (
-                        <li
-                            onClick={() => onPageChange(Number(pageNumber))}
-                            className={`${currentPage === pageNumber ? "bg-blue-600" : ""
-                                } flex h-8 cursor-pointer items-center border border-gray-300 px-3 leading-tight text-white hover:bg-gray-100 hover:text-gray-700`}
-                        >
-                            {pageNumber}
-                        </li>
-                    );
-                })}
-                <li
-                    onClick={onNext}
-                    className={`${currentPage === lastPage ? "hidden" : ""
-                        } flex h-8 cursor-pointer items-center rounded-r-lg border border-gray-300 px-3 leading-tight text-white hover:bg-gray-100 hover:text-gray-700`}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Theme.Button
+                    key={page}
+                    variant={currentPage === page ? "solid" : "soft"}
+                    onClick={() => handlePageChange(page)}
+                    className="w-10 hover:cursor-pointer"
                 >
-                    <ArrowRightIcon />
-                </li>
-            </ul>
+                    {page}
+                </Theme.Button>
+            ))}
+
+            <Theme.Button
+                variant="surface"
+                className="hover:cursor-pointer"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+            >
+                <ArrowRightIcon />
+            </Theme.Button>
         </nav>
     );
 };

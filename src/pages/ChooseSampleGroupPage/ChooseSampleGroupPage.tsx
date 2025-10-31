@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { SampleGroup, findAllSampleGroups } from "../../api/sampleGroup.api";
 import { Card } from "../../components/Card/Card";
 import { useNavigate } from "react-router-dom";
-import { Box, Container, Skeleton } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 
 import { GridComponent } from "../../components/Grid/Grid";
 import SkeletonDataList from "../../components/Skeletons/SkeletonDataList";
@@ -34,6 +34,10 @@ const ChooseSampleGroupPage = () => {
             window.scrollTo(0, 0);
         }
     };
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     return (
         <>

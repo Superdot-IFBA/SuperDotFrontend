@@ -178,7 +178,7 @@ const EditSamplePage = () => {
 
                 <Form.Root
                     onSubmit={onSubmit}
-                    className="mx-auto mb-6 mt-11 max-sm:mt-5 w-11/12 opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards"
+                    className="mx-auto mb-6 mt-11 max-sm:mt-5  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards"
                 >
                     <h3 className="text-left text-primary animate-fade-in animate-delay-200">
                         Detalhes da amostra
@@ -186,12 +186,10 @@ const EditSamplePage = () => {
 
                     <Separator.Root className="my-6 h-px w-full bg-black animate-grow-width animate-delay-300" />
 
-                    {/* CONTAINER TO INPUT SAMPLE DETAILS */}
                     <div className=" gap-4 ">
                         <div className="col-span-3 animate-fade-in animate-delay-300">
                             <InputField
                                 label="TÍTULO DA PESQUISA*"
-                                // defaultValue={sample.researchTitle}
                                 errorMessage={errors.researchTitle?.message}
                                 {...register("researchTitle")}
                             />
@@ -200,7 +198,6 @@ const EditSamplePage = () => {
                         <div className="col-span-3 animate-fade-in animate-delay-400">
                             <InputField
                                 label="TÍTULO DA AMOSTRA*"
-                                // defaultValue={sample.sampleTitle}
                                 errorMessage={errors.sampleTitle?.message}
                                 {...register("sampleTitle")}
                             />
@@ -209,14 +206,12 @@ const EditSamplePage = () => {
                         <div className="col-span-3 md:flex gap-2 animate-fade-in animate-delay-500">
                             <InputField
                                 label="Código do Comitê de Ética*"
-                                // defaultValue={sample.researchCep?.cepCode}
                                 errorMessage={errors.researchCep?.cepCode?.message}
                                 {...register("researchCep.cepCode")}
                                 className="flex-1 "
                             />
                             <InputField
                                 label="QUANTIDADE TOTAL DE PARTICIPANTES*"
-                                // defaultValue={sample.qttParticipantsRequested}
                                 errorMessage={errors.qttParticipantsRequested?.message}
                                 type="number"
                                 {...register("qttParticipantsRequested")}
@@ -224,10 +219,9 @@ const EditSamplePage = () => {
                             />
                         </div>
 
-                        <div className="md:col-span-2 md:flex lg:col-span-3 mb-12 gap-2 animate-fade-in animate-delay-600">
+                        <div className="md:col-span-2 md:flex lg:col-span-3 mb-4 gap-2 animate-fade-in animate-delay-600">
                             <SelectField
                                 label="REGIÃO DA AMOSTRA*"
-                                // defaultValue={sample.countryRegion}
                                 errorMessage={errors.countryRegion?.message}
                                 {...register("countryRegion")}
                                 className="md:flex-1 w-full md:w-auto "
@@ -241,7 +235,6 @@ const EditSamplePage = () => {
 
                             <InputField
                                 label="ESTADO DA AMOSTRA*"
-                                // defaultValue={sample.countryState}
                                 errorMessage={errors.countryState?.message}
                                 {...register("countryState")}
                                 className="flex-1 "
@@ -249,7 +242,6 @@ const EditSamplePage = () => {
 
                             <InputField
                                 label="CIDADE DA AMOSTRA*"
-                                // defaultValue={sample.countryCity}
                                 errorMessage={errors.countryCity?.message}
                                 {...register("countryCity")}
                                 className="flex-1 "

@@ -188,15 +188,6 @@ const EvaluateAutobiography: React.FC = () => {
         });
     };
 
-    // const handleRemoveCommentBack = (id: number) => {
-    //     setMarkedTextsBack(prev => prev.filter(markedTextsBack => markedTextsBack.id !== id));
-    //     setNotificationData({
-    //         title: "Comentário Excluído",
-    //         description: "O comentário e a marcação foram excluídos com sucesso!",
-    //         type: "success"
-    //     });
-
-    // }
 
     const handleAddComment = (title: string, bg: string,) => {
         if (selectedText && commentInputRef.current && selectionRange) {

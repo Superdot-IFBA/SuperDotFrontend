@@ -26,6 +26,7 @@ import { MenuProvider, useMenu } from "./components/UseMenu/UseMenu ";
 import BackToTop from "./components/BackToTop/BackToTop";
 import { PageContainer } from "./components/PageContainer/PageContainer";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 
 
@@ -70,6 +71,7 @@ function InnerLayout() {
     return (
 
         <Flex className="bg-background font-roboto min-h-screen w-full">
+            <ScrollToTop />
             <Box className={`max-xl:!w-0 ${isMobileMenuOpen ? 'w-64' : 'w-16'}`}>
                 <SideBar userRole={userRole} />
             </Box>

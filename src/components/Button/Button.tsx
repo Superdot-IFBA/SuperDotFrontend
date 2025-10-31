@@ -98,7 +98,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <Flex align="center" gap="2" justify={'center'}>
             {children}
-            <span className={`whitespace-nowrap ${classNameTitle} ${title == "" ? 'hidden' : ""}`}>
+            <span
+              className={`whitespace-nowrap truncate ${classNameTitle} ${title === "" ? 'hidden' : ""} text-xs sm:text-sm md:text-base lg:text-lg`}
+            >
               {title}
             </span>
           </Flex>

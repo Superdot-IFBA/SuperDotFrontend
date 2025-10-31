@@ -3,30 +3,31 @@ import * as Icon from '@phosphor-icons/react';
 
 const BackToTop = () => {
   const [showButton, setShowButton] = useState(false);
+  const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
+    const container = document.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    setScrollContainer(container);
+
     const handleScroll = () => {
-      setShowButton(window.scrollY > 100);
+      const scrollY = container ? container.scrollTop : window.scrollY;
+      setShowButton(scrollY > 100);
     };
 
-
-    const scrollHandler = setTimeout(() => {
-      window.addEventListener('scroll', handleScroll);
-      handleScroll();
-    }, 100);
+    const target = container || window;
+    target.addEventListener('scroll', handleScroll);
+    handleScroll();
 
     return () => {
-      clearTimeout(scrollHandler);
-      window.removeEventListener('scroll', handleScroll);
+      target.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   const scrollToTop = () => {
-
-    try {
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (error) {
-      window.scrollTo(0, 0);
     }
   };
 
@@ -35,10 +36,9 @@ const BackToTop = () => {
       onClick={scrollToTop}
       aria-label="Voltar ao topo"
       className={`
-        fixed bottom-6 right-6 z-30 p-3 w-12 h-12 rounded-full bg-primary text-white shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95 hover:bg-secondary
-        ${showButton ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-10 pointer-events-auto'}
+        fixed bottom-6 right-6 z-30 p-3 w-12 h-12 rounded-full bg-primary text-white shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95 hover:bg-secondary border  
+        ${showButton ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-10 pointer-events-none'}
         md:bottom-8 md:right-8 
-        touch-pan-x select-none 
       `}
       style={{ WebkitTapHighlightColor: 'transparent' }}
     >

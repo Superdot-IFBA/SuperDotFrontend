@@ -1,5 +1,5 @@
 import * as Form from "@radix-ui/react-form";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Select } from "@radix-ui/themes";
 import { ReactNode, forwardRef } from "react";
 
 interface SelectFieldProps extends React.PropsWithRef<React.JSX.IntrinsicElements["select"]> {
@@ -29,6 +29,7 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
                 </Flex>
                 <Flex gap="4">
                     <Form.Control asChild>
+
                         <select
                             name={name}
                             ref={ref}

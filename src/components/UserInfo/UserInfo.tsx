@@ -8,13 +8,7 @@ import {
   DropdownMenu,
   IconButton
 } from '@radix-ui/themes';
-import {
-  CaretDown,
-  Gear,
-  SignOut,
-  User,
-  Pencil
-} from '@phosphor-icons/react';
+import * as Icon from '@phosphor-icons/react';
 import NoImg from "../../assets/no-image.jpg"
 import { useEffect, useState } from 'react';
 import { seeAttachmentImage } from '../../api/sample.api';
@@ -138,7 +132,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
         size="4"
         src={imageUrl || NoImg}
         radius="full"
-        fallback={userData?.personalData?.fullName?.charAt(0) || <User size={20} />}
+        fallback={userData?.personalData?.fullName?.charAt(0) || <Icon.User size={20} />}
         className="transition-all duration-300 hover:scale-105 border-2 border-white shadow-md"
       />
     </Skeleton>
@@ -189,7 +183,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
             <button className="flex items-center gap-3 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
               <AvatarWithSkeleton />
               {variant === 'full' && <UserDetails />}
-              <CaretDown size={16} weight="bold" className="text-gray-600" />
+              <Icon.CaretDown size={16} weight="bold" className="text-gray-600" />
             </button>
           </DropdownMenu.Trigger>
 
@@ -202,10 +196,19 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
               className="flex items-center gap-2 p-3 rounded-lg  text-gray-900 hover:bg-gray-100 focus:bg-gray-100 !cursor-pointer"
               onClick={openProfileEditModal}
             >
-              <Pencil size={16} />
+              <Icon.Pencil size={16} />
               Editar Perfil
             </DropdownMenu.Item>
 
+            <DropdownMenu.Separator className="my-1 bg-gray-100" />
+            <DropdownMenu.Item
+              className="flex items-center gap-2 p-3 rounded-lg  text-gray-900 hover:bg-gray-100 focus:bg-gray-100 !cursor-pointer"
+
+            ><a href="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <Icon.BookOpen size={16} />
+                Documentação SuperDot
+              </a>
+            </DropdownMenu.Item>
             <DropdownMenu.Separator className="my-1 bg-gray-100" />
 
             <Alert
@@ -214,7 +217,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
                   onSelect={(e) => e.preventDefault()}
                   className="flex items-center gap-2 p-3 rounded-lg !cursor-pointer text-red-600 hover:bg-red-200 focus:bg-red-200"
                 >
-                  <SignOut size={16} />
+                  <Icon.SignOut size={16} />
                   Sair
                 </DropdownMenu.Item>
               }
@@ -239,6 +242,10 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
 
         className={`sm:hidden w-full px-2 py-1 shadow-sm rounded-xl ${className} mobo-flex !align-center  w-full flex flex-col  !items-center `}
       >
+        <a href="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 absolute -top-10 text-white font-bold p-4 bg-glass px-3 py-1 rounded-full border border-white  btn-primary">
+          <Icon.BookOpen size={20} weight='bold' />
+          Documentação SuperDot
+        </a>
         <div className=' flex items-center !justify-between w-full'>
           <IconButton
             variant="ghost"
@@ -246,7 +253,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
             onClick={openProfileEditModal}
             className=" rounded-full transition-transform hover:scale-105 shadow-sm"
           >
-            <Gear size={30} className='text-white' />
+            <Icon.Gear size={30} className='text-white' />
           </IconButton>
 
           <Box className="text-center">
@@ -265,7 +272,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
               size="3"
               className="rounded-full  shadow-sm"
             >
-              <SignOut size={30} className='text-white' />
+              <Icon.SignOut size={30} className='text-white' />
             </IconButton>}
             title="Tem certeza que deseja sair da plataforma?"
             buttoncancel={<Button size="Small" color="gray" title="Cancelar" />}

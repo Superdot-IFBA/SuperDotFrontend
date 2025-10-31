@@ -136,14 +136,7 @@ const SamplesTable = ({
                                 </Table.Row>
                             ))}
                         </Table.Body>
-                        <Table.Row>
-                            <Pagination
-                                currentPage={currentPage}
-                                pageSize={PAGE_SIZE}
-                                totalCount={page?.pagination?.totalItems || 0}
-                                onPageChange={setCurrentPage}
-                            />
-                        </Table.Row>
+
                     </>
                 ) : (
                     <Table.Body>
@@ -240,6 +233,12 @@ const SamplesTable = ({
                     <EmptyState icon={<Icon.FileX weight="thin" size={100} />} title={"Nenhuma Solicitação encontrada."} description={"Não foram encontradas solicitações que correspondam aos critérios de busca ou filtros aplicados. Verifique os parâmetros utilizados e tente novamente."} />
                 )}
             </DataList.Root>
+            <Pagination
+                currentPage={currentPage}
+                pageSize={PAGE_SIZE}
+                totalCount={page?.pagination?.totalItems || 0}
+                onPageChange={setCurrentPage}
+            />
         </>
     );
 };

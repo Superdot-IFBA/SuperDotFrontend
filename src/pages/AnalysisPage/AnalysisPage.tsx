@@ -201,18 +201,24 @@ const AnalysisPage = () => {
             return null;
         }
         const pages = [];
+
         for (let i = 1; i <= totalPages; i++) {
             pages.push(
-                <Theme.Button
-                    key={i}
-                    variant={currentPage === i ? "solid" : "soft"}
-                    onClick={() => handlePageChange(i)}
-                    className="w-10 hover:cursor-pointer"
-                >
-                    {i}
-                </Theme.Button>
+                <>
+                    <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage - 1)}>{`<`}</Theme.Button>
+                    <Theme.Button
+                        key={i}
+                        variant={currentPage === i ? "solid" : "soft"}
+                        onClick={() => handlePageChange(i)}
+                        className="w-10 hover:cursor-pointer"
+                    >
+                        {i}
+                    </Theme.Button>
+                    <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage + 1)}>{`>`}</Theme.Button>
+                </>
             );
         }
+
         return pages;
     };
 
@@ -618,9 +624,9 @@ const AnalysisPage = () => {
 
 
             <Flex gap="2" mt="4" justify="center" align="center">
-                <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage - 1)}>{`<`}</Theme.Button>
+
                 {renderPagination()}
-                <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage + 1)}>{`>`}</Theme.Button>
+
             </Flex>
             <GridComponent
                 className="gap-5 mt-5 m-auto w-full  max-xl:p-2"

@@ -8,12 +8,16 @@ import * as Icon from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import SkeletonTableBody from "../../Skeletons/SkeletonTableBody";
 import SkeletonDataList from "../../Skeletons/SkeletonDataList";
+import Pagination from "../../../components/Table/Pagination/Pagination";
+
 
 interface ParticipantsRegistrationTableProps {
     sampleId: string;
     data?: ISample["participants"];
-    // currentPage: number;
-    // setCurrentPage: (newPage: number) => void;
+    currentPage: number;
+    pageSize: number;
+    totalCount: number;
+    onPageChange: (page: number) => void;
     onClickToViewSecondSources: (participant: IParticipant) => void;
     onClickToCopySecondSourceURL: (text: string) => void;
 }
@@ -21,8 +25,10 @@ interface ParticipantsRegistrationTableProps {
 const ParticipantsRegistrationTable = ({
     sampleId,
     data,
-    // currentPage,
-    // setCurrentPage,
+    currentPage,
+    pageSize,
+    totalCount,
+    onPageChange,
     onClickToViewSecondSources,
     onClickToCopySecondSourceURL,
 }: ParticipantsRegistrationTableProps) => {
@@ -232,7 +238,12 @@ const ParticipantsRegistrationTable = ({
                                 </DataList.Root>
                             )}
                         </div>
-
+                        <Pagination
+                            currentPage={currentPage}
+                            pageSize={pageSize}
+                            totalCount={totalCount}
+                            onPageChange={onPageChange}
+                        />
                     </>
                 }
                 className="mb-2"

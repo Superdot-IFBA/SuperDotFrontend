@@ -16,7 +16,6 @@ import SampleUploadFile from "../../components/SampleUploaderFile/SampleUploader
 import { validateFiles } from "../../validators/fileValidator";
 import { CustomFileError } from "../../errors/fileErrors";
 import * as Icon from "@phosphor-icons/react";
-
 import { Button } from "../../components/Button/Button";
 
 const CreateSamplePage = () => {
@@ -31,6 +30,16 @@ const CreateSamplePage = () => {
         type: "",
     });
 
+    const showErrorNotification = (message: string) => {
+        setNotificationData({
+            title: "Por favor, preencha todos os campos.",
+            description: message,
+            type: "erro",
+        });
+        scrollToTop();
+    };
+
+
 
     /* GROUP SELECTION ASSERT */
     const [groupSelected, setGroupSelected] = useState<string>();
@@ -38,22 +47,25 @@ const CreateSamplePage = () => {
     const navigate = useNavigate();
 
     const scrollToTop = () => {
+        const scrollContainer = document.querySelector(
+            '[data-radix-scroll-area-viewport]'
+        ) as HTMLElement | null;
 
-        try {
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            window.scrollTo(0, 0);
         }
     };
-
     useEffect(() => {
         if (stateWithGroupSample(location.state)) {
             setGroupSelected(location.state.groupSelected);
+            scrollToTop();
         } else {
             navigate("/app/choose-sample-group");
             scrollToTop();
         }
-    }, [location.state]);
+    }, [location.state, navigate]);
 
     /* FORM HANDLER */
     const {
@@ -136,10 +148,14 @@ const CreateSamplePage = () => {
             setLoading(false);
         }
     });
-
+    useEffect(() => {
+        const firstError = Object.values(errors)[0]?.message;
+        if (firstError) {
+            showErrorNotification(firstError as string);
+        }
+    }, [errors]);
     return (
         <>
-
             <Notify
                 open={!!notificationData.title}
                 onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
@@ -147,9 +163,10 @@ const CreateSamplePage = () => {
                 description={notificationData.description}
                 icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
                 className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-            >
+            />
 
 
+            <div className="container mx-auto px-4">
                 <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
                     <h2 className="heading-2 font-semibold text-gray-900">
                         Grupo selecionado: {groupSelected}
@@ -158,7 +175,7 @@ const CreateSamplePage = () => {
 
                 <Form.Root
                     onSubmit={onSubmit}
-                    className=" mb-6   w-11/12 opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full"
+                    className="mb-6  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full"
                 >
                     <h3 className="text-left text-primary animate-fade-in animate-delay-200">
                         Detalhes da amostra
@@ -166,15 +183,14 @@ const CreateSamplePage = () => {
 
                     <Separator.Root className="my-6 h-px w-full bg-black animate-grow-width animate-delay-300" />
 
-                    {/* CONTAINER TO INPUT SAMPLE DETAILS */}
-                    <div className=" gap-4 ">
+
+                    <div className="gap-4">
                         <div className="col-span-3 animate-fade-in animate-delay-300">
                             <InputField
                                 label="TÍTULO DA PESQUISA*"
                                 placeholder="Digite o título da pesquisa"
                                 errorMessage={errors.researchTitle?.message}
                                 {...register("researchTitle")}
-
                             />
                         </div>
 
@@ -193,7 +209,7 @@ const CreateSamplePage = () => {
                                 placeholder="Digite o código fornecido pelo Comitê de Ética em Pesquisa"
                                 errorMessage={errors.researchCep?.cepCode?.message}
                                 {...register("researchCep.cepCode")}
-                                className="flex-1 "
+                                className="flex-1"
                             />
                             <InputField
                                 label="QUANTIDADE TOTAL DE PARTICIPANTES*"
@@ -201,11 +217,11 @@ const CreateSamplePage = () => {
                                 errorMessage={errors.qttParticipantsRequested?.message}
                                 type="number"
                                 {...register("qttParticipantsRequested")}
-                                className="flex-1 "
+                                className="flex-1"
                             />
                         </div>
 
-                        <div className="md:col-span-2 md:flex lg:col-span-3 mb-12 gap-2 animate-fade-in animate-delay-600">
+                        <div className="md:col-span-2 md:flex lg:col-span-3 mb-4 gap-2 animate-fade-in animate-delay-600">
                             <SelectField
                                 label="REGIÃO DA AMOSTRA*"
                                 errorMessage={errors.countryRegion?.message}
@@ -224,7 +240,7 @@ const CreateSamplePage = () => {
                                 placeholder="Digite o estado dos participantes da amostra"
                                 errorMessage={errors.countryState?.message}
                                 {...register("countryState")}
-                                className="flex-1 "
+                                className="flex-1"
                             />
 
                             <InputField
@@ -268,19 +284,18 @@ const CreateSamplePage = () => {
                         setSampleFiles={setSampleFiles}
                     />
 
-                    <Form.Submit asChild className="mt-10 ">
+                    <Form.Submit asChild className="mt-10">
                         <Button
                             size="Medium"
                             loading={loading}
                             className={`disabled:bg-neutral-dark disabled:hover:cursor-not-allowed mx-auto btn-primary max-sm:w-full`}
-                            color={`${isValid ? "green" : "gray"}`}
-                            disabled={!isValid}
+                            color={`${loading ? "white" : "green"}`}
                             title={"Enviar Solicitação"}
                             children={<Icon.FloppyDisk size={18} weight="bold" />}
                         />
                     </Form.Submit>
                 </Form.Root>
-            </Notify>
+            </div>
         </>
     );
 };

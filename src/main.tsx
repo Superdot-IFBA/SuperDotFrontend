@@ -8,9 +8,9 @@ import { ScrollArea, Theme } from '@radix-ui/themes';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Theme panelBackground="translucent" appearance="light" accentColor="violet" radius="small" className='h-full font-roboto' >
-      {/* <ScrollArea type="scroll" scrollbars="both" size="3" radius='none' className='w-full'> */}
-      <App />
-      {/* </ScrollArea> */}
+      <ScrollArea type="scroll" scrollbars="vertical" size="2" radius='none' className='w-full max-sm:hidden' >
+        <App />
+      </ScrollArea>
     </Theme>
   </React.StrictMode>,
 )

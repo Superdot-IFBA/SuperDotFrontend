@@ -228,7 +228,7 @@ const CompareParticipantsSelected = () => {
                     <DataList.Item
                       key={index}
                       className={`w-full p-3 rounded-lg mb-5 card-container transition-all duration-300 ease-in-out 
-          ${expandedParticipants[participant._id] ? 'max-h-[1000px]' : 'max-h-[300px]'}`}
+          ${participant._id && expandedParticipants[participant._id] ? 'max-h-[1000px]' : 'max-h-[300px]'}`}
                     >
 
                       {/* Informações Básicas */}

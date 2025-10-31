@@ -305,8 +305,8 @@ const MySamplesPage = () => {
 
                                             {/* Ações */}
                                             <Card.Actions className="flex gap-4 justify-between max-sm:flex-col mt-4">
-                                                <Skeleton className="h-10 w-full sm:w-1/2 rounded-md" />
-                                                <Skeleton className="h-10 w-full sm:w-1/2 rounded-md" />
+                                                <Skeleton className="h-10 w-full  rounded-md" />
+                                                <Skeleton className="h-10 w-full  rounded-md" />
                                             </Card.Actions>
                                         </Card.Root>
                                     ))) :
@@ -391,7 +391,7 @@ const MySamplesPage = () => {
                                             </div>
                                         </Card.Content>
 
-                                        <Card.Actions className=" flex gap-4 justify-between max-sm:flex-col">
+                                        <Card.Actions className=" flex gap-4 max-sm:gap-2 max-sm:flex-col">
                                             <Card.Action
                                                 disabled={
                                                     sample.status !== "Autorizado"

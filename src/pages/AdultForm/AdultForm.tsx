@@ -133,9 +133,6 @@ const AdultForm = () => {
         }
     };
 
-
-
-
     /* It is used to validate the URL (receive in the user email) by making an asynchronous request to a server endpoint. */
     useEffect(() => {
         const validateURL = async (participantId: string, sampleId: string, verificationCode: string) => {
@@ -167,9 +164,7 @@ const AdultForm = () => {
                 }, 2000);
             }
         };
-
-
-        // If the link haven't a verification code, ignore and continue
+       
         if (!verificationCode) {
             setIsPageLoading(false);
             return;
@@ -187,11 +182,6 @@ const AdultForm = () => {
         return null;
     }
 
-    // const getStepState = (stepToCompare: EAdultFormSteps): StepStateType => {
-    //     if (currentStep > stepToCompare) return "DONE";
-    //     else if (currentStep === stepToCompare) return "HOLD";
-    //     else return "DISABLED";
-    // };
 
     const handleNextStep = () => {
         scrollToTop();
