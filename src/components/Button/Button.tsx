@@ -2,7 +2,7 @@ import { Flex } from '@radix-ui/themes';
 import { ReactNode, ButtonHTMLAttributes, forwardRef } from 'react';
 
 const SIZE_TYPES = ["Large", "Medium", "Small", "Extra Small", "Full", ""] as const;
-const COLOR_TYPES = ['primary', 'red', 'green', 'gray', 'secondary', 'white', 'yellow', ""] as const;
+const COLOR_TYPES = ['primary', 'red', 'green', 'gray', 'secondary', 'white', 'yellow', 'gradiente', ""] as const;
 
 type size = typeof SIZE_TYPES[number];
 type color = typeof COLOR_TYPES[number];
@@ -34,6 +34,7 @@ const colorClasses = {
   secondary: 'bg-secondary text-white hover:bg-primary',
   white: 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-50',
   yellow: 'text-yellow-800 bg-yellow-100 hover:bg-yellow-200 active:bg-yellow-300',
+  gradiente: "bg-gradient-to-br from-violet-600 via-purple-500 to-primary hover:to-purple-700 text-white font-medium  transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg text-sm",
   "": ''
 } satisfies Record<color, string>;
 

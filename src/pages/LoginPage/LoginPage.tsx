@@ -7,6 +7,7 @@ import { saveTokens } from "../../utils/tokensHandler";
 import { useNavigate } from "react-router-dom";
 import logo from '../../assets/Logo-GRUPAC.png'
 import logoWhite from '../../assets/Logo-GRUPAC-white.png'
+import ImgPopUp from '../../assets/Saly-16.svg'
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Notify from "../../components/Notify/Notify";
@@ -15,6 +16,7 @@ import * as Icon from "@phosphor-icons/react";
 import { Button } from "../../components/Button/Button";
 import { InputField } from "../../components/InputField/InputField";
 import BackgroundComponent from "../../components/Background/Background";
+import FloatingPopup from "../../components/FloatingPopup/FloatingPopup";
 
 export const LoginPage = () => {
     const {
@@ -59,17 +61,26 @@ export const LoginPage = () => {
 
     return (
 
-        <Notify
-            open={!!notificationData.title}
-            onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-            title={notificationData.title}
-            description={notificationData.description}
-            icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-            className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-        >
+        <>
+            <Notify
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                title={notificationData.title}
+                description={notificationData.description}
+                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
+                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
+            />
             <Flex className="h-screen w-full">
                 <Flex className="w-full align-middle h-screen">
+
                     <BackgroundComponent />
+                    <FloatingPopup
+                        message="É novo por aqui? 
+                        Venha conhecer o SuperDot!"
+                        buttonText="Explorar Agora"
+                        redirectUrl="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
+                        imageUrl={ImgPopUp}
+                    />
                 </Flex>
                 <Flex direction="column" className="w-full text-[#4F4F4F] m-auto desktop z-50">
                     <Form.Root onSubmit={onSubmit} className="m-auto w-[70%] max-md:w-[80%] ">
@@ -109,7 +120,7 @@ export const LoginPage = () => {
                         </Box>
                         <Box>
                             <Form.Submit asChild >
-                                <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"primary"} >
+                                <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
 
                                 </Button>
                             </Form.Submit>
@@ -163,7 +174,7 @@ export const LoginPage = () => {
                                 </Box>
                                 <Box>
                                     <Form.Submit asChild >
-                                        <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"primary"} >
+                                        <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
 
                                         </Button>
                                     </Form.Submit>
@@ -182,8 +193,7 @@ export const LoginPage = () => {
                     </Flex>
                 </div>
             </Flex>
-
-        </Notify>
+        </>
 
     );
 };
