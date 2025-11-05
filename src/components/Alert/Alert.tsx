@@ -18,7 +18,7 @@ export function Alert({ trigger, title, description, buttonAction, buttoncancel 
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth="450px" className=''>
           <AlertDialog.Title className='!font-roboto'>{title}</AlertDialog.Title>
-          <AlertDialog.Description size="1">
+          <AlertDialog.Description size="3">
             {description}
           </AlertDialog.Description>
           <Flex gap="3" mt="4" justify="end">

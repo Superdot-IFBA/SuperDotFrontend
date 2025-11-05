@@ -4,28 +4,26 @@ import { DashboardInfo, getinfoDashboard, MonthlyProgressItem } from "../../api/
 import Dcard from "../../components/DashboardCard/DCard";
 import ApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import ChartContainer from "../../components/Charts/ChartContainer";
-import NewUser from "../../components/NewUser/NewUser";
-import { useLocation } from "react-router-dom";
+
 
 function DashBoardPage() {
     const [dados, setDados] = useState<DashboardInfo | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
-    const location = useLocation();
-    const isNewUser = location.state?.isNewUser || false;
-    const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const shouldOpen = isNewUser && !localStorage.getItem('dontShowWelcome');
-        setIsWelcomeOpen(shouldOpen);
-    }, [isNewUser]);
+
 
     useEffect(() => {
         const fetchDados = async () => {
@@ -38,7 +36,7 @@ function DashBoardPage() {
                 setNotificationData({
                     title: "Erro no servidor",
                     description: "Não foi possível carregar os dados do Dashboard",
-                    type: "erro"
+                    type: "error"
                 });
             }
         };
@@ -465,21 +463,12 @@ function DashBoardPage() {
         <>
             <Notify
                 open={!!notificationData.title}
-                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
                 title={notificationData.title}
                 description={notificationData.description}
-                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
+                type={notificationData.type}
             />
-            {isNewUser ? (
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                    <NewUser
-                        open={isWelcomeOpen}
-                        setOpen={setIsWelcomeOpen}
-                        isNewUser={isNewUser}
-                    />
-                </div>
-            ) : null}
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
                 <Dcard

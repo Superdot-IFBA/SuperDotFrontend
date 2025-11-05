@@ -8,7 +8,7 @@ import { SampleReviewWithReviewerName, findReviewsBySampleId } from "../../api/s
 import ReviewCard from "../../components/ReviewCard/ReviewCard";
 import { SampleSummary } from "../../api/sample.api";
 import { SampleStatus } from "../../utils/consts.utils";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { Container, Flex, Skeleton } from "@radix-ui/themes";
 import { Button } from "../../components/Button/Button";
 import * as Icon from "@phosphor-icons/react"
@@ -18,7 +18,15 @@ import ForbiddenPage from "../../components/ForbiddenPage/ForbiddenPage";
 const SampleReviewPage = () => {
     /* PAGE GLOBAL STATES */
     const [sampleSelected, setSampleSelected] = useState<SampleSummary | undefined>();
-    const [showSuccessNotify, setShowSuccessNotify] = useState(false);
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
+        title: "",
+        description: "",
+        type: undefined,
+    });
     const [loading, setLoading] = useState(true);
     const [forbidden, setForbidden] = useState(false);
 
@@ -109,93 +117,93 @@ const SampleReviewPage = () => {
     return (
         <>
             <Notify
-                onOpenChange={setShowSuccessNotify}
-                open={showSuccessNotify}
-                description="O perfil do usuário foi atualizado com sucesso!"
-                title="Sucesso"
-            >
-                <>
-                    {forbidden ? (
-                        <ForbiddenPage />
-                    ) : (
-                        <Skeleton loading={loading}>
-                            <Container className="mb-8">
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
+            <>
+                {forbidden ? (
+                    <ForbiddenPage />
+                ) : (
+                    <Skeleton loading={loading}>
+                        <Container className="mb-8">
 
-                                <SamplesTable
-                                    onClickToReviewSample={handleOnClickToReviewSample}
-                                    onClickToViewSampleReviews={handleOnClickListSampleReviews}
-                                    onClickToViewSampleAttachments={handleOnClickToViewSampleAttachments}
-                                    currentStatus={filterStatus}
-                                    onChangeFilterStatus={handleChangeFilterStatus}
-                                    currentPage={currentTablePage}
-                                    setCurrentPage={setCurrentTablePage}
-                                    page={tablePageData}
-                                    loading={loading} />
-                            </Container>
+                            <SamplesTable
+                                onClickToReviewSample={handleOnClickToReviewSample}
+                                onClickToViewSampleReviews={handleOnClickListSampleReviews}
+                                onClickToViewSampleAttachments={handleOnClickToViewSampleAttachments}
+                                currentStatus={filterStatus}
+                                onChangeFilterStatus={handleChangeFilterStatus}
+                                currentPage={currentTablePage}
+                                setCurrentPage={setCurrentTablePage}
+                                page={tablePageData}
+                                loading={loading} />
+                        </Container>
 
-                            <Modal
-                                accessibleDescription="Revisando uma solicitação de amostra."
-                                title="Revisando solicitação"
-                                open={modalReviewingOpen}
-                                setOpen={setModalReviewingOpen}
-                            >
-                                <SampleReviewForm sample={sampleSelected} onFinish={handleOnFinishReviewCreation} />
-                            </Modal>
+                        <Modal
+                            accessibleDescription="Revisando uma solicitação de amostra."
+                            title="Revisando solicitação"
+                            open={modalReviewingOpen}
+                            setOpen={setModalReviewingOpen}
+                        >
+                            <SampleReviewForm sample={sampleSelected} onFinish={handleOnFinishReviewCreation} />
+                        </Modal>
 
-                            <Modal
-                                accessibleDescription="Visulizando todas as revisões da respectiva amostra."
-                                title="Revisões"
-                                className="overflow-auto"
-                                open={modalListReviewsOpen}
-                                setOpen={setModalListReviewsOpen}
-                            >
-                                {reviewsData?.map((review) => (
-                                    <ReviewCard reviewerFullName={review.reviewerFullName} reviewDetails={review.reviewDetails} />
-                                ))}
-                            </Modal>
-                            <Modal
-                                accessibleDescription="Visulizar os anexos da amostra."
-                                title="Anexos"
-                                open={modalAttachmentsOpen}
-                                setOpen={setModalAttachmentsOpen}
-                            >
-                                <Flex align="center" justify="center" gap="2" className="flex-row max-sm:flex-col">
-                                    {attachmentsToDisplay?.researchDocument && (
-
-
-                                        <Button
-                                            onClick={() => handleSeeAttachment(attachmentsToDisplay.researchDocument || "")} title={"Parecer do CEP"}
-                                            children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >
-
-                                        </Button>
-
-                                    )}
-                                    {attachmentsToDisplay?.tcleDocument && (
-
-                                        <Button
-                                            onClick={() => handleSeeAttachment(attachmentsToDisplay.tcleDocument || "")}
-                                            title={"TCLE"}
-                                            children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >
-
-                                        </Button>
-                                    )}
-                                    {attachmentsToDisplay?.taleDocument && (
+                        <Modal
+                            accessibleDescription="Visulizando todas as revisões da respectiva amostra."
+                            title="Revisões"
+                            className="overflow-auto"
+                            open={modalListReviewsOpen}
+                            setOpen={setModalListReviewsOpen}
+                        >
+                            {reviewsData?.map((review) => (
+                                <ReviewCard reviewerFullName={review.reviewerFullName} reviewDetails={review.reviewDetails} />
+                            ))}
+                        </Modal>
+                        <Modal
+                            accessibleDescription="Visulizar os anexos da amostra."
+                            title="Anexos"
+                            open={modalAttachmentsOpen}
+                            setOpen={setModalAttachmentsOpen}
+                        >
+                            <Flex align="center" justify="center" gap="2" className="flex-row max-sm:flex-col">
+                                {attachmentsToDisplay?.researchDocument && (
 
 
-                                        <Button
-                                            onClick={() => handleSeeAttachment(attachmentsToDisplay.taleDocument || "")}
-                                            title={"TALE"}
-                                            children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                          >
+                                    <Button
+                                        onClick={() => handleSeeAttachment(attachmentsToDisplay.researchDocument || "")} title={"Parecer do CEP"}
+                                        children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >
 
-                                        </Button>
+                                    </Button>
 
-                                    )}
-                                </Flex>
-                            </Modal>
-                        </Skeleton>
-                    )}
-                </>
-            </Notify>
+                                )}
+                                {attachmentsToDisplay?.tcleDocument && (
+
+                                    <Button
+                                        onClick={() => handleSeeAttachment(attachmentsToDisplay.tcleDocument || "")}
+                                        title={"TCLE"}
+                                        children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >
+
+                                    </Button>
+                                )}
+                                {attachmentsToDisplay?.taleDocument && (
+
+
+                                    <Button
+                                        onClick={() => handleSeeAttachment(attachmentsToDisplay.taleDocument || "")}
+                                        title={"TALE"}
+                                        children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                          >
+
+                                    </Button>
+
+                                )}
+                            </Flex>
+                        </Modal>
+                    </Skeleton>
+                )}
+            </>
         </>
     );
 };

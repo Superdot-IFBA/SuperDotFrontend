@@ -107,6 +107,10 @@ export default {
                         transform: 'scale(1)',
                     },
                 },
+                progressBar: {
+                    "0%": { width: "100%" },
+                    "100%": { width: "0%" },
+                },
 
             },
 
@@ -135,7 +139,7 @@ export default {
     },
 
     plugins: [
-        function ({ addComponents }) {
+        function ({ addComponents }: { addComponents: (components: Record<string, any>) => void }) {
             addComponents({
                 '.wrapper': {
                     width: '100%',

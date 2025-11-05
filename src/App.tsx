@@ -1,4 +1,4 @@
-import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
 import UsersPage from "./pages/UsersPage/UsersPage";
@@ -27,6 +27,9 @@ import BackToTop from "./components/BackToTop/BackToTop";
 import { PageContainer } from "./components/PageContainer/PageContainer";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import { clearTokens, hasActiveSession } from "./utils/tokensHandler";
+import { useEffect } from "react";
+import WelcomeModal from "./components/NewUser/NewUser";
 
 
 
@@ -43,8 +46,14 @@ function OuterLayout() {
 function InnerLayout() {
     const userRole = getUserRole();
     const location = useLocation();
+    const navigate = useNavigate();
     const { isMobileMenuOpen, toggleMobileMenu } = useMenu();
-
+    useEffect(() => {
+        if (!hasActiveSession()) {
+            clearTokens();
+            navigate("/");
+        }
+    }, [navigate]);
 
     const headerConfig: Record<string, { title: string; icon: JSX.Element }> = {
         "home": { title: "Dashboard", icon: <Icon.SquaresFour size={20} /> },
@@ -72,6 +81,7 @@ function InnerLayout() {
 
         <Flex className="bg-background font-roboto min-h-screen w-full">
             <ScrollToTop />
+            <WelcomeModal />
             <Box className={`max-xl:!w-0 ${isMobileMenuOpen ? 'w-64' : 'w-16'}`}>
                 <SideBar userRole={userRole} />
             </Box>

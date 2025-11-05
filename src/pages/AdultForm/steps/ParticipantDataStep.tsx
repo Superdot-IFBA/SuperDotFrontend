@@ -21,11 +21,11 @@ import { Flex } from "@radix-ui/themes";
 import { useState } from "react";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import * as Icon from "@phosphor-icons/react";
-
+import { NotificationType } from "../../../components/Notify/Notify";
 interface ParticipantDataStepProps {
     nextStep: () => void;
     setFormData: (formData: IParticipant) => void;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type: NotificationType }) => void;
     formData?: IParticipant;
     sampleId: string;
     header: string;
@@ -85,7 +85,7 @@ const ParticipantDataStep = ({
             setNotificationData({
                 title: "Preenchimento inválido!",
                 description: "Preencha todos os campos corretamente.",
-                type: "erro"
+                type: "error"
             });
         } finally {
             setLoading(false);

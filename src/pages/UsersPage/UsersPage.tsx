@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Modal from "../../components/Modal/Modal";
 import ChangeRoleForm from "../../components/Form/ChangeRoleForm/ChangeRoleForm";
 import { fetchUserRole } from "../../api/auth.api";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { usersPageSearchFormSchema } from "../../schemas/usersPage.schema";
 import { USER_ROLE } from "../../utils/consts.utils";
 import { Box, Container, Flex } from "@radix-ui/themes";
@@ -32,7 +32,15 @@ const UsersPage = () => {
     const [filters, setFilters] = useState<Filters>();
     const [currentUserRole, setCurrentUserRole] = useState<USER_ROLE>("Pesquisador");
     const [loading, setLoading] = useState(true)
-    const [showSuccessNotify, setShowSuccessNotify] = useState(false);
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
+        title: "",
+        description: "",
+        type: undefined,
+    });
     const [showSearch, setShowSearch] = useState(false);
     const [isDesktop, setIsDesktop] = useState(false);
     const [notFound, setNotFound] = useState(false);
@@ -83,7 +91,7 @@ const UsersPage = () => {
 
     const onUpdateUserRole = (newRole: USER_ROLE) => {
         setModalOpen(false);
-        setShowSuccessNotify(true);
+
         const researchers = tablePageData?.researchers.map((data) => {
             if (data._id === userSelected) {
                 return {
@@ -99,131 +107,135 @@ const UsersPage = () => {
             totalResearchers: tablePageData?.totalResearchers,
             researchers,
         });
+        setNotificationData({
+            title: "Permissões atualizadas!",
+            description: "As permissões do usuário foram alteradas com sucesso.",
+            type: "success"
+        });
+
     };
 
     return (
         <>
             <Notify
-                open={showSuccessNotify}
-                onOpenChange={setShowSuccessNotify}
-                title="Sucesso!"
-                description="O perfil do usuário foi atualizado com sucesso!"
-                icon={<Icon.CheckCircle size={30} color="white" />}
-                className="bg-green-400"
-            >
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
 
 
-                <Box className="w-full  pt-10 pb-10 max-xl:pt-2 max-xl:pb-2">
-                    <Form.Root
-                        onSubmit={handleSubmit((data) => {
-                            setCurrentTablePage(1);
-                            setFilters({
-                                ...data,
-                            });
-                        })}
-                        className="flex flex-col items-center gap-4 xl:flex-row xl:justify-between p-4 pt-0 pb-1"
-                    >
-                        {!isDesktop && (
-                            <Button
-                                type="button"
-                                onClick={() => setShowSearch(!showSearch)}
-                                className="block xl:hidden"
-                                title={`${showSearch ? "Fechar Filtros" : "Mostrar Filtros"}`}
-                                color="primary"
-                                size="Medium"
+            <Box className="w-full  pt-10 pb-10 max-xl:pt-2 max-xl:pb-2">
+                <Form.Root
+                    onSubmit={handleSubmit((data) => {
+                        setCurrentTablePage(1);
+                        setFilters({
+                            ...data,
+                        });
+                    })}
+                    className="flex flex-col items-center gap-4 xl:flex-row xl:justify-between p-4 pt-0 pb-1"
+                >
+                    {!isDesktop && (
+                        <Button
+                            type="button"
+                            onClick={() => setShowSearch(!showSearch)}
+                            className="block xl:hidden"
+                            title={`${showSearch ? "Fechar Filtros" : "Mostrar Filtros"}`}
+                            color="primary"
+                            size="Medium"
+                        >
+                            {showSearch ? <Icon.X size={20} /> : <Icon.Funnel size={20} />}
+                        </Button>
+                    )}
+
+                    <AnimatePresence>
+                        {showFilters && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="flex flex-col xl:flex-row xl:items-center gap-3 w-full overflow-hidden"
                             >
-                                {showSearch ? <Icon.X size={20} /> : <Icon.Funnel size={20} />}
-                            </Button>
-                        )}
-
-                        <AnimatePresence>
-                            {showFilters && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="flex flex-col xl:flex-row xl:items-center gap-3 w-full overflow-hidden"
-                                >
-                                    <Form.Submit asChild className="hidden xl:block">
-                                        <Button
-                                            size="Large"
-                                            className="items-center w-full xl:w-[300px] xl:mt-2"
-                                            title="Filtrar"
-                                            color="primary"
-                                        >
-                                            <Icon.Funnel size={20} color="white" />
-                                        </Button>
-                                    </Form.Submit>
-                                    <InputField
-                                        label="Pesquisar Pelo Nome do Usuário"
-                                        icon={<Icon.MagnifyingGlass />}
-                                        placeholder="Digite o nome do usuário"
-                                        errorMessage={errors.userName?.message}
-                                        {...register("userName")}
-                                    />
-                                    <InputField
-                                        label="Pesquisar pelo E-mail do Usuário"
-                                        icon={<Icon.MagnifyingGlass />}
-                                        placeholder="Digite o e-mail do usuário"
-                                        errorMessage={errors.userName?.message}
-                                        {...register("userEmail")}
-                                    />
-                                    <Form.Submit asChild className="block xl:hidden">
-                                        <Button
-                                            size="Large"
-                                            className="items-center w-full xl:w-[300px]"
-                                            title="Filtrar"
-                                            color="primary"
-                                        >
-                                            <Icon.Funnel size={20} color="white" />
-                                        </Button>
-                                    </Form.Submit>
-
+                                <Form.Submit asChild className="hidden xl:block">
                                     <Button
                                         size="Large"
-                                        onClick={() => {
-                                            setCurrentTablePage(1);
-                                            setFilters({});
-                                            reset({ userName: "", userEmail: "" });
-                                        }}
-                                        type="reset"
                                         className="items-center w-full xl:w-[300px] xl:mt-2"
+                                        title="Filtrar"
                                         color="primary"
-                                        title="Limpar Filtro"
                                     >
+                                        <Icon.Funnel size={20} color="white" />
                                     </Button>
+                                </Form.Submit>
+                                <InputField
+                                    label="Pesquisar Pelo Nome do Usuário"
+                                    icon={<Icon.MagnifyingGlass />}
+                                    placeholder="Digite o nome do usuário"
+                                    errorMessage={errors.userName?.message}
+                                    {...register("userName")}
+                                />
+                                <InputField
+                                    label="Pesquisar pelo E-mail do Usuário"
+                                    icon={<Icon.MagnifyingGlass />}
+                                    placeholder="Digite o e-mail do usuário"
+                                    errorMessage={errors.userName?.message}
+                                    {...register("userEmail")}
+                                />
+                                <Form.Submit asChild className="block xl:hidden">
+                                    <Button
+                                        size="Large"
+                                        className="items-center w-full xl:w-[300px]"
+                                        title="Filtrar"
+                                        color="primary"
+                                    >
+                                        <Icon.Funnel size={20} color="white" />
+                                    </Button>
+                                </Form.Submit>
 
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                        <Flex />
-                    </Form.Root>
-                </Box>
+                                <Button
+                                    size="Large"
+                                    onClick={() => {
+                                        setCurrentTablePage(1);
+                                        setFilters({});
+                                        reset({ userName: "", userEmail: "" });
+                                    }}
+                                    type="reset"
+                                    className="items-center w-full xl:w-[300px] xl:mt-2"
+                                    color="primary"
+                                    title="Limpar Filtro"
+                                >
+                                </Button>
 
-                <Container className="mb-8">
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <Flex />
+                </Form.Root>
+            </Box>
 
-                    <UsersTable
-                        onClickPencil={onUserSelected}
-                        currentPage={currentTablePage}
-                        setCurrentPage={setCurrentTablePage}
-                        data={tablePageData}
-                    />
+            <Container className="mb-8">
 
-                </Container>
-                <Modal
-                    accessibleDescription="Selecione um novo perfil para o usuário escolhido."
-                    title="Alterando Perfil"
-                    open={modalOpen}
-                    setOpen={setModalOpen}
-                >
-                    <ChangeRoleForm
-                        currentUserRole={currentUserRole}
-                        onFinish={onUpdateUserRole}
-                        userId={userSelected || ""}
-                    />
-                </Modal>
-            </Notify>
+                <UsersTable
+                    onClickPencil={onUserSelected}
+                    currentPage={currentTablePage}
+                    setCurrentPage={setCurrentTablePage}
+                    data={tablePageData}
+                />
+
+            </Container>
+            <Modal
+                accessibleDescription="Selecione um novo perfil para o usuário escolhido."
+                title="Alterando Perfil"
+                open={modalOpen}
+                setOpen={setModalOpen}
+            >
+                <ChangeRoleForm
+                    currentUserRole={currentUserRole}
+                    onFinish={onUpdateUserRole}
+                    userId={userSelected || ""}
+                />
+            </Modal>
         </>
     );
 };

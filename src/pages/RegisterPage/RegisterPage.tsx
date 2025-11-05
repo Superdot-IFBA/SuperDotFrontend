@@ -6,10 +6,9 @@ import ProfilePhotoForm from "./components/ProfilePhotoForm/ProfilePhotoForm";
 import { registerResearcher } from "../../api/auth.api";
 import { saveTokens } from "../../utils/tokensHandler";
 import LoginInfoForm from "./components/LoginInfoForm/LoginInfoForm";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 
 import { Flex } from "@radix-ui/themes";
-import * as Icon from "@phosphor-icons/react";
 import Stepper, { Step } from "../../components/NewStepper/NewStteper";
 import BackgroundComponent from "../../components/Background/Background";
 
@@ -33,10 +32,14 @@ const INITIAL_VALUES: RegisterValues = {
 const RegisterPage = () => {
     const [registerData, setCurrentData] = useState<RegisterValues>(INITIAL_VALUES);
     const navigate = useNavigate();
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
 
     const [loading, setLoading] = useState(false);
@@ -68,9 +71,7 @@ const RegisterPage = () => {
             const result = await registerResearcher(formData);
             if (result.status === 200) {
                 saveTokens(result.data);
-                navigate("/app/home", {
-                    state: { isNewUser: true }
-                });
+                navigate("/app/home");
                 setLoading(false);
 
             }
@@ -79,7 +80,7 @@ const RegisterPage = () => {
             setNotificationData({
                 title: "Erro ao cadastrar",
                 description: "Por favor, confira as informações fornecidas e tente novamente.",
-                type: "erro",
+                type: "error",
             });
         } finally {
             setLoading(false);
@@ -99,14 +100,14 @@ const RegisterPage = () => {
     };
 
     return (
-        <Notify
-            open={!!notificationData.title}
-            onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-            title={notificationData.title}
-            description={notificationData.description}
-            icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-            className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-        >
+        <>
+            <Notify
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
             <Flex className="w-full">
                 <Flex className="desktop w-full">
                     <BackgroundComponent />
@@ -145,7 +146,7 @@ const RegisterPage = () => {
                     </Stepper>
                 </Flex>
             </Flex>
-        </Notify>
+        </>
     );
 };
 

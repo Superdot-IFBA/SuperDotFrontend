@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SampleValues, sampleSchema } from "../../schemas/sample.schema";
 import * as Separator from "@radix-ui/react-separator";
 import { editSample } from "../../api/sample.api";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { SelectField } from "../../components/SelectField/SelectField";
 import { FILES_AVAILABLE_TO_CREATE_SAMPLE } from "../../utils/consts.utils";
 import { ISample, SampleFile } from "../../interfaces/sample.interface";
@@ -24,10 +24,14 @@ const EditSamplePage = () => {
     const [sample, setSample] = useState({} as ISample);
     const sampleId = useRef<string>();
     const fileChangeRef = useRef(false);
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
     const navigate = useNavigate();
     const location = useLocation();
@@ -86,7 +90,7 @@ const EditSamplePage = () => {
                     setNotificationData({
                         title: "Erro ao enviar arquivo.",
                         description: e.message,
-                        type: "erro",
+                        type: "error",
                     });
                 }
                 return;
@@ -159,26 +163,32 @@ const EditSamplePage = () => {
             setNotificationData({
                 title: "Erro no servidor.",
                 description: "Não foi possível atualizar as informações da amostra.",
-                type: "erro",
+                type: "error",
             });
         }
     });
 
     return (
         <>
-
             <Notify
                 open={!!notificationData.title}
-                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
                 title={notificationData.title}
                 description={notificationData.description}
-                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-            >
+                type={notificationData.type}
+            />
+
+
+            <div className="container mx-auto px-4">
+                <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
+                    <h2 className="heading-2 font-semibold text-gray-900">
+
+                    </h2>
+                </header>
 
                 <Form.Root
                     onSubmit={onSubmit}
-                    className="mx-auto mb-6 mt-11 max-sm:mt-5  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards"
+                    className="mb-6  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full"
                 >
                     <h3 className="text-left text-primary animate-fade-in animate-delay-200">
                         Detalhes da amostra
@@ -290,7 +300,7 @@ const EditSamplePage = () => {
                         />
                     </Form.Submit>
                 </Form.Root>
-            </Notify>
+            </div>
         </>
     );
 };

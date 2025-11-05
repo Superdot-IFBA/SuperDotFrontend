@@ -18,14 +18,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const sizeClasses = {
-  Large: 'h-10 px-4 text-base',
-  Medium: 'h-8 px-4 text-sm',
-  Small: 'h-7 px-3 text-sm',
-  'Extra Small': 'h-6 px-2 text-xs',
-  Full: 'w-full py-1 text-base',
+  Large: 'h-10 px-4 !text-lg',
+  Medium: 'h-8 px-4 !text-base',
+  Small: 'h-7 px-3 !text-sm',
+  'Extra Small': 'h-6 px-2 !text-xs',
+  Full: 'w-full py-1 !text-lg',
   '': ''
 } satisfies Record<size, string>;
-
 const colorClasses = {
   primary: 'bg-primary text-white hover:bg-secondary active:bg-primary active:brightness-90',
   red: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700',
@@ -34,7 +33,7 @@ const colorClasses = {
   secondary: 'bg-secondary text-white hover:bg-primary',
   white: 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-50',
   yellow: 'text-yellow-800 bg-yellow-100 hover:bg-yellow-200 active:bg-yellow-300',
-  gradiente: "bg-gradient-to-br from-violet-600 via-purple-500 to-primary hover:to-purple-700 text-white font-medium  transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg text-sm",
+  gradiente: "bg-gradient-to-br from-violet-600 via-purple-500 to-primary hover:to-purple-700 text-white font-medium  transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg",
   "": ''
 } satisfies Record<color, string>;
 
@@ -100,7 +99,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <Flex align="center" gap="2" justify={'center'}>
             {children}
             <span
-              className={`whitespace-nowrap truncate ${classNameTitle} ${title === "" ? 'hidden' : ""} text-xs sm:text-sm md:text-base lg:text-lg`}
+              className={`whitespace-nowrap truncate ${classNameTitle} ${title === "" ? 'hidden' : ""} `}
             >
               {title}
             </span>

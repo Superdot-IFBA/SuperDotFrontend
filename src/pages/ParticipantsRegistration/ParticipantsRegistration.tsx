@@ -5,7 +5,7 @@ import { ISample } from "../../interfaces/sample.interface";
 import Modal from "../../components/Modal/Modal";
 import { IParticipant } from "../../interfaces/participant.interface";
 import { DateTime } from "luxon";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { TFormFillStatus } from "../../utils/consts.utils";
 import { ISecondSource } from "../../interfaces/secondSource.interface";
 import { DeepPartial } from "react-hook-form";
@@ -24,10 +24,14 @@ const ParticipantsRegistration = () => {
     const [loading, setLoading] = useState(true);
     const [currentParticipant, setCurrentParticipant] = useState<IParticipant>();
     const [modalIndicateParticipantsOpen, setModalIndicateParticipantsOpen] = useState(false);
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
     const [copied, setCopied] = useState(false);
 
@@ -47,7 +51,7 @@ const ParticipantsRegistration = () => {
                 setNotificationData({
                     title: "Erro no servidor",
                     description: "Não foi possível buscar as informações da amostra.",
-                    type: "erro"
+                    type: "error"
 
                 });
             }
@@ -63,7 +67,7 @@ const ParticipantsRegistration = () => {
             setNotificationData({
                 title: "Aviso!",
                 description: "Você ainda não selecionou a quantidade total de participantes da pesquisa.",
-                type: "aviso"
+                type: "warning"
             })
 
         }
@@ -183,11 +187,10 @@ const ParticipantsRegistration = () => {
         <>
             <Notify
                 open={!!notificationData.title}
-                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
                 title={notificationData.title}
                 description={notificationData.description}
-                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
+                type={notificationData.type}
             />
 
 

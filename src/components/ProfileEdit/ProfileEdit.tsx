@@ -2,7 +2,7 @@ import * as Icon from "@phosphor-icons/react";
 import { useState } from "react";
 import { Button } from "../Button/Button";
 import { updateUser } from "../../api/researchers.api";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 interface UserOptionsProps {
   currentUser: {
     fullName: string;
@@ -15,6 +15,7 @@ interface UserOptionsProps {
     newPassword?: string;
   }) => void;
 }
+
 
 interface ErrorState {
   message: string;
@@ -35,11 +36,16 @@ export const ProfileEdit = ({
   const [currentPassword, setCurrentPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorState>({ message: '', type: '' });
-  const [notificationData, setNotificationData] = useState({
+  const [notificationData, setNotificationData] = useState<{
+    title: string;
+    description: string;
+    type?: NotificationType;
+  }>({
     title: "",
     description: "",
-    type: "",
+    type: undefined,
   });
+
 
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +65,6 @@ export const ProfileEdit = ({
 
   const showError = (message: string, field?: string) => {
     setError({ message, type: 'error', field });
-    // Auto-clear error after 5 seconds
     setTimeout(() => clearError(), 5000);
   };
 
@@ -156,14 +161,17 @@ export const ProfileEdit = ({
   };
 
   return (
-    <Notify
-      open={!!notificationData.title}
-      onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-      title={notificationData.title}
-      description={notificationData.description}
-      icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-      className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-    >
+    <>
+      <Notify
+        open={!!notificationData.title}
+        onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+        title={notificationData.title}
+        description={notificationData.description}
+        type={notificationData.type}
+      />
+      <div className="bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-8 w-full flex justify-center items-center">
+        <h2 className="heading-2 !text-white">Configurações da Conta</h2>
+      </div>
       <div className="bg-white card-container overflow-hidden max-w-3xl mx-auto">
 
         {/* Banner de erro/sucesso */}
@@ -383,6 +391,6 @@ export const ProfileEdit = ({
           </div>
         </div>
       </div>
-    </Notify>
+    </>
   );
 };

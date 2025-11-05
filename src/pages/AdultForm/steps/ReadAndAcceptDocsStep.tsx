@@ -13,11 +13,12 @@ import { ISecondSource } from "../../../interfaces/secondSource.interface";
 import { Button } from "../../../components/Button/Button";
 import { Flex } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
+import { NotificationType } from "../../../components/Notify/Notify";
 interface ReadAndAcceptDocsStepProps {
     sourceForm: EAdultFormSource;
     nextStep: () => void;
     previousStep: () => void;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type: NotificationType }) => void;
     sampleId: string;
     formData: IParticipant | ISecondSource;
     setFormData: (data: IParticipant | ISecondSource) => void;
@@ -102,14 +103,14 @@ const ReadAndAcceptDocsStep = ({
                     setNotificationData({
                         title: "Nenhum documento encontrado",
                         description: "Entre em contato com o pesquisador responsável",
-                        type: "erro"
+                        type: "error"
                     });
                 }
             } catch (error) {
                 setNotificationData({
                     title: "Erro de conexão",
                     description: "Falha ao carregar documentos",
-                    type: "erro"
+                    type: "error"
                 });
             } finally {
                 setLoading(false);
@@ -177,7 +178,7 @@ const ReadAndAcceptDocsStep = ({
             setNotificationData({
                 title: "Erro no servidor",
                 description: "Tente novamente mais tarde",
-                type: "erro"
+                type: "error"
             });
         } finally {
             setLoading(false);

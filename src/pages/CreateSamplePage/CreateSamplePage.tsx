@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SampleValues, sampleSchema } from "../../schemas/sample.schema";
 import * as Separator from "@radix-ui/react-separator";
 import { createSample } from "../../api/sample.api";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { SelectField } from "../../components/SelectField/SelectField";
 import { FILES_AVAILABLE_TO_CREATE_SAMPLE } from "../../utils/consts.utils";
 import { SampleFile } from "../../interfaces/sample.interface";
@@ -24,17 +24,21 @@ const CreateSamplePage = () => {
     const [loading, setLoading] = useState(false);
 
     /* NOTIFY */
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
 
     const showErrorNotification = (message: string) => {
         setNotificationData({
             title: "Por favor, preencha todos os campos.",
             description: message,
-            type: "erro",
+            type: "error",
         });
         scrollToTop();
     };
@@ -83,7 +87,7 @@ const CreateSamplePage = () => {
                 setNotificationData({
                     title: "Arquivos inválidos.",
                     description: e.message,
-                    type: "erro"
+                    type: "error"
                 });
                 setSampleFileError(e.message);
                 setLoading(false);
@@ -142,7 +146,7 @@ const CreateSamplePage = () => {
             setNotificationData({
                 title: "Erro no servidor.",
                 description: "Não foi possível cadastrar a amostra com as informações fornecidas.",
-                type: "erro"
+                type: "error"
             });
         } finally {
             setLoading(false);
@@ -158,11 +162,10 @@ const CreateSamplePage = () => {
         <>
             <Notify
                 open={!!notificationData.title}
-                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
                 title={notificationData.title}
                 description={notificationData.description}
-                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
+                type={notificationData.type}
             />
 
 

@@ -1,53 +1,125 @@
-import * as Toast from "@radix-ui/react-toast";
-import { Flex } from "@radix-ui/themes";
+import React, { useEffect, useState } from "react";
+import * as Icon from "@phosphor-icons/react";
 
-interface NotifyProps extends React.PropsWithChildren {
+export type NotificationType = "success" | "error" | "warning" | "info";
+
+interface NotifyProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    title?: string;
-    description?: string;
-    icon?: React.ReactNode;
-    className?: string;
+    title: string;
+    description: string;
+    type?: NotificationType;
+    duration?: number;
 }
 
-const Notify: React.FC<NotifyProps> = ({
+export const Notify: React.FC<NotifyProps> = ({
     open,
     onOpenChange,
     title,
     description,
-    children,
-    icon,
-    className,
+    type = "info",
+    duration = 10000,
 }) => {
+    const [isVisible, setIsVisible] = useState(open);
+    const [progress, setProgress] = useState(100);
+
+    useEffect(() => {
+        setIsVisible(open);
+        setProgress(100);
+    }, [open]);
+
+    useEffect(() => {
+        if (isVisible && duration > 0) {
+            const startTime = Date.now();
+            const interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
+                setProgress(remaining);
+                if (elapsed >= duration) clearInterval(interval);
+            }, 50);
+            return () => clearInterval(interval);
+        }
+    }, [isVisible, duration]);
+
+    useEffect(() => {
+        if (isVisible && duration > 0) {
+            const timer = setTimeout(() => handleClose(), duration);
+            return () => clearTimeout(timer);
+        }
+    }, [isVisible, duration]);
+
+    const handleClose = () => {
+        setIsVisible(false);
+        setTimeout(() => onOpenChange(false), 300);
+    };
+
+    const getIcon = () => {
+        switch (type) {
+            case "success":
+                return <Icon.CheckCircle size={40} weight="duotone" className="text-white" />;
+            case "error":
+                return <Icon.XCircle size={40} weight="duotone" className="text-white" />;
+            case "warning":
+                return <Icon.WarningCircle size={40} weight="duotone" className="text-white" />;
+            default:
+                return <Icon.Info size={40} weight="duotone" className="text-white" />;
+        }
+    };
+
+    const getStyles = () => {
+        switch (type) {
+            case "success":
+                return { progress: "bg-green-500", bg: "bg-green-50", text: "text-green-800" };
+            case "error":
+                return { progress: "bg-red-500", bg: "bg-red-50", text: "text-red-800" };
+            case "warning":
+                return { progress: "bg-yellow-500", bg: "bg-yellow-50", text: "text-yellow-800" };
+            default:
+                return { progress: "bg-blue-500", bg: "bg-blue-50", text: "text-blue-800" };
+        }
+    };
+
+    const styles = getStyles();
+
+    if (!open && !isVisible) return null;
+
     return (
-        <Toast.Provider swipeDirection="right">
-            {children}
-            <Toast.Root
-                className={`bg-white rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut font-roboto border-2 text-stone-950 `}
-                open={open}
-                onOpenChange={onOpenChange}
-            >
-                <Flex justify="between" className="w-full ">
-                    <Flex align="center" className={`w-[50px] p-2 ${className} rounded-tl-md rounded-bl-md`}>
-                        {icon}
-                    </Flex>
-                    <Flex direction="column" justify={"center"} align={"center"} className="p-[15px] w-full">
-                        {title && (
-                            <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
-                                {title}
-                            </Toast.Title>
-                        )}
-                        {description && (
-                            <Toast.Description asChild className="[grid-area:_description] m-0 text-slate11 text-[13px] leading-[1.3] text-justify">
-                                <p>{description}</p>
-                            </Toast.Description>
-                        )}
-                    </Flex>
-                </Flex>
-            </Toast.Root>
-            <Toast.Viewport className="[--viewport-padding:_10px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[450px] max-w-[100vw] m-0 list-none z-[9999] outline-none " />
-        </Toast.Provider>
+        <div
+            className={`fixed bottom-5 right-2 z-[9999999] max-w-[450px] max-sm:max-w-[360px] w-full transition-all duration-300 ease-in-out
+        ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 pointer-events-none"}
+      `}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+        >
+            <div className={`relative flex border rounded-lg shadow-lg overflow-hidden ${styles.bg}`}>
+                <div className={`flex items-center justify-center w-14 bg-gray-300 ${styles.progress}`}>
+                    {getIcon()}
+                </div>
+
+                <div className="flex-1 p-4 max-sm:p-2">
+                    <div className="flex justify-between items-start">
+                        <div className={`font-semibold text-sm  ${styles.text}`}>{title}</div>
+                        <button
+                            onClick={handleClose}
+                            className="text-gray-400 hover:text-gray-600  rounded transition-colors duration-200 absolute top-2 right-2"
+                            aria-label="Fechar notificação"
+                        >
+                            <Icon.XCircle size={26} aria-hidden="true" />
+                        </button>
+                    </div>
+                    <div className="text-gray-700 text-sm mt-1 max-sm:text-[13px]">{description}</div>
+                </div>
+
+                {duration > 0 && (
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200 bg-opacity-50">
+                        <div
+                            className={`${styles.progress} h-full transition-all duration-50 ease-linear`}
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
-
-export default Notify;

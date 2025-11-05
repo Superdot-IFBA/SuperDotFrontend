@@ -8,6 +8,7 @@ import logo from '../../../assets/Logo-GRUPAC-white.png'
 import { Button } from "../../../components/Button/Button";
 import FadeContent from "../../../components/FadeContent/FadeContent";
 import RotatingText from "../../../components/RotatingText/RotatingText";
+import { NotificationType } from "../../../components/Notify/Notify";
 
 interface IntroductionStepProps {
     sourceForm: EAdultFormSource;
@@ -15,7 +16,7 @@ interface IntroductionStepProps {
     researcherName: string;
     participantName?: string;
     sampleId: string;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type?: NotificationType; }) => void;
 }
 
 /* This step will introduce the participant in the researcher and request an email to send a
@@ -43,7 +44,7 @@ const IntroductionStep = ({
             return setNotificationData({
                 title: "Insira um email.",
                 description: "Para prosseguir, você deve informar um e-mail.",
-                type: "erro"
+                type: "error"
             });;
         }
 
@@ -78,7 +79,7 @@ const IntroductionStep = ({
                         setNotificationData({
                             title: "E-mail inválido.",
                             description: "Verifique o seu e-mail e tente novamente.",
-                            type: "erro"
+                            type: "error"
                         });
                         break;
                     case 401:
@@ -94,21 +95,21 @@ const IntroductionStep = ({
                             title: "E-mail não encontrado.",
                             description:
                                 "Caso ainda não tenha iniciado o preenchimento, selecione a opção 'Iniciar preenchimento' na tela anterior.",
-                            type: "erro"
+                            type: "error"
                         });
                         break;
                     case 409: // Email already in use
                         setNotificationData({
                             title: "E-mail em uso.",
                             description: "Esse endereço de e-mail já foi utilizado para preencher o formulário.",
-                            type: "erro"
+                            type: "error"
                         });
                         break;
                     default: // Others
                         setNotificationData({
                             title: "Erro no servidor.",
                             description: "Verifique se você está utilizando a URL fornecida pelo pesquisador.",
-                            type: "erro"
+                            type: "error"
                         });
                 }
             }

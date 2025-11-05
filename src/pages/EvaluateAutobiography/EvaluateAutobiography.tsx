@@ -3,7 +3,7 @@ import * as Icon from '@phosphor-icons/react';
 import { IParticipant } from '../../interfaces/participant.interface';
 import { useLocation } from "react-router-dom";
 import { Flex, Text, HoverCard, Tooltip, Popover, TextArea, Box } from '@radix-ui/themes';
-import Notify from '../../components/Notify/Notify';
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { Button } from "../../components/Button/Button"
 import { Alert } from '../../components/Alert/Alert';
 import { getParticipantDataBio, patchSaveEvalueAutobiography } from '../../api/participant.api';
@@ -31,10 +31,14 @@ const EvaluateAutobiography: React.FC = () => {
     const [selectedText, setSelectedText] = useState<string | null>(null);
     const [selectionRange, setSelectionRange] = useState<{ start: number, end: number } | null>(null);
     const commentInputRef = useRef<HTMLTextAreaElement>(null);
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
     const [limit, setLimit] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
@@ -115,14 +119,14 @@ const EvaluateAutobiography: React.FC = () => {
                 setNotificationData({
                     title: "Erro ao salvar os comentários!",
                     description: "Houve um erro ao salvar os comentários!",
-                    type: "erro"
+                    type: "error"
                 });
             }
         } catch (error) {
             setNotificationData({
                 title: "Erro ao salvar os comentários!",
                 description: "Houve um erro ao salvar os comentários!",
-                type: "erro"
+                type: "error"
             });
             console.error(error);
         }
@@ -155,14 +159,14 @@ const EvaluateAutobiography: React.FC = () => {
                         setNotificationData({
                             title: "Seleção fora do limite permitido!",
                             description: "Por favor, selecione o texto dentro da autobiografia.",
-                            type: "aviso"
+                            type: "warning"
                         });
                     }
                 } else {
                     setNotificationData({
                         title: "Seleção fora do limite permitido!",
                         description: "Por favor, selecione o texto dentro da autobiografia.",
-                        type: "aviso"
+                        type: "warning"
                     });
 
                 }
@@ -170,7 +174,7 @@ const EvaluateAutobiography: React.FC = () => {
                 setNotificationData({
                     title: "Nenhum texto selecionado!",
                     description: "Selecione o texto para fazer a marcação!",
-                    type: "aviso"
+                    type: "warning"
                 });
 
             }
@@ -301,15 +305,14 @@ const EvaluateAutobiography: React.FC = () => {
     };
 
     return (
-
-        <Notify
-            open={!!notificationData.title}
-            onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-            title={notificationData.title}
-            description={notificationData.description}
-            icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-            className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-        >
+        <>
+            <Notify
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
             <div className=" min-h-screen px-4 max-xl:p-2">
                 {/* Cabeçalho */}
                 <header className="mb-2 max-xl:mb-4 text-center">
@@ -578,7 +581,7 @@ const EvaluateAutobiography: React.FC = () => {
 
                 <BackToTop />
             </div>
-        </Notify>
+        </>
     );
 };
 

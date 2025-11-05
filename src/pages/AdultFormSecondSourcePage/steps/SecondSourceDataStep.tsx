@@ -14,12 +14,13 @@ import * as Icon from "@phosphor-icons/react";
 
 import { Button } from "../../../components/Button/Button";
 import { useState } from "react";
+import { NotificationType } from "../../../components/Notify/Notify";
 
 interface SecondSourceDataStepProps {
     formData?: ISecondSource;
     setFormData: (formData: ISecondSource) => void;
     nextStep: () => void;
-    setNotificationData: (data: { title: string; description: string, type: string }) => void;
+    setNotificationData: (data: { title: string; description: string, type: NotificationType }) => void;
     sampleId: string;
     header: string;
 }
@@ -77,7 +78,7 @@ const SecondSourceDataStep = ({
             setNotificationData({
                 title: "Preenchimento inválido!",
                 description: "Preencha todos os campos corretamente.",
-                type: "erro"
+                type: "error"
             });
         } finally {
             setLoading(false);

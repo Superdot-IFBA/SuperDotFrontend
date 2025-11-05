@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { useParams } from "react-router-dom";
 import { EAdultFormSource, EAdultFormSteps } from "../../utils/consts.utils";
 import SecondSourceDataStep from "./steps/SecondSourceDataStep";
@@ -74,10 +74,14 @@ const AdultFormSecondSourcePage = () => {
     const [isPageLoading, setIsPageLoading] = useState(true);
 
 
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
 
     const { sampleId = "", participantId = "", secondSourceId = "", verificationCode = "" } = useParams();
@@ -117,7 +121,7 @@ const AdultFormSecondSourcePage = () => {
                     setNotificationData({
                         title: "Link inválido!",
                         description: "Verifique se está utilizando o código que foi enviado para o seu e-mail.",
-                        type: "erro"
+                        type: "error"
                     });
                 })
                 .finally(() => {
@@ -207,14 +211,14 @@ const AdultFormSecondSourcePage = () => {
 
 
     return (
-        <Notify
-            open={!!notificationData.title}
-            onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-            title={notificationData.title}
-            description={notificationData.description}
-            icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-            className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-        >
+        <>
+            <Notify
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
             {isPageLoading && (
                 <PageLoader />
             )}
@@ -412,7 +416,7 @@ const AdultFormSecondSourcePage = () => {
                         )
                     }
                 </>)}
-        </Notify >
+        </>
     );
 };
 

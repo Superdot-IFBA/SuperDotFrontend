@@ -9,7 +9,7 @@ import { IParticipant } from "../../interfaces/participant.interface";
 import { GridComponent } from "../../components/Grid/Grid";
 import { answerByGender, AnswerByGender, getSampleById } from "../../api/sample.api";
 import { patchSaveGiftdnessIndicatorsByResearcher, patchSaveKnowledgeAreasIndicatedByResearcher } from "../../api/participant.api";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import PercentageGiftedChart from "../../components/Charts/PercentageGiftedChart";
 import ResponseChartByGender from "../../components/Charts/ResponseChartByGender";
 import { useForm } from "react-hook-form";
@@ -27,10 +27,14 @@ interface Filters {
 const AnalysisPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
     const [filters, setFilters] = useState<Filters>({});
     const [sample, setSample] = useState({} as ISample);
@@ -147,7 +151,7 @@ const AnalysisPage = () => {
             setNotificationData({
                 title: "Erro ao enviar os dados.",
                 description: "Ocorreu um problema ao tentar enviar os dados. Tente novamente mais tarde.",
-                type: "erro"
+                type: "error"
             });
         } finally {
             setIsSavingItem(false);
@@ -186,7 +190,7 @@ const AnalysisPage = () => {
             setNotificationData({
                 title: "Erro ao salvar os dados",
                 description: "Não foi possível salvar os dados. Tente novamente.",
-                type: "erro"
+                type: "error"
             });
             console.error("Erro ao salvar os dados:", error);
         } finally {
@@ -233,7 +237,7 @@ const AnalysisPage = () => {
                 setNotificationData({
                     title: "Erro no servidor.",
                     description: "Não foi possível carregar os dados. Tente novamente.",
-                    type: "erro"
+                    type: "error"
                 });
             }
         };
@@ -499,52 +503,54 @@ const AnalysisPage = () => {
 
     return (
 
-        <Notify
-            open={!!notificationData.title}
-            onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
-            title={notificationData.title}
-            description={notificationData.description}
-            icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-            className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
-        >
+        <>
+            <Notify
+                open={!!notificationData.title}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
+                title={notificationData.title}
+                description={notificationData.description}
+                type={notificationData.type}
+            />
 
-            {loading ? (
-                <>
-                    <SkeletonHeader buttons={true} filter={true} />
-                </>
-            ) : (
-                <>
-                    <AnalysisHeaderAndFilters
-                        sample={sample}
-                        isDesktop={isDesktop}
-                        showSearch={showSearch}
-                        setShowSearch={setShowSearch}
-                        showFilters={isDesktop || showSearch}
-                        handleSubmit={handleSubmit}
-                        onSubmit={onSubmit}
-                        register={register}
-                        clearFilters={clearFilters}
-                        selectItensKA={selectItensKA}
-                        selectItensPM={selectItensPM}
-                        openModalCompare={openModalCompare}
-                        setOpenModalCompare={setOpenModalCompare}
-                        handleCompareSelected={handleCompareSelected}
-                        openModal={openModal}
-                        setOpenModal={setOpenModal}
-                        handleShowPunctuation={handleShowPunctuation}
-                        openModalCloud={openModalCloud}
-                        setOpenModalCloud={setOpenModalCloud}
-                        CloudWord={CloudWord}
-                        isCheckedWC={isCheckedWC}
-                        handleChangeWC={handleChangeWC}
-                        cloudWords={cloudWords}
-                        showNewComponent={showNewComponent}
-                        selectedParticipants={selectedParticipants}
-                        handleShowCloud={handleShowCloud}
-                        getRangeForPercentage={getRangeForPercentage}
-                    />
-                </>
-            )}
+            {
+                loading ? (
+                    <>
+                        <SkeletonHeader buttons={true} filter={true} />
+                    </>
+                ) : (
+                    <>
+                        <AnalysisHeaderAndFilters
+                            sample={sample}
+                            isDesktop={isDesktop}
+                            showSearch={showSearch}
+                            setShowSearch={setShowSearch}
+                            showFilters={isDesktop || showSearch}
+                            handleSubmit={handleSubmit}
+                            onSubmit={onSubmit}
+                            register={register}
+                            clearFilters={clearFilters}
+                            selectItensKA={selectItensKA}
+                            selectItensPM={selectItensPM}
+                            openModalCompare={openModalCompare}
+                            setOpenModalCompare={setOpenModalCompare}
+                            handleCompareSelected={handleCompareSelected}
+                            openModal={openModal}
+                            setOpenModal={setOpenModal}
+                            handleShowPunctuation={handleShowPunctuation}
+                            openModalCloud={openModalCloud}
+                            setOpenModalCloud={setOpenModalCloud}
+                            CloudWord={CloudWord}
+                            isCheckedWC={isCheckedWC}
+                            handleChangeWC={handleChangeWC}
+                            cloudWords={cloudWords}
+                            showNewComponent={showNewComponent}
+                            selectedParticipants={selectedParticipants}
+                            handleShowCloud={handleShowCloud}
+                            getRangeForPercentage={getRangeForPercentage}
+                        />
+                    </>
+                )
+            }
 
 
 
@@ -650,7 +656,7 @@ const AnalysisPage = () => {
             </GridComponent>
 
 
-        </Notify >
+        </>
 
     );
 };

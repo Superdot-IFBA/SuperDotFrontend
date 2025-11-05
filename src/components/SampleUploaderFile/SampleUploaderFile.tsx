@@ -1,7 +1,7 @@
 import { ArrowTopRightIcon, Cross2Icon } from "@radix-ui/react-icons";
 import * as Separator from "@radix-ui/react-separator";
 import * as Form from "@radix-ui/react-form";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { SampleFile } from "../../interfaces/sample.interface";
 import { seeAttachment } from "../../api/sample.api";
 import { Flex } from "@radix-ui/themes";
@@ -16,9 +16,15 @@ interface SampleUploadFileProps {
 
 const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messageError }: SampleUploadFileProps) => {
     const [currentFileKeyToUpload, setCurrentFileKeyToUpload] = useState<string | undefined>(undefined);
+    const [localError, setLocalError] = useState<string | undefined>(messageError);
+
+    useEffect(() => {
+        setLocalError(messageError);
+    }, [messageError]);
 
     const handleChangeFileToUpload = (e: ChangeEvent<HTMLSelectElement>) => {
         setCurrentFileKeyToUpload(e.target.value);
+        if (localError) setLocalError(undefined)
     };
 
     /** REMOVE A UPLOAD */
@@ -36,6 +42,7 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
 
         setSampleFiles(filesUpdated);
         setCurrentFileKeyToUpload(undefined);
+        if (localError) setLocalError(undefined);
     };
 
     /** UPLOAD A FILE */
@@ -61,6 +68,7 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
 
         setSampleFiles(filesUpdated);
         setCurrentFileKeyToUpload(undefined);
+        if (localError) setLocalError(undefined);
     };
 
     /** FILES RULES */
@@ -127,7 +135,7 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
                             type="file"
                         ></input>
                     </div>
-                    <span className="error-message">{messageError}</span>
+                    <span className="error-message">{localError}</span>
                 </Form.Field>
             </div>
             {sampleFiles && (

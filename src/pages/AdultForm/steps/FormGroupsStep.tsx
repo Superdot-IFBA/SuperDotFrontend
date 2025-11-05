@@ -25,6 +25,7 @@ import Comprometimento from "../../../assets/comprometimento.png"
 import Gerais from "../../../assets/gerais.png"
 import Habilidades from "../../../assets/Habilidades.png"
 import Atividade from "../../../assets/Atividades.png"
+import { NotificationType } from "../../../components/Notify/Notify";
 
 
 interface FormGroupsStepProps {
@@ -32,7 +33,7 @@ interface FormGroupsStepProps {
     setFormData: (data: IParticipant | ISecondSource) => void;
     sourceForm: EAdultFormSource;
     currentStep: EAdultFormSteps;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type: NotificationType }) => void;
     sampleId: string;
     completed?: boolean;
     onCompletionChange?: (isCompleted: boolean) => void;
@@ -192,7 +193,7 @@ const FormGroupsStep = ({
             setNotificationData({
                 title: "Erro no servidor!",
                 description: "Não foi possível efetuar a comunicação com o servidor. Tente novamente.",
-                type: "erro"
+                type: "error"
             });
             return;
         }
@@ -257,7 +258,7 @@ const FormGroupsStep = ({
             setNotificationData({
                 title: "Perguntas em aberto.",
                 description: "Para proseguir, respoda todas as perguntas",
-                type: "erro"
+                type: "error"
             })
             return;
         }
@@ -270,7 +271,7 @@ const FormGroupsStep = ({
             setNotificationData({
                 title: "Erro no servidor!",
                 description: "Não foi possível efetuar a comunicação com o servidor. Tente novamente.",
-                type: "erro"
+                type: "error"
             });
             return;
         }

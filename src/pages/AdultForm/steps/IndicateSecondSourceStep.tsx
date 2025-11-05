@@ -9,12 +9,13 @@ import { IParticipant } from "../../../interfaces/participant.interface";
 import { DataList, Flex, Separator } from "@radix-ui/themes";
 import { Button } from "../../../components/Button/Button";
 import * as Icon from "@phosphor-icons/react";
+import { NotificationType } from "../../../components/Notify/Notify";
 
 interface IndicateSecondSourceStepProps {
     formData: IParticipant;
     setFormData: (data: IParticipant) => void;
     nextStep: () => void;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type: NotificationType }) => void;
     sampleId: string;
     previousStep: () => void;
     header: string;
@@ -44,7 +45,7 @@ const IndicateSecondSourceStep = ({
             setNotificationData({
                 title: "Campos vazios!",
                 description: "Por favor, preencha todos os campos.",
-                type: "erro"
+                type: "error"
             });
             return false;
         }
@@ -53,7 +54,7 @@ const IndicateSecondSourceStep = ({
             setNotificationData({
                 title: "Indique a matéria!",
                 description: "É necessário indicar a matéria ministrada pelo professor.",
-                type: "erro"
+                type: "error"
             });
             return false;
         }
@@ -62,7 +63,7 @@ const IndicateSecondSourceStep = ({
             setNotificationData({
                 title: "E-mail inválido!",
                 description: "É necessário informar um e-mail válido.",
-                type: "erro"
+                type: "error"
             });
             return false;
         }
@@ -89,7 +90,7 @@ const IndicateSecondSourceStep = ({
             setNotificationData({
                 title: "Pessoa já indicada!",
                 description: "Você já indicou essa pessoa, não é possível indicar novamente.",
-                type: "erro"
+                type: "error"
             });
             return;
         }
@@ -191,14 +192,14 @@ const IndicateSecondSourceStep = ({
                     setNotificationData({
                         title: "E-mail em uso.",
                         description: "Esse e-mail já está sendo utilizado.",
-                        type: "erro"
+                        type: "error"
                     });
                 } else {
                     setNotificationData({
                         title: "Erro no servidor.",
                         description:
                             "Ocorreu um erro ao tentar salvar as informações, contate o responsável pela pesquisa ou os responsáveis pela plataforma.",
-                        type: "erro"
+                        type: "error"
                     });
                 }
             }

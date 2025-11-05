@@ -4,11 +4,12 @@ import { IParticipant } from "../../../interfaces/participant.interface";
 import { Button } from "../../../components/Button/Button";
 import { Flex } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
+import { NotificationType } from "../../../components/Notify/Notify";
 
 interface AutobiographyStepProps {
     formData: IParticipant;
     nextStep: () => void;
-    setNotificationData: (data: { title: string; description: string; type: string }) => void;
+    setNotificationData: (data: { title: string; description: string; type: NotificationType }) => void;
     sampleId: string;
     previousStep: () => void;
     header: string;
@@ -32,7 +33,7 @@ const AutobiographyStep = ({
             setNotificationData({
                 title: "Preencha pelo menos um campo",
                 description: "É obrigatório digitar/gravar a autobiografia.",
-                type: "aviso",
+                type: "warning",
             });
             return;
         }
@@ -59,7 +60,7 @@ const AutobiographyStep = ({
                 title: "Erro no servidor!",
                 description:
                     "Não foi possível enviar a sua autobiografia. Salve o conteúdo que foi escrito e contate os responsáveis pelo sistema.",
-                type: "erro",
+                type: "error",
             });
             console.error(e);
         } finally {

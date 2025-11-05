@@ -10,7 +10,7 @@ import logoWhite from '../../assets/Logo-GRUPAC-white.png'
 import ImgPopUp from '../../assets/Saly-16.svg'
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import Notify from "../../components/Notify/Notify";
+import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { Box, Flex, Strong } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
 import { Button } from "../../components/Button/Button";
@@ -27,10 +27,14 @@ export const LoginPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
-    const [notificationData, setNotificationData] = useState({
+    const [notificationData, setNotificationData] = useState<{
+        title: string;
+        description: string;
+        type?: NotificationType;
+    }>({
         title: "",
         description: "",
-        type: "",
+        type: undefined,
     });
     const [loading, setLoading] = useState(false)
 
@@ -48,7 +52,7 @@ export const LoginPage = () => {
             setNotificationData({
                 title: "Credenciais inválidas.",
                 description: "O email ou a senha estão incorretos.",
-                type: "erro",
+                type: "error",
             });
 
 
@@ -64,11 +68,10 @@ export const LoginPage = () => {
         <>
             <Notify
                 open={!!notificationData.title}
-                onOpenChange={() => setNotificationData({ title: "", description: "", type: "" })}
+                onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
                 title={notificationData.title}
                 description={notificationData.description}
-                icon={notificationData.type === "erro" ? <Icon.XCircle size={30} color="white" weight="bold" /> : notificationData.type === "aviso" ? <Icon.WarningCircle size={30} color="white" weight="bold" /> : <Icon.CheckCircle size={30} color="white" weight="bold" />}
-                className={notificationData.type === "erro" ? "bg-red-500" : notificationData.type === "aviso" ? "bg-yellow-400" : notificationData.type === "success" ? "bg-green-500" : ""}
+                type={notificationData.type}
             />
             <Flex className="h-screen w-full">
                 <Flex className="w-full align-middle h-screen">
