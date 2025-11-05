@@ -109,8 +109,7 @@ const DetailsForm = ({ handleOnSubmit, setStepData, currentData }: DetailsFormPr
                     size="Large"
                     className={`disabled:bg-neutral-dark disabled:hover:cursor-not-allowed`}
                     title={"Continuar"}
-                    color={`${isValid ? "green" : "gray"}`}
-                    disabled={!isValid}
+                    color={"green"}
                 />
 
                 <div>

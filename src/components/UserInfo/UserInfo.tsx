@@ -2,8 +2,6 @@ import {
   Avatar,
   Box,
   Text,
-  Flex,
-  Card,
   Skeleton,
   DropdownMenu,
   IconButton
@@ -160,10 +158,9 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
         <Modal
           open={openProfileModal}
           setOpen={setOpenProfileModal}
-          title="Configurações da Conta"
-          accessibleDescription="Gerencie suas informações pessoais e segurança"
-          accessibleDescription2=""
-          className=""
+          title=""
+          accessibleDescription=""
+          classNameChildren="!p-0"
         >
           <ProfileEdit
             currentUser={{
@@ -275,9 +272,9 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
               <Icon.SignOut size={30} className='text-white' />
             </IconButton>}
             title="Tem certeza que deseja sair da plataforma?"
-            buttoncancel={<Button size="Small" color="gray" title="Cancelar" />}
+            buttoncancel={<Button size="Extra Small" color="gray" title="Cancelar" />}
             buttonAction={<Button
-              size="Small"
+              size="Extra Small"
               onClick={logout}
               color="red"
               title="Sim, desejo sair." />} description={''} />

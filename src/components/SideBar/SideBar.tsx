@@ -93,7 +93,7 @@ const SideBar = ({ userRole }: SideBarProps) => {
                         </button>
 
                         <h2 className={`ml-4 text-xl font-bold text-white transition-all duration-300 ${expanded
-                            ? "opacity-100 translate-x-0 scale-100 delay-150"
+                            ? "opacity-100 translate-x-0 scale-100 delay-200"
                             : "opacity-0 -translate-x-4 scale-0 "
                             } mt-2`}>
                             SUPERDOT
@@ -114,7 +114,7 @@ const SideBar = ({ userRole }: SideBarProps) => {
                                     })}
                                 </div>
                                 <span className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
-                                    ? "opacity-100 translate-x-0 max-w-[300px] delay-150"
+                                    ? "opacity-100 translate-x-0 max-w-[300px] delay-200"
                                     : "opacity-0 translate-x-4 max-w-0 pointer-events-none"
                                     }`}>
                                     {menu.title}
@@ -127,7 +127,7 @@ const SideBar = ({ userRole }: SideBarProps) => {
                             <Link
                                 to="/app/review-requests"
                                 onClick={() => setExpanded(false)}
-                                className={`group flex items-center ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} truncate  p-3 rounded-md transition-all duration-300  text-white ${isActive("/app/review-requests")}`}
+                                className={`group flex items-center ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} truncate  p-3 rounded-md transition-all duration-300 hover:bg-white/20 text-white ${isActive("/app/review-requests")}`}
                             >
                                 <Icon.Check size={24} className={`transition-transform duration-300 ${expanded ? "translate-x-0" : "translate-x-1"}`} weight={`${isActiveIcon("/app/review-requests")}`} />
                                 <span className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
@@ -144,17 +144,30 @@ const SideBar = ({ userRole }: SideBarProps) => {
                             <Link
                                 to="/app/users"
                                 onClick={() => setExpanded(false)}
-                                className={`group flex items-center truncate ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} p-3 rounded-md transition-all duration-300  text-white  ${isActive("/app/users")} `}
+                                className={`group flex items-center truncate ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} p-3 rounded-md transition-all duration-300 hover:bg-white/20 text-white  ${isActive("/app/users")} `}
                             >
                                 <Icon.UserGear size={24} className={`transition-transform duration-300 ${expanded ? "translate-x-0" : "translate-x-1"}`} weight={`${isActiveIcon("/app/users")}`} />
                                 <span className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
-                                    ? "opacity-100 translate-x-0 max-w-[200px] delay-300"
+                                    ? "opacity-100 translate-x-0 max-w-[200px] delay-200"
                                     : "opacity-0 translate-x-4 max-w-0 pointer-events-none"
                                     }`}>
                                     Usuários
                                 </span>
                             </Link>
                         )}
+                        <Link
+                            to="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
+                            onClick={() => setExpanded(false)}
+                            className={`group flex items-center truncate ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} p-3 rounded-md transition-all duration-300 hover:bg-white/20 text-white  `}
+                        >
+                            <Icon.BookOpen size={20} className={`transition-transform duration-300 ${expanded ? "translate-x-0" : "translate-x-1"}`} />
+                            <span className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
+                                ? "opacity-100 translate-x-0 max-w-[200px] delay-200"
+                                : "opacity-0 translate-x-4 max-w-0 pointer-events-none"
+                                }`}>
+                                Documentação SuperDot
+                            </span>
+                        </Link>
                     </nav>
                 </div>
                 {/* Elementos flutuantes */}

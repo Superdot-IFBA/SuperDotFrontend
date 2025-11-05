@@ -7,56 +7,44 @@ interface ModalProps extends React.PropsWithChildren {
     setOpen: (open: boolean) => void;
     title: string;
     accessibleDescription: string;
-    accessibleDescription2?: string;
     className?: string;
+    classNameChildren?: string;
+    onclickCancel?: () => void
 }
 
 const Modal = ({
     title,
     accessibleDescription,
-    accessibleDescription2,
     open,
     setOpen,
     children,
     className,
+    classNameChildren,
+    onclickCancel
 }: ModalProps) => {
     return (
         <AlertDialog.Root open={open} onOpenChange={setOpen}>
-
-            <AlertDialog.Content
-                className={`relative bg-white rounded-md  p-6 z-50 ${className} !font-roboto`}
-
-            >
-                {/* Close Button */}
-
+            <AlertDialog.Content className={`relative bg-white rounded-md  !p-0 z-50 ${className} !font-roboto`}>
                 <AlertDialog.Cancel className="absolute top-2 right-2 !font-roboto">
                     <Button
                         className="hover:cursor-pointer"
-                        aria-label="Close modal" title={""} color={"red"} size={"Small"}>
+                        aria-label="Close modal" title={""} color={"red"} size={"Small"}
+                        onClick={onclickCancel}>
                         <Icon.X size={20} weight="bold" />
                     </Button>
                 </AlertDialog.Cancel>
 
 
-                {/* Title */}
-                <AlertDialog.Title className={"text-xl font-bold mb-4 max-sm:!text-[18px] !font-roboto"}>{title}</AlertDialog.Title>
+                <AlertDialog.Title className={`text-xl font-bold mb-4 max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-8 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}>{title}</AlertDialog.Title>
 
-                {/* Description */}
-                <AlertDialog.Description>
+                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} p-6`}>
                     <Flex direction="column" gap="2" className="mb-4 !font-roboto">
                         <Text as="p" className="text-sm max-sm:text-xs">
                             {accessibleDescription}
                         </Text>
-                        {accessibleDescription2 && (
-                            <Text as="p" className="text-sm !font-roboto">
-                                {accessibleDescription2}
-                            </Text>
-                        )}
                     </Flex>
                 </AlertDialog.Description>
-
-                {/* Children */}
-                <div>{children}</div>
+                <div className={`p-6 ${classNameChildren}`}>{children}</div>
             </AlertDialog.Content>
         </AlertDialog.Root>
     );
