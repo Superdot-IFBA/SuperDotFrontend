@@ -71,7 +71,6 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
   getRangeForPercentage
 }) => {
 
-  // Memoize os options para evitar re-renderizações
   const knowledgeAreaOptions = useMemo(() =>
     selectItensKA.map(option => (
       <option key={option.label} value={option.label}>
@@ -86,7 +85,6 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
       </option>
     )), [selectItensPM]);
 
-  // Handler para toggle de search
   const toggleSearch = () => setShowSearch(!showSearch);
 
   return (
@@ -118,7 +116,6 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
             </Button>
           )}
 
-          {/* Substituição do AnimatePresence por CSS transitions nativas */}
           <div
             className={`
               flex flex-col xl:flex-row xl:items-end gap-3 w-full 
@@ -165,7 +162,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
               </SelectField>
             </Flex>
 
-            <Form.Submit asChild className="desktop xl:mobo">
+            <Form.Submit asChild className="mobo">
               <Button
                 size="Large"
                 className="items-center w-full xl:w-[300px]"
@@ -191,7 +188,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
       <Flex
         direction={isDesktop ? "row" : "column"}
         justify="between"
-        className="gap-4 m-auto w-[90%] max-w-4xl mt-5 px-4"
+        className="gap-4 m-auto w-[90%] max-w-4xl mt-5 mb-5 px-4"
       >
         <Modal
           open={openModalCompare}

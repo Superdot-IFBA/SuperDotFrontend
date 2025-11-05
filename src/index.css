@@ -56,7 +56,9 @@ thead.multi-rows th {
 span.error-message {
     @apply block px-2 text-left text-sm text-red-500;
 }
-
+.rt-BaseDialogOverlay::before {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
 /** BACKGROUNDS, COLORS AND GRADIENTS **/
 * {
     transition: background-color 0.2s ease, color 0.2s ease;
@@ -85,7 +87,7 @@ span.error-message {
 }
 
 .heading-1 {
-    @apply text-3xl font-bold text-neutral-800;
+    @apply text-xl font-bold text-neutral-800;
 }
 
 .heading-2 {
@@ -178,7 +180,9 @@ span.error-message {
     left: 0;
     z-index: 9999;
 }
-
+.radix-themes.light.rt-PopperContent.rt-HoverCardContent.rt-r-size-2.rt-r-max-w.p-4.shadow-xl.rounded-lg.border.border-gray-100.max-w-sm.animate-in.fade-in-0.zoom-in-95 {
+    padding: 0px;
+}
 .overlay-message {
     position: absolute;
     bottom: 0%;

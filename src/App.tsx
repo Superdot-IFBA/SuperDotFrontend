@@ -18,7 +18,7 @@ import AnalysisPage from "./pages/AnalysisPage/AnalysisPage";
 import SecondsSourceCompare from "./pages/SecondsSourceCompare/SecondsSourceCompare";
 import CompareParticipantsSelected from "./pages/CompareParticipantsSelected/CompareParticipantsSelected";
 import EvaluateAutobiography from "./pages/EvaluateAutobiography/EvaluateAutobiography";
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, ScrollArea } from "@radix-ui/themes";
 import { GuardRoute } from "./components/GuardRoute/GuardRoute";
 import { Header } from "./components/Header/Header";
 import * as Icon from "@phosphor-icons/react";
@@ -77,33 +77,39 @@ function InnerLayout() {
         icon: <Icon.WarningCircle size={24} />
     };
 
-    return (
+    const isAnalysisPage = location.pathname.includes("/app/my-samples/analyze-sample");
 
+    const content = (
+        <Box className="flex-1 transition-all duration-300 w-full">
+            <GuardRoute scope="INNER">
+                <Header title={title} icon={icon} onMenuToggle={toggleMobileMenu} />
+                <PageContainer>
+                    <Outlet />
+                </PageContainer>
+            </GuardRoute>
+        </Box>
+    );
+
+    return (
         <Flex className="bg-background font-roboto min-h-screen w-full">
             <ScrollToTop />
             <WelcomeModal />
-            <Box className={`max-xl:!w-0 ${isMobileMenuOpen ? 'w-64' : 'w-16'}`}>
+            <Box className={`max-xl:!w-0 ${isMobileMenuOpen ? "w-64" : "w-16"}`}>
                 <SideBar userRole={userRole} />
             </Box>
 
+            {isAnalysisPage ? (
+                content
+            ) : (
+                <ScrollArea type="scroll" scrollbars="vertical" size="2" radius="none" className="w-full max-sm:hidden">
+                    {content}
+                </ScrollArea>
+            )}
 
-            <Box className="flex-1 transition-all duration-300 w-full">
-                <GuardRoute scope="INNER">
-                    <Header
-                        title={title}
-                        icon={icon}
-                        onMenuToggle={toggleMobileMenu}
-                    />
-                    <PageContainer>
-                        <Outlet />
-                    </PageContainer>
-                </GuardRoute>
-            </Box>
             <BackToTop />
         </Flex>
     );
 }
-
 
 const router = createBrowserRouter([
     {

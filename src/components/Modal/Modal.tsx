@@ -24,7 +24,7 @@ const Modal = ({
 }: ModalProps) => {
     return (
         <AlertDialog.Root open={open} onOpenChange={setOpen}>
-            <AlertDialog.Content className={`relative bg-white rounded-md  !p-0 z-50 ${className} !font-roboto`}>
+            <AlertDialog.Content className={`relative bg-white rounded-md !p-0 z-50 ${className} !font-roboto`}>
                 <AlertDialog.Cancel className="absolute top-2 right-2 !font-roboto">
                     <Button
                         className="hover:cursor-pointer"
@@ -35,16 +35,16 @@ const Modal = ({
                 </AlertDialog.Cancel>
 
 
-                <AlertDialog.Title className={`text-xl font-bold mb-4 max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-8 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}>{title}</AlertDialog.Title>
+                <AlertDialog.Title className={`text-xl font-bold max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}>{title}</AlertDialog.Title>
 
-                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} p-6`}>
-                    <Flex direction="column" gap="2" className="mb-4 !font-roboto">
+                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} px-6 mb-3`}>
+                    <Flex direction="column" gap="2" className="mb-6 !font-roboto">
                         <Text as="p" className="text-sm max-sm:text-xs">
                             {accessibleDescription}
                         </Text>
                     </Flex>
                 </AlertDialog.Description>
-                <div className={`p-6 ${classNameChildren}`}>{children}</div>
+                <div className={`px-6 pt-0 mb-6 ${classNameChildren}`}>{children}</div>
             </AlertDialog.Content>
         </AlertDialog.Root>
     );

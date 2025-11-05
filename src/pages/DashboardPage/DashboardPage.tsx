@@ -469,192 +469,179 @@ function DashBoardPage() {
                 type={notificationData.type}
             />
 
+            <div className="min-h-screen bg-gray-50 mb-4">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-                <Dcard
-                    loading={loading}
-                    title="Total de Amostras"
-                    value={dados?.total_samples}
-                    icon={<Icon.Swatches size={32} />}
-                    style="bg-gradient-to-l from-red-500 to-amber-500" />
-
-                <Dcard
-                    loading={loading}
-                    title="Participantes"
-                    value={dados?.total_participants ?? 0}
-                    icon={<Icon.UsersThree size={32} />}
-                    style="bg-gradient-to-l from-lime-500 to-sky-500"
-                />
-
-                <Dcard
-                    loading={loading}
-                    title="Instituições"
-                    value={dados?.total_unique_instituition ?? 0}
-                    icon={<Icon.GraduationCap size={32} />}
-                    style="bg-gradient-to-l from-violet-500 to-pink-500"
-                />
-
-                <Dcard
-                    loading={loading}
-                    title="Taxa de Completude"
-                    value={`${completionRate.toFixed(0)}%`}
-                    icon={<Icon.ChartLineUp size={32} />}
-                    style="bg-green-500"
-                />
-
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <ChartContainer
-                    title="Distribuição por Gênero"
-                    loading={loading}
-                    tooltip="Distribuição dos participantes por gênero"
-                >
-                    <ApexChart
-                        options={genderChartOptions}
-                        series={genderSeries}
-                        type="donut"
-                        height={350}
-                    />
-                </ChartContainer>
-
-                <ChartContainer
-                    title="Progresso Mensal"
-                    loading={loading}
-                    tooltip="Evolução mensal de amostras e participantes"
-                >
-                    <ApexChart
-                        options={lineChartOptions}
-                        series={lineSeries}
-                        type="line"
-                        height={350}
-                    />
-                </ChartContainer>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <ChartContainer
-                    title="Distribuição por Instituição"
-                    loading={loading}
-                    tooltip="Amostras coletadas por instituição participante"
-                >
-                    <ApexChart
-                        options={barChartOptions}
-                        series={barChartSeries}
-                        type="bar"
-                        height={350}
-                    />
-                </ChartContainer>
-
-                <ChartContainer
-                    title="Distribuição por Região"
-                    loading={loading}
-                    tooltip="Amostras coletadas por região do país"
-                >
-                    <ApexChart
-                        options={regionalDistributionOptions}
-                        series={dados?.regionalDistribution?.series || []}
-                        type="polarArea"
-                        height={350}
-                    />
-                </ChartContainer>
-
-                <ChartContainer
-                    title="Status das Coletas"
-                    loading={loading}
-                    tooltip="Porcentagem de coletas Autorizadas"
-                >
-                    <ApexChart
-                        options={radialChartOptions}
-                        series={collectionStatusSeries}
-                        type="radialBar"
-                        height={350}
-                    />
-                </ChartContainer>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <ChartContainer
-                    title="Distribuição por Faixa Etária"
-                    loading={loading}
-                    tooltip="Distribuição de participantes por faixa etária"
-                >
-                    <ApexChart
-                        options={ageDistributionOptions}
-                        series={ageDistributionSeries}
-                        type="bar"
-                        height={350}
-                    />
-                </ChartContainer>
-
-                <ChartContainer
-                    title="Distribuição por Área de Conhecimento"
-                    loading={loading}
-                    tooltip="Distribuição de participantes por área de conhecimento"
-                >
-                    <ApexChart
-                        options={knowledgeAreaDistributionOptions}
-                        series={knowledgeAreaDistributionSeries}
-                        type="bar"
-                        height={350}
-                    />
-                </ChartContainer>
-
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <ChartContainer
-                    title="Status de Preenchimento"
-                    loading={loading}
-                    tooltip="Distribuição dos participantes por status de preenchimento do questionário"
-                >
-                    <ApexChart
-                        options={participantProgressOptions}
-                        series={participantProgressSeries}
-                        type="donut"
-                        height={350}
-                    />
-                </ChartContainer>
-
-            </div>
-
-
-            <div className="bg-white card-container p-6 mb-6">
-                <h3 className="text-xl font-semibold mb-4 text-gray-800 ">Resumo Estatístico</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-gray-50  p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                            <Icon.ChartPieSlice size={20} className="text-blue-500 mr-2" />
-                            <span className="font-medium text-gray-700 ">Média Mensal</span>
+                <div className="grid grid-cols-12 gap-6">
+                    <div className="col-span-12 lg:col-span-8">
+                        <div className="grid grid-cols-1 max-md:grid-cols-1 xl:grid-cols-2 gap-4 max-md:gap-2 mb-6">
+                            <Dcard
+                                loading={loading}
+                                title="Total de Amostras"
+                                value={dados?.total_samples}
+                                icon={<Icon.Swatches size={24} weight="duotone" className="text-white" />}
+                                style="bg-gradient-to-br from-blue-500/60 to-blue-600 shadow-lg"
+                            />
+                            <Dcard
+                                loading={loading}
+                                title="Participantes"
+                                value={dados?.total_participants ?? 0}
+                                icon={<Icon.UsersThree size={24} weight="duotone" className="text-white" />}
+                                style="bg-gradient-to-br from-amber-500/60 to-amber-600 shadow-lg"
+                            />
+                            <Dcard
+                                loading={loading}
+                                title="Instituições"
+                                value={dados?.total_unique_instituition ?? 0}
+                                icon={<Icon.GraduationCap size={24} weight="duotone" className="text-white" />}
+                                style="bg-gradient-to-br from-purple-500/60 to-primary shadow-lg"
+                            />
+                            <Dcard
+                                loading={loading}
+                                title="Taxa de Completude"
+                                value={`${completionRate.toFixed(0)}%`}
+                                icon={<Icon.ChartLineUp size={24} weight="light" className="text-white" />}
+                                style="bg-gradient-to-br from-lime-500/60 to-lime-600 shadow-lg"
+                            />
+                            {/* <Dcard
+                                loading={loading}
+                                title="Participantes"
+                                value={1500}
+                                icon={<Icon.UsersThree size={20} />}
+                                style="bg-gradient-to-br from-green-500 to-green-600"
+                                trend={{ value: 12, isPositive: true }}
+                                linkTo="/participants"
+                            /> */}
                         </div>
-                        <p className="text-2xl font-bold text-gray-800">
-                            {((dados?.total_samples ?? 0) / (dados?.monthlyProgress?.length || 1)).toFixed(0)}
-                        </p>
 
-                        <p className="text-sm text-gray-500 ">amostras/mês</p>
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+                            <ChartContainer
+                                title="Progresso Mensal"
+                                loading={loading}
+                                tooltip="Evolução mensal de amostras e participantes"
+                                className="h-80"
+                            >
+                                <ApexChart
+                                    options={lineChartOptions}
+                                    series={lineSeries}
+                                    type="line"
+                                    height={300}
+                                />
+                            </ChartContainer>
+
+                            <ChartContainer
+                                title="Status das Coletas"
+                                loading={loading}
+                                tooltip="Porcentagem de coletas Autorizadas"
+                                className="h-80"
+                            >
+                                <ApexChart
+                                    options={radialChartOptions}
+                                    series={collectionStatusSeries}
+                                    type="radialBar"
+                                    height={300}
+                                />
+                            </ChartContainer>
+                        </div>
+
+                        {/* Segunda Linha de Gráficos */}
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+                            <ChartContainer
+                                title="Distribuição por Instituição"
+                                loading={loading}
+                                tooltip="Amostras coletadas por instituição participante"
+                                className="h-80"
+                            >
+                                <ApexChart
+                                    options={barChartOptions}
+                                    series={barChartSeries}
+                                    type="bar"
+                                    height={300}
+                                />
+                            </ChartContainer>
+
+                            <ChartContainer
+                                title="Distribuição por Região"
+                                loading={loading}
+                                tooltip="Amostras coletadas por região do país"
+                                className="h-80"
+                            >
+                                <ApexChart
+                                    options={regionalDistributionOptions}
+                                    series={dados?.regionalDistribution?.series || []}
+                                    type="polarArea"
+                                    height={300}
+                                />
+                            </ChartContainer>
+                        </div>
                     </div>
-                    <div className="bg-gray-50  p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                            <Icon.TrendUp size={20} className="text-green-500 mr-2" />
-                            <span className="font-medium text-gray-700 ">Crescimento</span>
+
+                    {/* Coluna Direita - Sidebar de Métricas */}
+                    <div className="col-span-12 lg:col-span-4 space-y-6">
+                        {/* Gráficos Verticais */}
+                        <ChartContainer
+                            title="Distribuição por Gênero"
+                            loading={loading}
+                            tooltip="Distribuição dos participantes por gênero"
+                            className="h-80"
+                        >
+                            <ApexChart
+                                options={genderChartOptions}
+                                series={genderSeries}
+                                type="donut"
+                                height={300}
+                            />
+                        </ChartContainer>
+
+                        <ChartContainer
+                            title="Status de Preenchimento"
+                            loading={loading}
+                            tooltip="Distribuição dos participantes por status de preenchimento"
+                            className="h-80"
+                        >
+                            <ApexChart
+                                options={participantProgressOptions}
+                                series={participantProgressSeries}
+                                type="donut"
+                                height={300}
+                            />
+                        </ChartContainer>
+
+                        {/* Métricas Rápidas */}
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <Icon.ChartBar size={20} className="mr-2 text-blue-500" />
+                                Métricas Rápidas
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">Média Mensal</p>
+                                        <p className="text-2xl font-bold text-gray-800">
+                                            {((dados?.total_samples ?? 0) / (dados?.monthlyProgress?.length || 1)).toFixed(0)}
+                                        </p>
+                                    </div>
+                                    <Icon.ChartPieSlice size={24} className="text-blue-500" />
+                                </div>
+
+                                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">Crescimento</p>
+                                        <p className="text-2xl font-bold text-gray-800">{calculateGrowth()}%</p>
+                                    </div>
+                                    <Icon.TrendUp size={24} className="text-green-500" />
+                                </div>
+
+                                <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">Dias Ativos</p>
+                                        <p className="text-2xl font-bold text-gray-800">{activeDays}</p>
+                                    </div>
+                                    <Icon.CalendarCheck size={24} className="text-purple-500" />
+                                </div>
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-gray-800 ">{calculateGrowth()}%</p>
-                        <p className="text-sm text-gray-500 ">últimos 3 meses</p>
-                    </div>
-                    <div className="bg-gray-50  p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                            <Icon.CalendarCheck size={20} className="text-purple-500 mr-2" />
-                            <span className="font-medium text-gray-700 ">Dias Ativos</span>
-                        </div>
-                        <p className="text-2xl font-bold text-gray-800 "> {activeDays}</p>
-                        <p className="text-sm text-gray-500 ">coletas realizadas</p>
                     </div>
                 </div>
-                {/* Footer */}
-
-                <div className="text-xs text-gray-400 mt-2 text-right">
-                    Atualizado em {new Date().toLocaleTimeString()}
-                </div>
-
             </div>
         </>
     );

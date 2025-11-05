@@ -93,7 +93,7 @@ export const Notify: React.FC<NotifyProps> = ({
             aria-atomic="true"
         >
             <div className={`relative flex border rounded-lg shadow-lg overflow-hidden ${styles.bg}`}>
-                <div className={`flex items-center justify-center w-14 bg-gray-300 ${styles.progress}`}>
+                <div className={`flex items-center justify-center w-14  ${styles.progress}`}>
                     {getIcon()}
                 </div>
 
