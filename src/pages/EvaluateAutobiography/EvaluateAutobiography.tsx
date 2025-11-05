@@ -10,6 +10,7 @@ import { getParticipantDataBio, patchSaveEvalueAutobiography } from '../../api/p
 import { ISample } from '../../interfaces/sample.interface';
 import IBio from '../../interfaces/evaluateAutobiography.interface';
 import BackToTop from '../../components/BackToTop/BackToTop';
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 
 interface MarkedText {
     id: number;
@@ -44,6 +45,9 @@ const EvaluateAutobiography: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [openMarks, setOpenMarks] = useState<boolean>(false);
     const [error, setError] = useState();
+    const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const youtubePlayerRef = useRef<any>(null);
 
     const location = useLocation();
     const { participant, sample } = location.state as LocationState;
@@ -97,6 +101,9 @@ const EvaluateAutobiography: React.FC = () => {
     const handleOpenBox = () => {
         setOpen(!open)
     }
+    const isVideoMark = (mark: MarkedText): boolean => {
+        return mark.start === mark.end;
+    };
 
     const handleSaveEvalueAutobiography = async (submitForm?: boolean) => {
         try {
@@ -135,51 +142,107 @@ const EvaluateAutobiography: React.FC = () => {
 
     const handleTextSelection = () => {
         const textElement = document.getElementById("autobiography");
-        if (textElement) {
-            const selection = window.getSelection();
-            if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const { startContainer, endContainer } = range;
+        if (!textElement) return;
 
-                if (textElement.contains(startContainer) && textElement.contains(endContainer)) {
-                    const selectedText = range.toString();
-
-                    if (selectedText.length < 250) {
-                        const preSelectionRange = range.cloneRange();
-                        preSelectionRange.selectNodeContents(textElement);
-                        preSelectionRange.setEnd(range.startContainer, range.startOffset);
-                        const start = preSelectionRange.toString().length;
-                        const end = start + selectedText.length;
-
-                        setSelectedText(selectedText);
-                        setSelectionRange({ start, end });
-                        selection.removeAllRanges();
-                        setLimit(false);
-                    } else {
-                        setNotificationData({
-                            title: "Seleção fora do limite permitido!",
-                            description: "Por favor, selecione o texto dentro da autobiografia.",
-                            type: "warning"
-                        });
-                    }
-                } else {
-                    setNotificationData({
-                        title: "Seleção fora do limite permitido!",
-                        description: "Por favor, selecione o texto dentro da autobiografia.",
-                        type: "warning"
-                    });
-
-                }
-            } else {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+            if (!participant?.autobiography?.videoUrl) {
                 setNotificationData({
                     title: "Nenhum texto selecionado!",
                     description: "Selecione o texto para fazer a marcação!",
-                    type: "warning"
+                    type: "warning",
                 });
-
             }
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+
+        if (range.collapsed) {
+            if (!participant?.autobiography?.videoUrl) {
+                setNotificationData({
+                    title: "Nenhum texto selecionado!",
+                    description: "Selecione o texto para fazer a marcação!",
+                    type: "warning",
+                });
+            }
+            selection.removeAllRanges();
+            return;
+        }
+
+        const ancestor = range.commonAncestorContainer;
+        if (!textElement.contains(ancestor)) {
+            setNotificationData({
+                title: "Seleção inválida",
+                description: "Por favor, selecione o texto dentro da autobiografia.",
+                type: "warning",
+            });
+            selection.removeAllRanges();
+            return;
+        }
+
+        const selectedText = range.toString().trim();
+
+        if (!selectedText) {
+            setNotificationData({
+                title: "Seleção vazia",
+                description: "A seleção não contém texto válido.",
+                type: "warning",
+            });
+            selection.removeAllRanges();
+            return;
+        }
+
+        const MAX_LENGTH = 250;
+        if (selectedText.length > MAX_LENGTH) {
+            setLimit(true);
+            setNotificationData({
+                title: "Seleção fora do limite permitido!",
+                description: `Por favor, selecione no máximo ${MAX_LENGTH} caracteres.`,
+                type: "warning",
+            });
+            selection.removeAllRanges();
+            return;
+        }
+
+        const preSelectionRange = document.createRange();
+        preSelectionRange.selectNodeContents(textElement);
+        try {
+            preSelectionRange.setEnd(range.startContainer, range.startOffset);
+        } catch (err) {
+            setNotificationData({
+                title: "Erro ao calcular seleção",
+                description: "Não foi possível determinar a posição da seleção.",
+                type: "error",
+            });
+            selection.removeAllRanges();
+            return;
+        }
+
+        const start = preSelectionRange.toString().length;
+        const end = start + selectedText.length;
+
+        setSelectedText(selectedText);
+        setSelectionRange({ start, end });
+        setLimit(false);
+        selection.removeAllRanges();
+
+        if (participant?.autobiography?.videoUrl) {
+            setNotificationData({
+                title: "Texto selecionado!",
+                description:
+                    "Texto selecionado para marcação. O vídeo será ignorado para esta marcação.",
+                type: "info",
+            });
+        } else {
+            setNotificationData({
+                title: "Texto selecionado!",
+                description: "Texto selecionado para marcação.",
+                type: "info",
+            });
         }
     };
+
 
     const handleRemoveComment = (id: number) => {
         const updatedMarkedTexts = markedTexts.filter(markedText => markedText.id !== id);
@@ -193,34 +256,100 @@ const EvaluateAutobiography: React.FC = () => {
     };
 
 
-    const handleAddComment = (title: string, bg: string,) => {
-        if (selectedText && commentInputRef.current && selectionRange) {
+
+    const handleAddComment = (title: string, bg: string) => {
+        if (commentInputRef.current) {
             const comment = commentInputRef.current.value;
             if (comment) {
-                const { start, end } = selectionRange;
-                const newMarkedText: MarkedText = {
-                    id: Date.now(),
-                    text: selectedText,
-                    comment,
-                    mark: title,
-                    start,
-                    end,
-                    background: bg,
-                };
+                let newMarkedText: MarkedText;
+
+                const isYouTube = participant?.autobiography?.videoUrl?.includes('youtube');
+                const hasVideo = !!participant?.autobiography?.videoUrl;
+                const hasTextSelection = !!selectedText && !!selectionRange;
+
+                if (hasTextSelection) {
+                    const { start, end } = selectionRange!;
+                    newMarkedText = {
+                        id: Date.now(),
+                        text: selectedText!,
+                        comment,
+                        mark: title,
+                        start,
+                        end,
+                        background: bg,
+                    };
+
+                    setNotificationData({
+                        title: "Marcação de texto adicionada!",
+                        description: `Texto marcado: "${selectedText!.substring(0, 30)}${selectedText!.length > 30 ? '...' : ''}"`,
+                        type: "success"
+                    });
+                }
+                else if (hasVideo) {
+                    const currentTime = isYouTube ? currentVideoTime : (videoRef.current?.currentTime || 0);
+                    newMarkedText = {
+                        id: Date.now(),
+                        text: `Marcação no tempo ${formatTime(currentTime)}`,
+                        comment,
+                        mark: title,
+                        start: currentTime,
+                        end: currentTime, // Igual a start = marcação de vídeo
+                        background: bg,
+                    };
+
+                    setNotificationData({
+                        title: "Marcação de vídeo adicionada!",
+                        description: `Marcação criada no tempo ${formatTime(currentTime)}`,
+                        type: "success"
+                    });
+                }
+                else {
+                    setNotificationData({
+                        title: "Nada selecionado!",
+                        description: "Selecione um texto para fazer a marcação!",
+                        type: "warning"
+                    });
+                    return;
+                }
 
                 setMarkedTexts(prev => {
                     const updatedMarkedTexts = [...prev, newMarkedText];
                     updatedMarkedTexts.sort((a, b) => a.start - b.start);
                     return updatedMarkedTexts;
                 });
+
+                // Limpa a seleção de texto após adicionar
                 setSelectedText(null);
                 setSelectionRange(null);
                 commentInputRef.current.value = '';
-                setOpen(true)
-
+                setOpen(true);
             }
         }
     };
+
+    // E ajuste a função handleSeekToTime para funcionar com YouTube:
+    const handleSeekToTime = (timestamp: number) => {
+        const isYouTube = participant?.autobiography?.videoUrl?.includes('youtube');
+
+        if (isYouTube) {
+            if (youtubePlayerRef.current) {
+                youtubePlayerRef.current.seekTo(timestamp, true);
+                youtubePlayerRef.current.playVideo();
+            }
+        } else {
+            if (videoRef.current) {
+                videoRef.current.currentTime = timestamp;
+                videoRef.current.play();
+            }
+        }
+    };
+    const formatTime = (seconds: number): string => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+
 
     const Marks = [
         { title: "Criatividade", gradienteBG: `bg-gradient-to-r from-red-400 to-red-500`, bg: "bg-red-400", borderColor: `border-red-500` },
@@ -232,9 +361,15 @@ const EvaluateAutobiography: React.FC = () => {
     ];
 
     const renderMarkedTexts = (text: string) => {
+        if (participant?.autobiography?.videoUrl && !participant?.autobiography?.text) {
+            return <span>{text}</span>;
+        }
         const parts = [];
         let lastIndex = 0;
-        const sortedMarkedTexts = [...markedTexts].sort((a, b) => a.start - b.start);
+
+        const textMarks = markedTexts.filter(mark => mark.start !== mark.end);
+        const sortedMarkedTexts = [...textMarks].sort((a, b) => a.start - b.start);
+
         sortedMarkedTexts.forEach((markedText) => {
             if (markedText.start >= lastIndex) {
                 const before = text.substring(lastIndex, markedText.start);
@@ -318,7 +453,7 @@ const EvaluateAutobiography: React.FC = () => {
                 <header className="mb-2 max-xl:mb-4 text-center">
                     <Flex align="center" justify="center" gap="3" className="mb-4">
                         <Icon.User weight="bold" size={32} className="text-violet-600" />
-                        <h1 className="heading-1 max-sm:text-lg">{participant.personalData.fullName}</h1>
+                        <h2 className="heading-1 max-sm:text-lg">{participant.personalData.fullName}</h2>
                     </Flex>
                     <Text className="text-neutral-600 text-lg max-sm:text-[20px]">
                         Análise de Autobiografia
@@ -346,7 +481,7 @@ const EvaluateAutobiography: React.FC = () => {
                                                 {mark.title}
                                             </button>
                                         </Popover.Trigger>
-                                        <Popover.Content className={`${limit ? "invisible" : ""} ${mark.gradienteBG}`} width="360px">
+                                        <Popover.Content className={`${limit ? "invisible" : ""} ${mark.gradienteBG} `} width="360px" size="1">
                                             <Flex gap="3">
                                                 <Box flexGrow="1">
                                                     <TextArea
@@ -477,49 +612,164 @@ const EvaluateAutobiography: React.FC = () => {
                         </Flex>
 
                         {/* Área de Texto */}
-                        <Box className="card-container  w-[70%] max-xl:w-full">
-                            <Flex direction="column" className="h-full">
-                                <Flex p="4" align="center" gap="3" className="border-b border-neutral-100">
+                        <Box className="card-container w-full">
+                            <Flex direction="column" className='align-center'>
+                                <Flex p="4" gap="3" className="border-b flex border-neutral-100 ">
                                     {participant?.autobiography?.text && participant?.autobiography?.videoUrl ? (
                                         <>
                                             <Icon.Notebook size={24} className="text-violet-600" />
-
-                                            <h2 className="heading-2">Autobiografia / Link Disponível : <a
-                                                href={participant?.autobiography?.videoUrl || "#"}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                {participant?.autobiography?.videoUrl || "Nenhum vídeo disponível"}
-                                            </a></h2>
+                                            <Flex className="max-sm:flex-col flex gap-3 " >
+                                                <h2 className="heading-2 max-sm:text-[20px]">Autobiografia </h2>
+                                                <h2 className="heading-2 max-sm:text-[20px]">(Texto e Vídeo)</h2>
+                                            </Flex>
                                         </>
                                     ) : participant?.autobiography?.text ? (
                                         <>
                                             <Icon.Notebook size={24} className="text-violet-600" />
                                             <h2 className="heading-2">Autobiografia</h2>
                                         </>
-                                    ) : (
+                                    ) : participant?.autobiography?.videoUrl ? (
                                         <>
-                                            <Icon.Link size={24} className="text-violet-600" />
-                                            <h2 className="heading-2">Link Disponível</h2>
+                                            <Icon.Video size={24} className="text-violet-600" />
+                                            <h2 className="heading-2">Autobiografia em Vídeo</h2>
                                         </>
-                                    )}
+                                    ) : null}
                                 </Flex>
+
                                 <Box className="p-6 overflow-auto h-[60vh]">
-                                    <p id="autobiography" className="text-justify leading-relaxed text-neutral-700">
-                                        {participant?.autobiography?.text ? (
-                                            renderMarkedTexts(participant.autobiography.text)
-                                        ) : (
-                                            <a
-                                                href={participant?.autobiography?.videoUrl || "#"}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                {participant?.autobiography?.videoUrl || "Nenhum vídeo disponível"}
-                                            </a>
-                                        )}
-                                    </p>
+                                    {participant?.autobiography?.text && participant?.autobiography?.videoUrl ? (
+                                        <div className="flex flex-col gap-6">
+                                            <div className="flex flex-col items-center">
+                                                <VideoPlayer
+                                                    videoUrl={participant.autobiography.videoUrl}
+                                                    onTimeUpdate={setCurrentVideoTime}
+                                                    playerRef={youtubePlayerRef}
+                                                />
+
+
+                                                {!participant.autobiography.videoUrl?.includes('youtube') && (
+                                                    <div className="flex gap-2 mb-4 mt-2">
+                                                        <Icon.Clock size={16} className="text-gray-600" />
+                                                        <Text className="font-medium text-gray-700">
+                                                            Tempo atual: {formatTime(currentVideoTime)}
+                                                        </Text>
+                                                    </div>
+                                                )}
+
+                                                {markedTexts.filter(mark => mark.start === mark.end).length > 0 && (
+                                                    <div className="w-full mt-4 max-w-4xl">
+                                                        <Text className="font-semibold mb-4 text-lg">Marcações no vídeo:</Text>
+                                                        <div className="space-y-2 mt-6">
+                                                            {markedTexts
+                                                                .filter(mark => mark.start === mark.end)
+                                                                .map((mark) => (
+                                                                    <div
+                                                                        key={mark.id}
+                                                                        className={`p-3 mt-6 rounded-lg ${mark.background} text-white cursor-pointer hover:opacity-90`}
+                                                                        onClick={() => handleSeekToTime(mark.start)}
+                                                                    >
+                                                                        <div className="flex justify-between items-start">
+                                                                            <Text size="2" className="font-medium">
+                                                                                {mark.mark} - {formatTime(mark.start)}
+                                                                            </Text>
+                                                                            <Button
+                                                                                title=''
+                                                                                size="Extra Small"
+                                                                                color="red"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    handleRemoveComment(mark.id);
+                                                                                }}
+                                                                                children={<Icon.Trash size={14} />}
+                                                                            />
+                                                                        </div>
+                                                                        <Text size="1" className="mt-1">
+                                                                            {mark.comment}
+                                                                        </Text>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="border-t pt-6">
+                                                <Text className="font-semibold mb-4 text-lg">Texto da Autobiografia:</Text>
+                                                <p id="autobiography" className="text-justify leading-relaxed text-neutral-700">
+                                                    {renderMarkedTexts(participant.autobiography.text)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : participant?.autobiography?.text ? (
+                                        <p id="autobiography" className="text-justify leading-relaxed text-neutral-700">
+                                            {renderMarkedTexts(participant.autobiography.text)}
+                                        </p>
+                                    ) : participant?.autobiography?.videoUrl ? (
+                                        <div className="flex flex-col items-center">
+                                            <VideoPlayer
+                                                videoUrl={participant.autobiography.videoUrl}
+                                                onTimeUpdate={setCurrentVideoTime}
+                                                playerRef={youtubePlayerRef}
+                                            />
+
+
+                                            {!participant.autobiography.videoUrl?.includes('youtube') && (
+                                                <div className="flex gap-2 mb-4 mt-2">
+                                                    <Icon.Clock size={16} className="text-gray-600" />
+                                                    <Text className="font-medium text-gray-700">
+                                                        Tempo atual: {formatTime(currentVideoTime)}
+                                                    </Text>
+                                                </div>
+                                            )}
+
+                                            {markedTexts.filter(mark =>
+                                                mark.start === mark.end
+                                            ).length > 0 && (
+                                                    <div className="w-full mt-4">
+                                                        <Text className="font-semibold mb-4 text-lg">Marcações no vídeo:</Text>
+                                                        <div className="space-y-2">
+                                                            {markedTexts
+                                                                .filter(mark => mark.start === mark.end)
+                                                                .map((mark) => (
+                                                                    <div
+                                                                        key={mark.id}
+                                                                        className={`p-3 rounded-lg ${mark.background} text-white cursor-pointer hover:opacity-90`}
+                                                                        onClick={() => handleSeekToTime(mark.start)}
+                                                                    >
+                                                                        <div className="flex justify-between items-start">
+                                                                            <Text size="2" className="font-medium">
+                                                                                {mark.mark} - {formatTime(mark.start)}
+                                                                            </Text>
+                                                                            <Button
+                                                                                title=''
+                                                                                size="Extra Small"
+                                                                                color="red"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    handleRemoveComment(mark.id);
+                                                                                }}
+                                                                                children={<Icon.Trash size={14} />}
+                                                                            />
+                                                                        </div>
+                                                                        <Text size="1" className="mt-1">
+                                                                            {mark.comment}
+                                                                        </Text>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                        </div>
+                                    ) : (
+                                        <a
+                                            href={participant?.autobiography?.videoUrl || "#"}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            {participant?.autobiography?.videoUrl || "Nenhum conteúdo disponível"}
+                                        </a>
+                                    )}
                                 </Box>
                             </Flex>
                         </Box>
@@ -577,10 +827,10 @@ const EvaluateAutobiography: React.FC = () => {
 
                         />
                     </div>
-                </main>
+                </main >
 
                 <BackToTop />
-            </div>
+            </div >
         </>
     );
 };

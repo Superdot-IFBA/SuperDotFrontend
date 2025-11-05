@@ -83,9 +83,6 @@ const ActionButtonExplain = () => {
             </Text>
           </AlertDialog.Description>
         </div>
-
-
-
       </AlertDialog.Content>
     </AlertDialog.Root>
   );

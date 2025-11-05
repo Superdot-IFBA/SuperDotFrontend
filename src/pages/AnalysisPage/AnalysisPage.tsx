@@ -17,6 +17,7 @@ import SkeletonHeader from "../../components/Skeletons/SkeletonHeader";
 import DesktopTableView from "../../components/DesktopTableView/DesktopTableView";
 import MobileDataListView from "../../components/MobileDataListView/MobileDataListView";
 import AnalysisHeaderAndFilters from "../../components/AnalysisHeaderAndFilters/AnalysisHeaderAndFilters";
+import { ScrollArea } from '@radix-ui/themes';
 
 interface Filters {
     searchName?: string;
@@ -141,8 +142,8 @@ const AnalysisPage = () => {
             }
 
             setNotificationData({
-                title: "Dados enviados com sucesso!",
-                description: "Os dados foram enviados corretamente e estão prontos para análise.",
+                title: "Áreas de conhecimento atualizadas!",
+                description: "As áreas indicadas foram enviadas com sucesso e estão disponíveis para avaliação.",
                 type: "success"
             });
 
@@ -466,7 +467,6 @@ const AnalysisPage = () => {
         { title: "Áreas do Saber", value: "ARE-SAB" },
     ];
     const filterParticipants = (participant: IParticipant) => {
-        // Verifica se tem pontuação válida
         if (participant.adultForm?.totalPunctuation === undefined) {
             return false;
         }
@@ -478,19 +478,16 @@ const AnalysisPage = () => {
             ...(participant.adultForm?.knowledgeAreas || []),
         ];
 
-        // Filtro por nome
         if (filters.searchName &&
             !participant.personalData.fullName.toLowerCase().includes(filters.searchName.toLowerCase())) {
             return false;
         }
 
-        // Filtro por área de conhecimento
         if (filters.knowledgeArea && filters.knowledgeArea !== "default" &&
             !combinedAreas.includes(filters.knowledgeArea)) {
             return false;
         }
 
-        // Filtro por pontuação mínima
         if (filters.minPunctuation && filters.minPunctuation !== 99) {
             const selectedRange = getRangeForPercentage(Number(filters.minPunctuation));
             if (selectedRange && (punctuation < selectedRange.min || punctuation > selectedRange.max)) {
@@ -501,9 +498,13 @@ const AnalysisPage = () => {
         return true;
     };
 
+
+
+
     return (
 
-        <>
+        <Box className="overflow-y-auto px-4 pb-8 analyse-page">
+
             <Notify
                 open={!!notificationData.title}
                 onOpenChange={() => setNotificationData({ title: "", description: "", type: undefined })}
@@ -656,7 +657,7 @@ const AnalysisPage = () => {
             </GridComponent>
 
 
-        </>
+        </Box>
 
     );
 };
