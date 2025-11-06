@@ -217,7 +217,7 @@ function DashBoardPage() {
             },
         },
         stroke: {
-            dashArray: 4
+            dashArray: 0
         },
         labels: ['Autorizadas', 'Pendentes', 'Rejeitadas'],
     };

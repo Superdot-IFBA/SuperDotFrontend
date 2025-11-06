@@ -32,7 +32,6 @@ const ChartContainer = ({
         ${error ? "border-red-300 bg-red-50" : ""}
         group/chart-container
       `}>
-        {/* Header Section - Mais Compacto */}
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-2">
             <h3 className={`text-base font-semibold text-gray-800 truncate`}>
@@ -72,7 +71,6 @@ const ChartContainer = ({
           )}
         </div>
 
-        {/* Content Area - Otimizado para altura reduzida */}
         {error ? (
           <div className="flex-1 flex flex-col items-center justify-center p-3 text-center">
             <div className="bg-red-100 p-2 rounded-full mb-2">

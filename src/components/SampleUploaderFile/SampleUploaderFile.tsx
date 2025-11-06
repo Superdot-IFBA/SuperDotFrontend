@@ -121,7 +121,13 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
                         <Flex justify={"center"} align={"center"}>
                             <label
                                 htmlFor="chooseFile"
-                                className="bg-primary flex border-2 rounded-lg p-2 justify-center  text-white  min-w-[200px] hover:cursor-pointer align-middle hover:bg-secondary active:bg-primary active:brightness-90 max-sm:text-[16px] btn-primary animate-bounce-in"
+                                onClick={(e) => {
+                                    if (!currentFileKeyToUpload) {
+                                        e.preventDefault(); // impede abrir o file dialog
+                                        setLocalError("Selecione o tipo de arquivo antes de anexar.");
+                                    }
+                                }}
+                                className="bg-primary flex border-2 rounded-lg p-2 justify-center text-white min-w-[200px] hover:cursor-pointer align-middle hover:bg-secondary active:bg-primary active:brightness-90 max-sm:text-[16px] btn-primary animate-bounce-in"
                             >
                                 Anexar arquivo
                                 <Icon.UploadSimple className="ml-2 h-[20px] w-[20px]" />
