@@ -72,7 +72,19 @@ span.error-message {
     background: var(--primary-light);
     border-radius: 4px;
 }
+/* Estilização register page */
+.modern-input {
+    @apply w-full rounded-lg border border-gray-200 bg-white px-4 py-3 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-transparent focus:outline-none;
+}
 
+.modern-select {
+    @apply w-full cursor-pointer appearance-none rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-transparent focus:outline-none;
+}
+
+.error-message {
+    @apply mt-1 flex items-center gap-1 text-sm font-medium text-red-500;
+}
+/* ==================== */
 .bg-professional {
     @apply bg-neutral-50;
 }

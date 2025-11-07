@@ -129,7 +129,9 @@ const DetailsForm = ({ handleOnSubmit, setStepData, currentData }: DetailsFormPr
                                 placeholder="dd/mm/aaaa"
                                 autoComplete="bday"
                                 multiple={false}
-                                onChange={([date]) => setValue("personalData.birthDate", date)}
+                                onChange={([date]) => {
+                                    setValue("personalData.birthDate", date, { shouldValidate: true });
+                                }}
                                 options={{
                                     dateFormat: "d/m/Y",
                                     maxDate: minDate,

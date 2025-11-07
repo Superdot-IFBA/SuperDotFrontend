@@ -9,7 +9,7 @@ import logo from '../../assets/Logo-GRUPAC.png'
 import logoWhite from '../../assets/Logo-GRUPAC-white.png'
 import ImgPopUp from '../../assets/Saly-16.svg'
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Notify, NotificationType } from "../../components/Notify/Notify";
 import { Box, Flex, Strong } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
@@ -26,6 +26,7 @@ export const LoginPage = () => {
     } = useForm({ resolver: yupResolver(loginSchema) });
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const [notificationData, setNotificationData] = useState<{
         title: string;
@@ -59,12 +60,20 @@ export const LoginPage = () => {
         } finally {
             setLoading(false);
         }
-
-
     });
 
-    return (
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
 
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    return (
         <>
             <Notify
                 open={!!notificationData.title}
@@ -75,128 +84,127 @@ export const LoginPage = () => {
             />
             <Flex className="h-screen w-full">
                 <Flex className="w-full align-middle h-screen">
-
                     <BackgroundComponent />
                     <FloatingPopup
-                        message="É novo por aqui? 
-                        Venha conhecer o SuperDot!"
+                        message="É novo por aqui? Venha conhecer o SuperDot!"
                         buttonText="Explorar Agora"
                         redirectUrl="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
                         imageUrl={ImgPopUp}
                     />
                 </Flex>
-                <Flex direction="column" className="w-full text-[#4F4F4F] m-auto desktop z-50">
-                    <Form.Root onSubmit={onSubmit} className="m-auto w-[70%] max-md:w-[80%] ">
-                        <Box className="mb-10">
-                            <img className="m-auto w-40" src={logo}></img>
-                        </Box>
-                        <Box className="text-left mb-10 w-[70%] lg:w-[100%] md:w-[100%] max-sm:w-[100%]">
-                            <h1 className="mb-4 text-[36px] leading-none">Acesse a plataforma</h1>
-                            <p className=" text-[16px]">Faça login ou registre-se para começar a sua pesquisa ainda hoje.</p>
-                        </Box>
-                        <Box className="mb-4">
-                            <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />} autoComplete="email"  {...register("email")} errorMessage={errors?.email && (
-                                <Form.Message className="error-message">{errors.email.message}</Form.Message>
-                            )}></InputField>
-                        </Box>
-                        <Box>
-                            <InputField
-                                label={""}
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Senha"
-                                icon={<Icon.Key color="gray" />}
-                                autoComplete="current-password"
-                                {...register("password")}
-                                errorMessage={errors?.password && (
-                                    <Form.Message className="error-message">{errors.password.message}</Form.Message>
-                                )}
-                                actionButton={
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                                    >
-                                        {showPassword ? <Icon.Eye size={16} /> : <Icon.EyeSlash size={16} />}
-                                    </button>
-                                }
-                            />
-                        </Box>
-                        <Box>
-                            <Form.Submit asChild >
-                                <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
+                {!isMobile && (
+                    <Flex direction="column" className="w-full text-[#4F4F4F] m-auto desktop z-50">
+                        <Form.Root onSubmit={onSubmit} className="m-auto w-[70%] max-md:w-[80%] ">
+                            <Box className="mb-10">
+                                <img className="m-auto w-40" src={logo}></img>
+                            </Box>
+                            <Box className="text-left mb-10 w-[70%] lg:w-[100%] md:w-[100%] max-sm:w-[100%]">
+                                <h1 className="mb-4 text-[36px] leading-none">Acesse a plataforma</h1>
+                                <p className=" text-[16px]">Faça login ou registre-se para começar a sua pesquisa ainda hoje.</p>
+                            </Box>
+                            <Box className="mb-4">
+                                <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />}   {...register("email")} errorMessage={errors?.email && (
+                                    <Form.Message className="error-message">{errors.email.message}</Form.Message>
+                                )}></InputField>
+                            </Box>
+                            <Box>
+                                <InputField
+                                    label={""}
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Senha"
+                                    icon={<Icon.Key color="gray" />}
+                                    autoComplete="current-password"
+                                    {...register("password")}
+                                    errorMessage={errors?.password && (
+                                        <Form.Message className="error-message">{errors.password.message}</Form.Message>
+                                    )}
+                                    actionButton={
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                        >
+                                            {showPassword ? <Icon.Eye size={16} /> : <Icon.EyeSlash size={16} />}
+                                        </button>
+                                    }
+                                />
+                            </Box>
+                            <Box>
+                                <Form.Submit asChild >
+                                    <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
 
-                                </Button>
-                            </Form.Submit>
+                                    </Button>
+                                </Form.Submit>
 
-                            <p className="text-sm text-left">
-                                Ainda não tem uma conta? <Link to="/register">
-                                    <Strong className="text-primary bold !font-roboto">Inscreva-se</Strong>
-                                </Link>
-                            </p>
-                        </Box>
-
-                    </Form.Root>
-
-                </Flex>
-                <div className="absolute inset-0 z-10   bg-cover mobo h-screen w-full">
-                    <Flex direction={"column"} className="w-[80%] max-sm:w-full bg-glass relative card-container-border-variant sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 py-3 max-sm:border-none  max-sm:rounded-none  max-sm:h-screen">
-                        <Flex direction="column" className="w-full text-[#4F4F4F] m-auto">
-                            <Form.Root onSubmit={onSubmit} className="m-auto w-auto max-sm:w-[80%]">
-                                <Box className="mb-10">
-                                    <img className="m-auto w-28" src={logoWhite}></img>
-                                </Box>
-                                <Box className="text-left mb-10 w-[70%] max-sm:w-[100%]">
-                                    <h1 className="mb-4 text-[30px] text-white leading-none">Acesse a plataforma</h1>
-                                    <p className=" text-[16px] text-white">Faça login ou registre-se para começar a sua pesquisa ainda hoje.</p>
-                                </Box>
-                                <Box className="mb-4  rounded-lg">
-                                    <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />}  {...register("email")} errorMessage={errors?.email && (
-                                        <Form.Message >{errors.email.message}</Form.Message>
-                                    )}></InputField>
-                                </Box>
-                                <Box className="mb-4  rounded-lg">
-                                    <InputField
-                                        label={""}
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="Senha"
-                                        icon={<Icon.Key color="gray" />}
-                                        {...register("password")}
-                                        errorMessage={errors?.password && (
-                                            <Form.Message className="error-message">{errors.password.message}</Form.Message>
-                                        )}
-                                        actionButton={
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {showPassword ? <Icon.Eye size={16} /> : <Icon.EyeSlash size={16} />}
-                                            </button>
-                                        }
-                                    />
-                                </Box>
-                                <Box>
-                                    <Form.Submit asChild >
-                                        <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
-
-                                        </Button>
-                                    </Form.Submit>
-
-                                    <p className="text-sm text-left text-white">
-                                        Ainda não tem uma conta? <Link to="/register">
-                                            <strong className="text-primary font-bold !font-roboto ">
-                                                Inscreva-se
-                                            </strong>
-
-                                        </Link>
-                                    </p>
-                                </Box>
-                            </Form.Root>
-                        </Flex>
+                                <p className="text-sm text-left">
+                                    Ainda não tem uma conta? <Link to="/register">
+                                        <Strong className="text-primary bold !font-roboto">Inscreva-se</Strong>
+                                    </Link>
+                                </p>
+                            </Box>
+                        </Form.Root>
                     </Flex>
-                </div>
+                )}
+                {isMobile && (
+                    < div className="absolute inset-0 z-10 bg-cover mobo h-screen w-full">
+                        <Flex direction={"column"} className="w-[80%] max-sm:w-full bg-glass relative card-container-border-variant sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 py-3 max-sm:border-none  max-sm:rounded-none  max-sm:h-screen">
+                            <Flex direction="column" className="w-full text-[#4F4F4F] m-auto">
+                                <Form.Root onSubmit={onSubmit} className="m-auto w-auto max-sm:w-[80%]">
+                                    <Box className="mb-10">
+                                        <img className="m-auto w-28" src={logoWhite}></img>
+                                    </Box>
+                                    <Box className="text-left mb-10 w-[70%] max-sm:w-[100%]">
+                                        <h1 className="mb-4 text-[30px] text-white leading-none">Acesse a plataforma</h1>
+                                        <p className=" text-[16px] text-white">Faça login ou registre-se para começar a sua pesquisa ainda hoje.</p>
+                                    </Box>
+                                    <Box className="mb-4  rounded-lg">
+                                        <InputField label={""} type="email" placeholder="E-mail" icon={<Icon.Envelope color="gray" />}  {...register("email")} errorMessage={errors?.email && (
+                                            <Form.Message >{errors.email.message}</Form.Message>
+                                        )}></InputField>
+                                    </Box>
+                                    <Box className="mb-4  rounded-lg">
+                                        <InputField
+                                            label={""}
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Senha"
+                                            icon={<Icon.Key color="gray" />}
+                                            {...register("password")}
+                                            errorMessage={errors?.password && (
+                                                <Form.Message className="error-message">{errors.password.message}</Form.Message>
+                                            )}
+                                            actionButton={
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                                >
+                                                    {showPassword ? <Icon.Eye size={16} /> : <Icon.EyeSlash size={16} />}
+                                                </button>
+                                            }
+                                        />
+                                    </Box>
+                                    <Box>
+                                        <Form.Submit asChild >
+                                            <Button loading={loading} size="Large" className="w-full mb-8 mt-4" title={"Entrar"} color={"gradiente"} >
+
+                                            </Button>
+                                        </Form.Submit>
+
+                                        <p className="text-sm text-left text-white">
+                                            Ainda não tem uma conta? <Link to="/register">
+                                                <strong className="text-primary font-bold !font-roboto ">
+                                                    Inscreva-se
+                                                </strong>
+
+                                            </Link>
+                                        </p>
+                                    </Box>
+                                </Form.Root>
+                            </Flex>
+                        </Flex>
+                    </div>
+                )}
             </Flex>
         </>
-
     );
 };

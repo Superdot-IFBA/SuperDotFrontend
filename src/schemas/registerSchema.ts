@@ -1,4 +1,4 @@
-import { date, object, string } from "yup";
+import { date, object, ref, string } from "yup";
 
 export const detailsSchema = object({
     personalData: object({
@@ -11,10 +11,25 @@ export const detailsSchema = object({
 });
 
 export const loginInfoSchema = object({
-    email: string().email("Insira um e-mail válido.").required("Email é um campo obrigatório."),
-    emailConfirmation: string().email("Insira um e-mail válido.").required("Digite o e-mail novamente."),
-    password: string().min(8, "A senha precisa ter, no mínimo, 8 caracteres").required("Senha é um campo obrigatório."),
-    passwordConfirmation: string().required("Digite a senha novamente."),
+    email: string()
+        .email("Insira um e-mail válido.")
+        .required("E-mail é um campo obrigatório."),
+
+    emailConfirmation: string()
+        .oneOf([ref("email")], "Os e-mails não coincidem.")
+        .required("Digite o e-mail novamente."),
+
+    password: string()
+        .min(8, "A senha precisa ter, no mínimo, 8 caracteres.")
+        .matches(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula.")
+        .matches(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula.")
+        .matches(/[0-9]/, "A senha deve conter pelo menos um número.")
+        .matches(/[@$!%*?&]/, "A senha deve conter pelo menos um caractere especial.")
+        .required("Senha é um campo obrigatório."),
+
+    passwordConfirmation: string()
+        .oneOf([ref("password")], "As senhas não coincidem.")
+        .required("Digite a senha novamente."),
 });
 
 export interface RegisterValues {

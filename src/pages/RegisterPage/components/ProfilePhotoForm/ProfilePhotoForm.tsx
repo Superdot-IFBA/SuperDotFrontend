@@ -48,38 +48,69 @@ const ProfilePhotoForm = ({
         <Form.Root
             about="Form to provide a profile photo."
             onSubmit={onSubmit}
-            className="m-auto"
+            className="mt-6 m-auto w-10/12 max-sm:w-full max-w-2xl"
         >
-            <h1>Criar uma conta</h1>
-            <h3>Foto de perfil (opcional)</h3>
-            <div className="text-center flex flex-col">
-                <div className="m-auto">
-                    <img
-                        className="mx-auto h-64 w-64 rounded-full mb-5 object-cover"
-                        src={photoUploaded ? URL.createObjectURL(photoUploaded) : noImage}
-                    ></img>
-                </div>
-                <Form.Field name="personalData.profilePhoto" className="m-auto h-full">
-
-                    <Form.Label asChild>
-                        <label className="block cursor-pointer py-2 px-4 text-sm bg-green-500 text-white hover:bg-green-600 active:bg-green-700 btn-primary rounded">Carregar foto</label>
-                    </Form.Label>
-                    <Form.Control
-                        className="hidden"
-                        type="file"
-                        name="personalData.profilePhoto"
-                        onChange={handleChangeImage}
-                    ></Form.Control>
-                    {errorMessage && <Form.Message className="error-message">{errorMessage}</Form.Message>}
-                </Form.Field>
+            <div className="text-center mb-4">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Criar uma conta</h1>
+                <h3 className="text-lg text-gray-600">Foto de perfil (opcional)</h3>
             </div>
-            <div className="mt-8 flex gap-x-2 ">
-                <Button onClick={handleOnClickPreviousStep} type="button" className="w-full" title={"Voltar"} color={"gray"} size={"Large"}>
 
-                </Button>
-                <Button className="w-full" title={"Continuar"} color={"primary"} size={"Large"}></Button>
+            <div className="space-y-6">
+                <div className="flex flex-col items-center">
+                    <div className="relative mb-4">
+                        <img
+                            className="h-48 w-48 sm:h-60 sm:w-60 rounded-full object-cover shadow-md border border-gray-200"
+                            src={photoUploaded ? URL.createObjectURL(photoUploaded) : noImage}
+                            alt="Foto de perfil"
+                        />
+                    </div>
+
+                    <Form.Field name="personalData.profilePhoto" className="text-center">
+                        <Form.Label asChild>
+                            <label className="cursor-pointer py-2 px-6 text-sm font-semibold bg-green-500 text-white rounded-xl hover:bg-green-600 active:bg-green-700 transition-all duration-200 shadow-md">
+                                Carregar foto
+                            </label>
+                        </Form.Label>
+                        <Form.Control
+                            className="hidden"
+                            type="file"
+                            name="personalData.profilePhoto"
+                            accept="image/*"
+                            onChange={handleChangeImage}
+                        />
+                        {errorMessage && (
+                            <Form.Message className="error-message mt-2 text-center text-sm text-red-600">
+                                {errorMessage}
+                            </Form.Message>
+                        )}
+                    </Form.Field>
+                </div>
+
+                <div className="pt-4 grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-3">
+                    <Button
+                        onClick={handleOnClickPreviousStep}
+                        type="button"
+                        title="Voltar"
+                        color="gray"
+                        size="Full"
+                        className="w-full modern-button"
+                    />
+                    <Button
+                        title="Continuar"
+                        color="green"
+                        size="Full"
+                        className="w-full modern-button disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    />
+                </div>
+
+                <div className="text-center space-y-4 pt-4">
+                    <div className="text-sm text-gray-500">
+                        Essa etapa é opcional. Você pode adicionar sua foto depois.
+                    </div>
+                </div>
             </div>
         </Form.Root>
+
     );
 };
 

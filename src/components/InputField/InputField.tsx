@@ -27,7 +27,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         };
 
         return (
-            <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"}  rounded-lg ${className}`} name={name}>
+            <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"} rounded-lg ${className}`} name={name}>
                 {label && (
                     <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
                         {label}
@@ -37,12 +37,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 <Flex justify="center" align="center" className="border rounded-md bg-white">
                     {icon && <Flex className="p-2">{icon}</Flex>}
 
-                    <Form.Control asChild className="h-10 w-full">
+                    <Form.Control asChild>
                         <input
-                            placeholder={placeholder}
+                            {...rest}
                             ref={ref}
+                            placeholder={placeholder}
                             type={type}
-                            min={type === "number" ? 0 : undefined} // garante que o input HTML não aceite negativos
+                            min={type === "number" ? 0 : undefined}
                             onKeyDown={handleKeyDown}
                             {...rest}
                             className="bg-white border-none max-sm:placeholder:text-[12px] max-sm:p-2 !font-roboto"
@@ -54,6 +55,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 
                 {errorMessage && <Form.Message className="error-message">{errorMessage}</Form.Message>}
             </Form.Field>
+
         );
     }
 );
