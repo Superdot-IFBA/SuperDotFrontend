@@ -75,13 +75,22 @@ const RegisterPage = () => {
                 setLoading(false);
 
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setNotificationData({
-                title: "Erro ao cadastrar",
-                description: "Por favor, confira as informações fornecidas e tente novamente.",
-                type: "error",
-            });
+
+            if (error.response?.status === 409) {
+                setNotificationData({
+                    title: "E-mail já cadastrado",
+                    description: error.response.data.message || "Este e-mail já está em uso.",
+                    type: "error",
+                });
+            } else {
+                setNotificationData({
+                    title: "Erro ao cadastrar",
+                    description: "Por favor, confira as informações fornecidas e tente novamente.",
+                    type: "error",
+                });
+            }
         } finally {
             setLoading(false);
         }
