@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "../Button/Button";
 import { updateUser } from "../../api/researchers.api";
 import { Notify, NotificationType } from "../../components/Notify/Notify";
+import { PasswordValidationCard } from "../PasswordValidate/PasswordValidate";
 interface UserOptionsProps {
   currentUser: {
     fullName: string;
@@ -45,7 +46,9 @@ export const ProfileEdit = ({
     description: "",
     type: undefined,
   });
-
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +82,6 @@ export const ProfileEdit = ({
   const validateForm = (): boolean => {
     clearError();
 
-    // Validação para aba de segurança
     if (activeTab === 'security') {
       if (newPassword && !currentPassword) {
         showError('Senha atual é obrigatória para alterar a senha', 'current-password');
@@ -91,13 +93,17 @@ export const ProfileEdit = ({
         return false;
       }
 
+      if (newPassword && !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(newPassword)) {
+        showError('A senha deve conter letras maiúsculas, minúsculas, números e símbolos', 'new-password');
+        return false;
+      }
+
       if (newPassword && confirmPassword !== newPassword) {
         showError('As senhas não coincidem', 'confirm-password');
         return false;
       }
     }
 
-    // Validação para aba de perfil
     if (activeTab === 'profile' && !name.trim()) {
       showError('O nome é obrigatório', 'name');
       return false;
@@ -111,29 +117,55 @@ export const ProfileEdit = ({
 
     if (!validateForm()) return;
 
+    const noChanges =
+      name === currentUser.fullName &&
+      !avatarFile &&
+      !newPassword;
+
+    if (noChanges) {
+      setNotificationData({
+        title: 'Nenhuma alteração detectada',
+        description: 'Você não modificou nenhuma informação do perfil.',
+        type: 'info',
+      });
+      return;
+    }
+
     setIsLoading(true);
     clearError();
 
     try {
       const formData = new FormData();
 
-      formData.append("personalData[fullName]", name);
+      formData.append("fullName", name);
 
       if (avatarFile) {
         formData.append("profilePhoto", avatarFile);
+        setNotificationData({
+          title: 'Foto de perfil atualizada!',
+          description: 'Sua nova foto de perfil foi salva com sucesso.',
+          type: 'success',
+        });
       }
+
       if (currentUser.profilePhoto) {
         formData.append("existingProfilePhoto", currentUser.profilePhoto);
+        setNotificationData({
+          title: 'Nome atualizado!',
+          description: 'Seu nome foi alterado com sucesso.',
+          type: 'success',
+        });
       }
 
       if (newPassword) {
         formData.append("currentPassword", currentPassword);
         formData.append("password", newPassword);
         formData.append("passwordConfirmation", confirmPassword);
-      }
-
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
+        setNotificationData({
+          title: 'Senha alterada!',
+          description: 'Sua senha foi atualizada com sucesso.',
+          type: 'success',
+        });
       }
 
       const updatedUser = await updateUser(formData);
@@ -142,19 +174,57 @@ export const ProfileEdit = ({
       setConfirmPassword('');
       setCurrentPassword('');
 
-      showSuccess();
+      if (name !== currentUser.fullName) {
+
+      }
+
+      if (avatarFile) {
+
+      }
+
+      if (newPassword) {
+
+      }
 
       onSave?.({
         fullName: updatedUser.personalData.fullName,
         profilePhoto: updatedUser.personalData.profilePhoto,
       });
+
     } catch (err: any) {
+      const errorResponse = err.response;
+      if (errorResponse) {
+        const { status, data } = errorResponse;
+        const errorMessage = data?.message || 'Erro ao atualizar perfil';
+        const errorCode = data?.code;
+
+        if (status === 400) {
+          switch (errorCode) {
+            case 'PASSWORD_INCORRECT':
+              showError('Senha atual incorreta', 'current-password');
+              break;
+            case 'PASSWORD_REQUIRED':
+              showError('Senha atual é obrigatória para alterar a senha', 'current-password');
+              break;
+            case 'PASSWORDS_MISMATCH':
+              showError('As senhas não coincidem', 'confirm-password');
+              break;
+            case 'NO_DATA':
+              showError('Nenhum dado foi modificado');
+              break;
+            default:
+              showError(errorMessage);
+          }
+        } else {
+          showError(errorMessage);
+        }
+      } else {
+        showError('Erro de conexão. Tente novamente.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
-
 
   const hasFieldError = (fieldName: string): boolean => {
     return error.field === fieldName;
@@ -174,7 +244,6 @@ export const ProfileEdit = ({
       </div>
       <div className="bg-white card-container overflow-hidden max-w-3xl mx-auto">
 
-        {/* Banner de erro/sucesso */}
         {error.message && (
           <div className={`px-6 py-3 rounded-lg mx-4 mt-4 ${error.type === 'error'
             ? 'bg-red-100 text-red-700 border border-red-200'
@@ -232,7 +301,6 @@ export const ProfileEdit = ({
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="flex-1 p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               {activeTab === 'profile' ? (
@@ -299,12 +367,12 @@ export const ProfileEdit = ({
               ) : (
                 <div className="space-y-4 max-w-md mx-auto">
                   <div>
-                    <label htmlFor="current-password" className="block text-sm font-medium text-gray-700 mb-1">
-                      Senha atual
+                    <label htmlFor="current-password" className="block text-sm font-semibold text-gray-800 mb-2 text-left">
+                      Senha atual <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showCurrentPassword ? "text" : "password"}
                         id="current-password"
                         value={currentPassword}
                         onChange={(e) => {
@@ -317,17 +385,23 @@ export const ProfileEdit = ({
                           }`}
                         placeholder="Digite sua senha atual"
                       />
-                      <Icon.Lock className="absolute right-3 top-3 text-gray-400" size={18} />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                      >
+                        {showCurrentPassword ? <Icon.Eye size={18} /> : <Icon.EyeSlash size={18} />}
+                      </button>
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
-                      Nova senha
+                    <label htmlFor="new-password" className="block text-sm font-semibold text-gray-800 mb-2 text-left">
+                      Nova senha <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         id="new-password"
                         value={newPassword}
                         onChange={(e) => {
@@ -340,20 +414,29 @@ export const ProfileEdit = ({
                           }`}
                         placeholder="Digite a nova senha"
                       />
-                      <Icon.Lock className="absolute right-3 top-3 text-gray-400" size={18} />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                      >
+                        {showNewPassword ? <Icon.Eye size={18} /> : <Icon.EyeSlash size={18} />}
+                      </button>
                     </div>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Mínimo de 8 caracteres, incluindo números e símbolos.
-                    </p>
+                    <div
+                      className={`transition-all duration-500 ease-out overflow-hidden ${newPassword ? "opacity-100 max-h-96 translate-y-0" : "opacity-0 max-h-0 -translate-y-2"
+                        }`}
+                    >
+                      <PasswordValidationCard password={newPassword} />
+                    </div>
                   </div>
 
                   <div>
-                    <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
-                      Confirmar nova senha
+                    <label htmlFor="confirm-password" className="block text-sm font-semibold text-gray-800 mb-2 text-left">
+                      Confirmar nova senha <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         id="confirm-password"
                         value={confirmPassword}
                         onChange={(e) => {
@@ -366,8 +449,30 @@ export const ProfileEdit = ({
                           }`}
                         placeholder="Confirme a nova senha"
                       />
-                      <Icon.Lock className="absolute right-3 top-3 text-gray-400" size={18} />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                      >
+                        {showConfirmPassword ? <Icon.Eye size={18} /> : <Icon.EyeSlash size={18} />}
+                      </button>
                     </div>
+
+                    {newPassword && confirmPassword && (
+                      <div className={`mt-2 flex items-center gap-2 text-sm ${newPassword === confirmPassword ? 'text-green-600' : 'text-red-600'}`}>
+                        {newPassword === confirmPassword ? (
+                          <>
+                            <Icon.CheckCircle size={16} weight="fill" />
+                            <span>Senhas coincidem</span>
+                          </>
+                        ) : (
+                          <>
+                            <Icon.WarningCircle size={16} weight="fill" />
+                            <span>Senhas não coincidem</span>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -375,7 +480,7 @@ export const ProfileEdit = ({
               <div className="flex justify-center pt-4 border-t border-gray-200">
                 <Button
                   type="submit"
-                  title={isLoading ? "Salvando..." : "Salvar alterações"}
+                  title={"Salvar alterações"}
                   color="green"
                   disabled={isLoading}
                   children={

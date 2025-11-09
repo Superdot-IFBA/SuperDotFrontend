@@ -37,12 +37,8 @@ const Modal = ({
 
                 <AlertDialog.Title className={`text-xl font-bold max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}>{title}</AlertDialog.Title>
 
-                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} px-6 mb-3`}>
-                    <Flex direction="column" gap="2" className="mb-6 !font-roboto">
-                        <Text as="p" className="text-sm max-sm:text-xs">
-                            {accessibleDescription}
-                        </Text>
-                    </Flex>
+                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} px-6  mb-6 !font-roboto text-sm max-sm:text-xs`}>
+                    {accessibleDescription}
                 </AlertDialog.Description>
                 <div className={`px-6 pt-0 mb-6 ${classNameChildren}`}>{children}</div>
             </AlertDialog.Content>

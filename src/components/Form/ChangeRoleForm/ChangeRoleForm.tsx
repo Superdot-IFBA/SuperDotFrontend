@@ -22,9 +22,8 @@ const ChangeRoleForm = ({ userId, onFinish, currentUserRole }: ChangeRoleFormPro
     const [loading, setLoading] = useState(false);
     const usersPageSearchFormSchema = yup.object({
         newRole: yup
-            .string()
-            .oneOf(USER_ROLES_ARRAY, "Por favor, selecione um perfil.")
-            .notOneOf([currentUserRole])
+            .mixed<USER_ROLE>()
+            .notOneOf([currentUserRole], "Não é possível selecionar este perfil, pois ele já está definido como o atual.")
             .required(),
         emailMessage: yup.string(),
     });
@@ -33,7 +32,9 @@ const ChangeRoleForm = ({ userId, onFinish, currentUserRole }: ChangeRoleFormPro
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({ resolver: yupResolver(usersPageSearchFormSchema) });
+    } = useForm<{ newRole: USER_ROLE; emailMessage?: string }>({
+        resolver: yupResolver(usersPageSearchFormSchema),
+    });
 
     const onSubmit = handleSubmit(async (data) => {
         setLoading(true);
@@ -69,6 +70,7 @@ const ChangeRoleForm = ({ userId, onFinish, currentUserRole }: ChangeRoleFormPro
                     label="Mensagem (será enviada ao e-mail do usuário)"
                     {...register("emailMessage")}
                     className="border-2 border-gray-300 mt-1"
+
                 />
                 <Form.Submit asChild>
                     <Button loading={loading} title={"Salvar alterações"} color={"green"} size={"Medium"} children={<Icon.FloppyDisk size={18} weight="bold" />} />

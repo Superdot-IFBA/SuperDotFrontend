@@ -29,7 +29,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         return (
             <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"} rounded-lg ${className}`} name={name}>
                 {label && (
-                    <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                    <Form.Label className="block text-left text-xs font-bold tracking-wide">
                         {label}
                     </Form.Label>
                 )}

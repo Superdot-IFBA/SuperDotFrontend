@@ -17,7 +17,7 @@ import { Button } from "../../components/Button/Button";
 import { InputField } from "../../components/InputField/InputField";
 import BackgroundComponent from "../../components/Background/Background";
 import FloatingPopup from "../../components/FloatingPopup/FloatingPopup";
-
+import { useSearchParams } from "react-router-dom";
 export const LoginPage = () => {
     const {
         register,
@@ -27,6 +27,10 @@ export const LoginPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [searchParams] = useSearchParams();
+    const sessionExpired = searchParams.get('sessionExpired');
+
+
 
     const [notificationData, setNotificationData] = useState<{
         title: string;
@@ -72,6 +76,19 @@ export const LoginPage = () => {
 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
+
+    useEffect(() => {
+        if (sessionExpired) {
+            setNotificationData({
+                title: "Sessão Expirada",
+                description: "Sua sessão expirou. Por favor, faça login novamente.",
+                type: "warning"
+            });
+
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        }
+    }, [sessionExpired]);
 
     return (
         <>

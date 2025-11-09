@@ -34,6 +34,8 @@ export interface SampleSummary {
         tcleDocument: string;
         taleDocument: string;
     };
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface PageSampleSummary {
@@ -87,11 +89,8 @@ export const seeAttachmentImage = async (fileName: string) => {
             const blob = new Blob([response.data], { type: response.headers["content-type"] });
             const imageUrl = URL.createObjectURL(blob);
             return imageUrl;
-        } else {
-            throw new Error("Erro ao recuperar o anexo");
         }
     } catch (error) {
-        console.error("Erro ao recuperar o anexo:", error);
         throw error;
     }
 };

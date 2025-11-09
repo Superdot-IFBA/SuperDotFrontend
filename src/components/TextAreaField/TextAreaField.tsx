@@ -12,14 +12,14 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
     ({ label, placeholder, name, errorMessage, ...rest }, ref) => {
         return (
             <Form.Field className="relative mb-6 w-full" name={name}>
-                <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                <Form.Label className="block text-left text-xs font-bold tracking-wide">
                     {label}
                 </Form.Label>
-                <Form.Control asChild className="h-20 w-full rounded-[4px] p-2  text-sm">
+                <Form.Control asChild className="h-20 w-full rounded-[4px] p-2 text-sm">
                     <textarea placeholder={placeholder} ref={ref} {...rest} />
                 </Form.Control>
                 {errorMessage && (
-                    <Form.Message className="float-left text-[13px] md:float-none">{errorMessage}</Form.Message>
+                    <Form.Message className="error-message">{errorMessage}</Form.Message>
                 )}
             </Form.Field>
         );

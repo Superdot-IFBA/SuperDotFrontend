@@ -69,15 +69,12 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
   useEffect(() => {
     const fetchImage = async () => {
       const profilePhoto = userData?.personalData.profilePhoto;
-
-      if (!profilePhoto) {
-        setLoading(false);
-        return;
-      }
+      if (!profilePhoto) return;
 
       const cacheKey = profilePhoto;
 
-      if (profilePhotoCache.has(cacheKey) && !sampleFile) {
+      // Verifica cache
+      if (profilePhotoCache.has(cacheKey)) {
         setImageUrl(profilePhotoCache.get(cacheKey)!);
         setLoading(false);
         return;
@@ -86,17 +83,19 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
       try {
         setLoading(true);
         const url = await seeAttachmentImage(cacheKey);
-        profilePhotoCache.set(cacheKey, url);
-        setImageUrl(url);
-      } catch (error) {
-        console.error("Erro ao recuperar a imagem:", error);
+        profilePhotoCache.set(cacheKey, url ?? '');
+        setImageUrl(url ?? '');
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchImage();
-  }, [sampleFile, userData?.personalData?.profilePhoto, profilePhotoCache]);
+    if (userData?.personalData?.profilePhoto) {
+      fetchImage();
+    }
+  }, [userData?.personalData?.profilePhoto]);
 
   const logout = () => {
     clearTokens();
@@ -107,10 +106,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
     setOpenProfileModal(true);
   }
 
-  const handleProfileSave = (updatedData: {
-    fullName?: string;
-    profilePhoto?: string;
-  }) => {
+  const handleProfileSave = (updatedData: { fullName?: string; profilePhoto?: string; }) => {
     setUserData((prev) => prev ? {
       ...prev,
       personalData: {
@@ -120,10 +116,13 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
       },
     } : null);
 
-    setOpenProfileModal(false);
+    if (updatedData.profilePhoto) {
+      profilePhotoCache.set(updatedData.profilePhoto, updatedData.profilePhoto);
+      setImageUrl(updatedData.profilePhoto);
+    }
   };
 
-  // Componente de avatar com skeleton
+
   const AvatarWithSkeleton = () => (
     <Skeleton loading={loading} width="40px" height="40px" >
       <Avatar

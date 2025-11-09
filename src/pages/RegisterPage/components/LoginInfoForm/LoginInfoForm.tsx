@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RegisterValues, loginInfoSchema } from "../../../../schemas/registerSchema";
 import { useState } from "react";
 import { Button } from "../../../../components/Button/Button";
+import { PasswordValidationCard } from "../../../../components/PasswordValidate/PasswordValidate";
 
 interface LoginInfoProps {
     handleOnSubmit: (data: RegisterValues) => void;
@@ -34,6 +35,8 @@ const LoginInfoForm = ({
     const [useTermChecked, setUseTermChecked] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+
 
 
     const onSubmit = handleSubmit((stepData) => {
@@ -122,6 +125,7 @@ const LoginInfoForm = ({
                         >
                             Senha <span className="text-red-500">*</span>
                         </Form.Label>
+
                         <div className="relative">
                             <Form.Control
                                 id="password"
@@ -130,6 +134,9 @@ const LoginInfoForm = ({
                                 autoComplete="new-password"
                                 className="modern-input pr-10"
                                 {...register("password")}
+                                onChange={(e) => {
+                                    setNewPassword(e.target.value);
+                                }}
                             />
                             <button
                                 type="button"
@@ -139,6 +146,9 @@ const LoginInfoForm = ({
                                 {showPassword ? <Icon.Eye /> : <Icon.EyeSlash />}
                             </button>
                         </div>
+
+
+
                         {errors?.password && (
                             <Form.Message className="error-message mt-2">
                                 {errors.password.message}
@@ -176,7 +186,12 @@ const LoginInfoForm = ({
                         )}
                     </Form.Field>
                 </div>
-
+                <div
+                    className={`transition-all duration-500 ease-out overflow-hidden ${newPassword ? "opacity-100 max-h-96 translate-y-0" : "opacity-0 max-h-0 -translate-y-2"
+                        }`}
+                >
+                    <PasswordValidationCard password={newPassword} />
+                </div>
                 <Form.Field name="acceptUseTerm" className="pt-2">
                     <div className="flex items-start gap-3 text-left">
                         <Checkbox.Root
@@ -220,10 +235,9 @@ const LoginInfoForm = ({
                     />
                     <Button
                         title="Concluir"
-                        color={isValid ? "green" : "gray"}
+                        color={"green"}
                         size="Full"
                         className="w-full modern-button disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        disabled={!isValid}
                         loading={loading}
                     />
                 </div>

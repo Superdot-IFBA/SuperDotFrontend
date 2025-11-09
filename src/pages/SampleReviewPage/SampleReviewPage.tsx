@@ -107,12 +107,30 @@ const SampleReviewPage = () => {
     };
 
     const handleSeeAttachment = async (fileName: string) => {
-        const response = await seeAttachment(fileName);
-        if (response.status === 200) {
-            const fileObjectURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
-            window.open(fileObjectURL);
+        try {
+            const response = await seeAttachment(fileName);
+
+            if (response.status === 200) {
+                const fileObjectURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+                window.open(fileObjectURL);
+            }
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                setNotificationData({
+                    title: "Erro ao Recuperar anexo!",
+                    description: "Arquivo não pode ser encontrado.",
+                    type: "error"
+                });
+            } else {
+                setNotificationData({
+                    title: "Erro inesperado!",
+                    description: "Ocorreu um problema ao tentar abrir o anexo.",
+                    type: "error"
+                });
+            }
         }
     };
+
 
     return (
         <>
@@ -158,8 +176,8 @@ const SampleReviewPage = () => {
                             open={modalListReviewsOpen}
                             setOpen={setModalListReviewsOpen}
                         >
-                            {reviewsData?.map((review) => (
-                                <ReviewCard reviewerFullName={review.reviewerFullName} reviewDetails={review.reviewDetails} />
+                            {reviewsData?.map((review, index) => (
+                                <ReviewCard key={index} reviewerFullName={review.reviewerFullName} reviewDetails={review.reviewDetails} />
                             ))}
                         </Modal>
                         <Modal
@@ -170,8 +188,6 @@ const SampleReviewPage = () => {
                         >
                             <Flex align="center" justify="center" gap="2" className="flex-row max-sm:flex-col">
                                 {attachmentsToDisplay?.researchDocument && (
-
-
                                     <Button
                                         onClick={() => handleSeeAttachment(attachmentsToDisplay.researchDocument || "")} title={"Parecer do CEP"}
                                         children={<Icon.Files size={20} />} color={"primary"} size={"Small"} className="w-full"                           >

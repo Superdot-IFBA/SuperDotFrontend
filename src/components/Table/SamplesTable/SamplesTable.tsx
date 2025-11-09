@@ -8,6 +8,8 @@ import SkeletonTableBody from "../../Skeletons/SkeletonTableBody";
 import SkeletonDataList from "../../Skeletons/SkeletonDataList";
 import EmptyState from "../../EmptyState/EmptyState";
 import { Button } from "../../Button/Button";
+import { DateTime } from "luxon";
+
 
 interface SamplesTableProps {
     page?: PageSampleSummary;
@@ -58,38 +60,47 @@ const SamplesTable = ({
             {/* Versão Desktop */}
             <Table.Root variant="surface" className="w-full m-auto desktop">
                 <Table.Header className="text-[15px]">
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r"> Nome do Pesquisador</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">Nome da amostra</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                        <Tooltip content="Certificado de Apresentação de Apreciação Ética">
-                            <Box>CAAE</Box>
-                        </Tooltip>
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r"> Participantes solicitados </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">Participantes autorizados</Table.ColumnHeaderCell>
+                    <Table.Row>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            Nome do Pesquisador
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            Nome da Amostra
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            <Tooltip content="Certificado de Apresentação de Apreciação Ética">
+                                <Box>CAAE</Box>
+                            </Tooltip>
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            Participantes Solicitados
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            Participantes Autorizados
+                        </Table.ColumnHeaderCell>
 
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                        <Flex direction="column">
-                            <Box className="mb-1">Status</Box>
-                            <Select.Root defaultValue="Todos" size="1" onValueChange={handleValueChange}>
-                                <Select.Trigger />
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            <Flex direction="column">
+                                <Box className="mb-1">Status</Box>
+                                <Select.Root defaultValue="Todos" size="1" onValueChange={handleValueChange}>
+                                    <Select.Trigger />
+                                    <Select.Content>
+                                        <Select.Group>
+                                            <Select.Label>Status</Select.Label>
+                                            <Select.Item value="Todos">Todos</Select.Item>
+                                            <Select.Item value="Pendente">Pendente</Select.Item>
+                                            <Select.Item value="Autorizado">Autorizado</Select.Item>
+                                            <Select.Item value="Não Autorizado">Não Autorizado</Select.Item>
+                                        </Select.Group>
+                                    </Select.Content>
+                                </Select.Root>
+                            </Flex>
+                        </Table.ColumnHeaderCell>
 
-                                <Select.Content>
-                                    <Select.Group>
-                                        <Select.Label>Status</Select.Label>
-                                        <Select.Item value="Todos" >Todos</Select.Item>
-                                        <Select.Item value="Pendente">Pendente</Select.Item>
-                                        <Select.Item value="Autorizado">Autorizado</Select.Item>
-                                        <Select.Item value="Não Autorizado">Não Autorizado</Select.Item>
-                                    </Select.Group>
-                                </Select.Content>
-                            </Select.Root>
-                        </Flex>
-
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r"> Ações</Table.ColumnHeaderCell>
-
-
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                            Ações
+                        </Table.ColumnHeaderCell>
+                    </Table.Row>
                 </Table.Header>
 
                 {loading ? (
@@ -100,7 +111,14 @@ const SamplesTable = ({
                             {page.data.map((sample) => (
                                 <Table.Row align="center" key={sample.sampleId}>
                                     <Table.Cell justify="center">{getFirstAndLastName(sample.researcherName)}</Table.Cell>
-                                    <Table.Cell justify="center">{sample.sampleName}</Table.Cell>
+                                    <Table.Cell justify="center">
+                                        <div>
+                                            <div >{sample.sampleName}</div>
+                                            <div className="text-[12px]">
+                                                Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
                                     <Table.Cell justify="center">{sample.cepCode}</Table.Cell>
                                     <Table.Cell justify="center">{sample.qttParticipantsRequested}</Table.Cell>
                                     <Table.Cell justify="center">{sample.qttParticipantsAuthorized}</Table.Cell>
@@ -115,7 +133,7 @@ const SamplesTable = ({
                                                     />
                                                 </IconButton>
                                             </Tooltip>
-                                            <Tooltip content="Visualizar histórico de reivisões.">
+                                            <Tooltip content="Visualizar histórico de revisões.">
                                                 <IconButton size="1" variant="surface" radius="full">
                                                     <Icon.MagnifyingGlass
                                                         onClick={() => onClickToViewSampleReviews(sample)}
@@ -185,7 +203,12 @@ const SamplesTable = ({
                             <Separator size="4" />
 
                             <DataList.Label>Nome da Amostra:</DataList.Label>
-                            <DataList.Value>{sample.sampleName}</DataList.Value>
+                            <DataList.Value><div>
+                                <div >{sample.sampleName}</div>
+                                <div style={{ fontSize: '0.675rem', color: '#64748b' }}>
+                                    Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
+                                </div>
+                            </div></DataList.Value>
                             <Separator size="4" />
 
                             <DataList.Label>CAAE:</DataList.Label>
