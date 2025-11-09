@@ -34,6 +34,16 @@ import WelcomeModal from "./components/NewUser/NewUser";
 
 
 function OuterLayout() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!hasActiveSession()) {
+            clearTokens();
+            if (location.pathname !== "/") {
+                navigate("/?sessionExpired=true");
+            }
+        }
+    }, [navigate]);
     return (
         <Flex className="h-full w-full font-roboto bg-off-white">
             <GuardRoute scope="OUTER" publicRoute={true}>
@@ -48,12 +58,18 @@ function InnerLayout() {
     const location = useLocation();
     const navigate = useNavigate();
     const { isMobileMenuOpen, toggleMobileMenu } = useMenu();
+
+
     useEffect(() => {
-        if (!hasActiveSession()) {
-            clearTokens();
-            navigate("/");
-        }
-    }, [navigate]);
+        const checkSession = () => {
+            if (!hasActiveSession()) {
+                clearTokens();
+                navigate("/?sessionExpired=true");
+            }
+        };
+
+        checkSession();
+    }, [navigate, location]);
 
     const headerConfig: Record<string, { title: string; icon: JSX.Element }> = {
         "home": { title: "Dashboard", icon: <Icon.SquaresFour size={20} /> },

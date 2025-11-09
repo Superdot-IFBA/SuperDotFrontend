@@ -53,9 +53,6 @@ thead.multi-rows th {
 
 /** CUSTOM ELEMENTS **/
 
-span.error-message {
-    @apply block px-2 text-left text-sm text-red-500;
-}
 .rt-BaseDialogOverlay::before {
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
@@ -82,7 +79,7 @@ span.error-message {
 }
 
 .error-message {
-    @apply mt-1 flex items-center gap-1 text-sm font-medium text-red-500;
+    @apply ml-2 mt-1 flex items-center gap-1 text-sm font-medium text-red-500;
 }
 /* ==================== */
 .bg-professional {

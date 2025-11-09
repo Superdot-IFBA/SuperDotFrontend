@@ -2,12 +2,15 @@ import axios, { AxiosHeaders } from "axios";
 import jwtDecode, { JwtPayload } from "jwt-decode";
 import { DateTime } from "luxon";
 
+export const logout = () => {
+    clearTokens();
+    window.location.href = "/";
+};
+
 export interface Tokens {
     accessToken: string;
     refreshToken: string;
 }
-
-
 
 export const saveTokens = ({ accessToken, refreshToken }: Tokens) => {
     localStorage.removeItem(import.meta.env.VITE_PARTICIPANT_TOKEN_KEY);
@@ -98,7 +101,7 @@ export const deserializeJWTParticipantToken = (): ParticipantToken => {
     }
 };
 
-export const hasActiveSession = () => {
+export const hasActiveSession = (): boolean => {
     const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
     const refreshToken = localStorage.getItem(import.meta.env.VITE_REFRESH_TOKEN_KEY);
 
@@ -107,17 +110,26 @@ export const hasActiveSession = () => {
         return false;
     }
 
-    const accessTokenDecoded = jwtDecode<JwtPayload>(accessToken);
-    const refreshTokenDecoded = jwtDecode<JwtPayload>(refreshToken);
+    try {
+        const accessTokenDecoded = jwtDecode<JwtPayload>(accessToken);
+        const refreshTokenDecoded = jwtDecode<JwtPayload>(refreshToken);
 
-    if (accessTokenDecoded.exp && DateTime.now().toSeconds() > accessTokenDecoded.exp) {
-        console.warn("Access token expirado.");
-        if (refreshTokenDecoded.exp && DateTime.now().toSeconds() > refreshTokenDecoded.exp) {
-            console.warn("Refresh token expirado.");
+        const nowInSeconds = DateTime.now().toSeconds();
+
+        if (refreshTokenDecoded.exp && nowInSeconds > refreshTokenDecoded.exp) {
+            console.warn("Refresh token expirado. Sessão inválida.");
             return false;
         }
-        return true;
-    }
 
-    return true;
+        if (accessTokenDecoded.exp && nowInSeconds > accessTokenDecoded.exp) {
+            console.warn("Access token expirado, mas refresh token ainda válido.");
+            return true;
+        }
+
+
+        return true;
+    } catch (error) {
+        console.error("Erro ao decodificar tokens:", error);
+        return false;
+    }
 };
