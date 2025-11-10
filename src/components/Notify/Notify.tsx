@@ -3,6 +3,15 @@ import * as Icon from "@phosphor-icons/react";
 
 export type NotificationType = "success" | "error" | "warning" | "info";
 
+interface Notification {
+    id: string;
+    title: string;
+    description: string;
+    type: NotificationType;
+    duration: number;
+    isClosing: boolean;
+}
+
 interface NotifyProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -12,49 +21,104 @@ interface NotifyProps {
     duration?: number;
 }
 
-export const Notify: React.FC<NotifyProps> = ({
-    open,
-    onOpenChange,
-    title,
-    description,
-    type = "info",
-    duration = 10000,
-}) => {
-    const [isVisible, setIsVisible] = useState(open);
+// Hook para gerenciar notificações
+const useNotifications = () => {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    const addNotification = (notification: Omit<Notification, "id" | "isClosing">) => {
+        const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        const newNotification = { ...notification, id, isClosing: false };
+        setNotifications((prev) => [...prev, newNotification]);
+        return id;
+    };
+
+    const removeNotification = (id: string) => {
+        setNotifications((prev) =>
+            prev.map((notif) => (notif.id === id ? { ...notif, isClosing: true } : notif))
+        );
+        setTimeout(() => {
+            setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+        }, 300); // duração da animação de saída
+    };
+
+    const clearAll = () => {
+        setNotifications((prev) => prev.map((notif) => ({ ...notif, isClosing: true })));
+        setTimeout(() => setNotifications([]), 300);
+    };
+
+    return {
+        notifications,
+        addNotification,
+        removeNotification,
+        clearAll,
+    };
+};
+
+// Componente individual
+const NotificationItem: React.FC<{
+    notification: Notification;
+    onClose: (id: string) => void;
+}> = ({ notification, onClose }) => {
     const [progress, setProgress] = useState(100);
 
     useEffect(() => {
-        setIsVisible(open);
-        setProgress(100);
-    }, [open]);
+        if (notification.duration <= 0 || notification.isClosing) return;
 
-    useEffect(() => {
-        if (isVisible && duration > 0) {
-            const startTime = Date.now();
-            const interval = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
-                setProgress(remaining);
-                if (elapsed >= duration) clearInterval(interval);
-            }, 50);
-            return () => clearInterval(interval);
+        const duration = notification.duration;
+        const startTime = Date.now();
+
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
+            setProgress(remaining);
+
+            if (elapsed >= duration) {
+                clearInterval(interval);
+                onClose(notification.id);
+            }
+        }, 50);
+
+        return () => clearInterval(interval);
+    }, []);
+
+
+    const getStyles = () => {
+        switch (notification.type) {
+            case "success":
+                return {
+                    bg: "bg-green-50 border-green-200",
+                    iconBg: "bg-green-500",
+                    text: "text-green-800",
+                    progress: "bg-green-500",
+                };
+            case "error":
+                return {
+                    bg: "bg-red-50 border-red-200",
+                    iconBg: "bg-red-500",
+                    text: "text-red-800",
+                    progress: "bg-red-500",
+                };
+            case "warning":
+                return {
+                    bg: "bg-yellow-50 border-yellow-200",
+                    iconBg: "bg-yellow-500",
+                    text: "text-yellow-800",
+                    progress: "bg-yellow-500",
+                };
+            default:
+                return {
+                    bg: "bg-blue-50 border-blue-200",
+                    iconBg: "bg-blue-500",
+                    text: "text-blue-800",
+                    progress: "bg-blue-500",
+                };
         }
-    }, [isVisible, duration]);
-
-    useEffect(() => {
-        if (isVisible && duration > 0) {
-            const timer = setTimeout(() => handleClose(), duration);
-            return () => clearTimeout(timer);
-        }
-    }, [isVisible, duration]);
-
-    const handleClose = () => {
-        setIsVisible(false);
-        setTimeout(() => onOpenChange(false), 300);
     };
 
+    const styles = getStyles();
+
     const getIcon = () => {
-        switch (type) {
+        switch (notification.type) {
             case "success":
                 return <Icon.CheckCircle size={40} weight="duotone" className="text-white" />;
             case "error":
@@ -66,60 +130,74 @@ export const Notify: React.FC<NotifyProps> = ({
         }
     };
 
-    const getStyles = () => {
-        switch (type) {
-            case "success":
-                return { progress: "bg-green-500", bg: "bg-green-50", text: "text-green-800" };
-            case "error":
-                return { progress: "bg-red-500", bg: "bg-red-50", text: "text-red-800" };
-            case "warning":
-                return { progress: "bg-yellow-500", bg: "bg-yellow-50", text: "text-yellow-800" };
-            default:
-                return { progress: "bg-blue-500", bg: "bg-blue-50", text: "text-blue-800" };
-        }
-    };
-
-    const styles = getStyles();
-
-    if (!open && !isVisible) return null;
-
     return (
         <div
-            className={`fixed bottom-5 right-2 z-[9999999] max-w-[450px] max-sm:max-w-[360px] w-full transition-all duration-300 ease-in-out
-        ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95 pointer-events-none"}
-      `}
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
+            className={`relative  flex border rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out
+        ${notification.isClosing ? "opacity-0 translate-x-10 scale-95" : "opacity-100 translate-x-0 scale-100"}
+        ${styles.bg}`}
         >
-            <div className={`relative flex border rounded-lg shadow-lg overflow-hidden ${styles.bg}`}>
-                <div className={`flex items-center justify-center w-14  ${styles.progress}`}>
-                    {getIcon()}
-                </div>
-
-                <div className="flex-1 p-4 max-sm:p-2">
-                    <div className="flex justify-between items-start">
-                        <div className={`font-semibold text-sm  ${styles.text}`}>{title}</div>
-                        <button
-                            onClick={handleClose}
-                            className="text-gray-400 hover:text-gray-600  rounded transition-colors duration-200 absolute top-2 right-2"
-                            aria-label="Fechar notificação"
-                        >
-                            <Icon.XCircle size={26} aria-hidden="true" />
-                        </button>
-                    </div>
-                    <div className="text-gray-700 text-sm mt-1 max-sm:text-[13px]">{description}</div>
-                </div>
-
-                {duration > 0 && (
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200 bg-opacity-50">
-                        <div
-                            className={`${styles.progress} h-full transition-all duration-50 ease-linear`}
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
-                )}
+            {/* Ícone */}
+            <div className={`flex items-center justify-center w-16 ${styles.iconBg}`}>
+                {getIcon()}
             </div>
+
+            {/* Conteúdo */}
+            <div className="flex-1 p-3">
+                <div className="flex justify-between items-start">
+                    <div className={`font-semibold text-sm ${styles.text}`}>
+                        {notification.title}
+                    </div>
+                    <button
+                        onClick={() => onClose(notification.id)}
+                        className="text-gray-400 hover:text-gray-600 rounded transition-colors duration-200 ml-2"
+                    >
+                        <Icon.X size={16} />
+                    </button>
+                </div>
+                <div className="text-gray-700 text-sm mt-1">{notification.description}</div>
+            </div>
+
+            {/* Barra de progresso */}
+            {notification.duration > 0 && !notification.isClosing && (
+                <div className="absolute bottom-0 left-0 h-1 bg-gray-200 bg-opacity-50 w-full">
+                    <div
+                        className={`${styles.progress} h-full transition-all duration-50 ease-linear`}
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+            )}
         </div>
     );
 };
+
+
+// Componente principal
+export const Notify: React.FC<NotifyProps> = ({
+    open,
+    onOpenChange,
+    title,
+    description,
+    type = "info",
+    duration = 5000,
+}) => {
+    const { notifications, addNotification, removeNotification } = useNotifications();
+
+    useEffect(() => {
+        if (open && title && description) {
+            addNotification({ title, description, type, duration });
+            setTimeout(() => onOpenChange(false), 100);
+        }
+    }, [open, title, description, type, duration]);
+
+    if (notifications.length === 0) return null;
+
+    return (
+        <div className="fixed bottom-2 right-2 z-[9999] flex flex-col gap-3 max-w-[450px] max-sm:max-w-[360px]">
+            {[...notifications].reverse().map((notif) => (
+                <NotificationItem key={notif.id} notification={notif} onClose={removeNotification} />
+            ))}
+        </div>
+    );
+};
+
+export default Notify;

@@ -1,5 +1,5 @@
 import * as Icon from "@phosphor-icons/react";
-import { AlertDialog, Flex, Text } from "@radix-ui/themes";
+import { AlertDialog } from "@radix-ui/themes";
 import { Button } from "../Button/Button";
 
 interface ModalProps extends React.PropsWithChildren {

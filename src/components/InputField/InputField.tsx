@@ -9,10 +9,11 @@ interface InputFieldProps extends React.PropsWithRef<React.JSX.IntrinsicElements
     errorMessage?: React.ReactNode;
     icon?: React.ReactNode;
     actionButton?: React.ReactNode;
+    required?: boolean;
 }
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-    ({ label, placeholder, name, errorMessage, type, className, icon, actionButton, ...rest }, ref) => {
+    ({ label, placeholder, name, errorMessage, type, className, icon, actionButton, required, ...rest }, ref) => {
 
         const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
             if (type === "number") {
@@ -30,7 +31,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"} rounded-lg ${className}`} name={name}>
                 {label && (
                     <Form.Label className="block text-left text-xs font-bold tracking-wide">
-                        {label}
+                        {label} {required && <span className="text-red-600">*</span>}
                     </Form.Label>
                 )}
 

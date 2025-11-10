@@ -181,7 +181,7 @@ const CreateSamplePage = () => {
                     className="mb-6  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full"
                 >
                     <h3 className="text-left text-primary animate-fade-in animate-delay-200">
-                        Detalhes da amostra
+                        Detalhes da Amostra
                     </h3>
 
                     <Separator.Root className="my-6 h-px w-full bg-black animate-grow-width animate-delay-300" />
@@ -190,7 +190,8 @@ const CreateSamplePage = () => {
                     <div className="gap-4">
                         <div className="col-span-3 animate-fade-in animate-delay-300">
                             <InputField
-                                label="TÍTULO DA PESQUISA*"
+                                label="TÍTULO DA PESQUISA"
+                                required={true}
                                 placeholder="Digite o título da pesquisa"
                                 errorMessage={errors.researchTitle?.message}
                                 {...register("researchTitle")}
@@ -199,7 +200,8 @@ const CreateSamplePage = () => {
 
                         <div className="col-span-3 animate-fade-in animate-delay-400">
                             <InputField
-                                label="TÍTULO DA AMOSTRA*"
+                                label="TÍTULO DA AMOSTRA"
+                                required={true}
                                 placeholder="Digite o título da amostra"
                                 errorMessage={errors.sampleTitle?.message}
                                 {...register("sampleTitle")}
@@ -208,14 +210,16 @@ const CreateSamplePage = () => {
 
                         <div className="col-span-3 md:flex gap-2 animate-fade-in animate-delay-500">
                             <InputField
-                                label="Código do Comitê de Ética*"
+                                label="CÓDIGO DO COMITÊ DE ÉTICA"
+                                required={true}
                                 placeholder="Digite o código fornecido pelo Comitê de Ética em Pesquisa"
                                 errorMessage={errors.researchCep?.cepCode?.message}
                                 {...register("researchCep.cepCode")}
                                 className="flex-1"
                             />
                             <InputField
-                                label="QUANTIDADE TOTAL DE PARTICIPANTES*"
+                                label="QUANTIDADE TOTAL DE PARTICIPANTES"
+                                required={true}
                                 placeholder="Digite a quantidade total de participantes da pesquisa"
                                 errorMessage={errors.qttParticipantsRequested?.message}
                                 type="number"
@@ -226,7 +230,8 @@ const CreateSamplePage = () => {
 
                         <div className="md:col-span-2 md:flex lg:col-span-3 mb-4 gap-2 animate-fade-in animate-delay-600">
                             <SelectField
-                                label="REGIÃO DA AMOSTRA*"
+                                label="REGIÃO DA AMOSTRA"
+                                required={true}
                                 errorMessage={errors.countryRegion?.message}
                                 {...register("countryRegion")}
                                 className="md:flex-1 w-full md:w-auto mb-2"
@@ -239,7 +244,8 @@ const CreateSamplePage = () => {
                             </SelectField>
 
                             <InputField
-                                label="ESTADO DA AMOSTRA*"
+                                label="ESTADO DA AMOSTRA"
+                                required={true}
                                 placeholder="Digite o estado dos participantes da amostra"
                                 errorMessage={errors.countryState?.message}
                                 {...register("countryState")}
@@ -247,7 +253,8 @@ const CreateSamplePage = () => {
                             />
 
                             <InputField
-                                label="CIDADE DA AMOSTRA*"
+                                label="CIDADE DA AMOSTRA"
+                                required={true}
                                 placeholder="Digite a cidade dos participantes da amostra"
                                 errorMessage={errors.countryCity?.message}
                                 {...register("countryCity")}
@@ -256,21 +263,22 @@ const CreateSamplePage = () => {
                         </div>
                     </div>
 
-                    {/* CONTAINER TO INPUT INSTITUITION DATA */}
                     <div className="col-span-3 gap-2 animate-fade-in animate-delay-700">
                         <h3 className="text-left text-primary">Instituição da Amostra</h3>
                         <Separator.Root className="my-6 h-px w-full bg-black animate-grow-width" />
 
                         <div className="flex justify-center gap-2 max-lg:flex-col">
                             <InputField
-                                label="NOME*"
+                                label="NOME"
+                                required={true}
                                 errorMessage={errors.instituition?.name?.message}
                                 {...register("instituition.name")}
                             />
 
                             <SelectField
                                 className="max-sm:mb-12"
-                                label="TIPO*"
+                                label="TIPO"
+                                required={true}
                                 errorMessage={errors.instituition?.instType?.message}
                                 {...register("instituition.instType")}
                             >
@@ -286,7 +294,9 @@ const CreateSamplePage = () => {
                         sampleFiles={sampleFiles}
                         setSampleFiles={setSampleFiles}
                     />
-
+                    <div className="text-sm text-gray-500">
+                        <span className="text-red-500">*</span> Campos obrigatórios
+                    </div>
                     <Form.Submit asChild className="mt-10">
                         <Button
                             size="Medium"
@@ -296,7 +306,9 @@ const CreateSamplePage = () => {
                             title={"Enviar Solicitação"}
                             children={<Icon.FloppyDisk size={18} weight="bold" />}
                         />
+
                     </Form.Submit>
+
                 </Form.Root>
             </div>
         </>

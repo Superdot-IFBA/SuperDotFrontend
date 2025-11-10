@@ -7,6 +7,7 @@ interface SelectFieldProps extends React.PropsWithRef<React.JSX.IntrinsicElement
     name: string;
     errorMessage?: string;
     extraItem?: ReactNode;
+    required?: boolean;
 }
 
 export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
@@ -19,12 +20,13 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
         onChange,
         onBlur,
         value,
+        required,
         ...rest }, ref) => {
         return (
             <Form.Field className="max-xl:w-full" name={name}>
                 <Flex justify={"between"} align={"baseline"}>
                     <Form.Label className="text-left text-xs font-bold tracking-wide">
-                        {label}
+                        {label} {required && <span className="text-red-600">*</span>}
                     </Form.Label>
                 </Flex>
                 <Flex gap="4">

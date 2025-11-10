@@ -6,12 +6,17 @@ import ApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { Notify, NotificationType } from "../../components/Notify/Notify";
 import ChartContainer from "../../components/Charts/ChartContainer";
+import { SampleResearcherSearch } from "../../components/ResearcherSearch/ResearcherSearch";
+import { getUserRole } from "../../utils/auth.utils";
+
 
 
 function DashBoardPage() {
     const [dados, setDados] = useState<DashboardInfo | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const userRole = getUserRole();
+
     const [notificationData, setNotificationData] = useState<{
         title: string;
         description: string;
@@ -21,15 +26,12 @@ function DashBoardPage() {
         description: "",
         type: undefined,
     });
-    const [open, setOpen] = useState(false);
-
-
 
     useEffect(() => {
         const fetchDados = async () => {
             try {
                 const response = await getinfoDashboard();
-                setDados(response);
+                setDados(response.data);
                 setLoading(false);
             } catch (error: any) {
                 setError(error.message);
@@ -470,6 +472,36 @@ function DashBoardPage() {
             />
 
             <div className="min-h-screen bg-gray-50 mb-4">
+                {userRole === "Administrador" && (
+                    <div className="flex justify-end w-full py-4">
+                        <SampleResearcherSearch
+                            onSelect={async (sample) => {
+                                try {
+                                    setLoading(true);
+                                    const result = await getinfoDashboard(sample?.sampleId);
+                                    setDados(result.data);
+                                    setLoading(false);
+                                    if (result.status === 200) {
+                                        setNotificationData({
+                                            title: "Amostra Selecionada",
+                                            description: "Você selecionou a amostra com sucesso. Agora você pode visualizar os detalhes.",
+                                            type: "success"
+                                        });
+                                    }
+                                } catch (error: any) {
+                                    setNotificationData({
+                                        title: "Erro",
+                                        description: "Não foi possível atualizar o dashboard",
+                                        type: "error"
+                                    });
+                                    setLoading(false);
+                                }
+                            }}
+                        />
+
+                    </div>
+                )}
+
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-span-12 lg:col-span-8">
@@ -543,7 +575,6 @@ function DashBoardPage() {
                             </ChartContainer>
                         </div>
 
-                        {/* Segunda Linha de Gráficos */}
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
                             <ChartContainer
                                 title="Distribuição por Instituição"

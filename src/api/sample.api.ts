@@ -159,14 +159,14 @@ export interface MonthlyProgressItem {
     participants: number;
 }
 
-export const getinfoDashboard = async () => {
+export const getinfoDashboard = async (sampleId?: string) => {
     try {
         setAuthHeaders();
         const response = await axios.get<DashboardInfo>(
-            `${import.meta.env.VITE_BACKEND_HOST}/api/sample/load-Information-dashboard`
+            `${import.meta.env.VITE_BACKEND_HOST}/api/sample/load-Information-dashboard`,
+            { params: { sampleId } }
         );
-
-        return response.data;
+        return { data: response.data, status: response.status };
     } catch (error) {
         console.error("Erro ao fazer requisição para obter dados: ", error);
         throw error;
