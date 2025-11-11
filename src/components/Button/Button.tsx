@@ -66,7 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const Spinner = () => (
       <svg
-        className="animate-spin h-5 w-5 "
+        className="animate-spin h-7 w-7 "
         viewBox="0 0 24 24"
       >
         <circle

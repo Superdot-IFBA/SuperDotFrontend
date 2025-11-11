@@ -107,7 +107,6 @@ const RenderQuestions = ({ questions, setQuestions, handlerSaveAndContinue }: Re
                 disableButton={disableButton}
                 completedStepContent={
                     <Flex direction={"column"} align={"center"} className="gap-2">
-                        <h3 className="">Grupo Finalizado!</h3>
                         <img className="m-auto w-72 rounded-md mb-5" src={check} alt="check-img"></img>
                     </Flex>
                 }
@@ -118,7 +117,6 @@ const RenderQuestions = ({ questions, setQuestions, handlerSaveAndContinue }: Re
 
                         {question.questionType === EQuestionType.FOUR_INPUT && (
                             <Flex direction={"column"} align={"center"} gap={"2"} className="mt-4">
-
                                 <FourInput
                                     values={question.answer as string[]}
                                     onChange={(values) => {

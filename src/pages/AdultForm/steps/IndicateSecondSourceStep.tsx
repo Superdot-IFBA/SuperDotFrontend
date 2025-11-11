@@ -279,41 +279,11 @@ const IndicateSecondSourceStep = ({
                     </div>
 
                     <Form.Submit asChild className="mt-5">
-                        <Button size="Extra Small" title={"Adicionar"} color={"green"} className="m-auto" children={<Icon.PlusCircle size={20} className="text-white" />} />
+                        <Button size="Small" title={"Adicionar"} color={"green"} className="m-auto" children={<Icon.PlusCircle size={24} className="text-white" />} />
                     </Form.Submit>
                 </Form.Root>
                 {(formData.secondSources?.length || 0) > 0 && (
                     <>
-                        {/* <Table.Root variant="surface" className="w-full overflow-x-visible truncate drop-shadow-[0_4px_16px_rgba(22,22,22,0.1)] mt-4 max-lg:hidden">
-                            <Table.Header className="text-[16px]">
-                                <Table.Row align="center" className="text-center">
-                                    <Table.ColumnHeaderCell className="border-l">Tipo de relação Mobo</Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell className="border-l">Nome completo</Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell className="border-l">E-mail</Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell className="border-l">Matéria</Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell className="border-l">Remover</Table.ColumnHeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {formData.secondSources?.map((people) => (
-                                    <Table.Row key={people.personalData?.email}>
-                                        <Table.Cell className="border-l">{people.personalData?.relationship}</Table.Cell>
-                                        <Table.Cell className="border-l">{people.personalData?.fullName}</Table.Cell>
-                                        <Table.Cell className="border-l">{people.personalData?.email}</Table.Cell>
-                                        <Table.Cell className="border-l">{people.teacherSubject}</Table.Cell>
-                                        <Table.Cell className="border-l text-center align-middle">
-                                            <Flex align={"center"} justify={"center"}>
-                                                <Cross2Icon
-                                                    className="cursor-pointer"
-                                                    color="red"
-                                                    onClick={() => people.personalData?.email && handleDeleteSourceIndicated(people.personalData.email)}
-                                                />
-                                            </Flex>
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table.Root> */}
                         <div className="">
                             <DataList.Root orientation={"vertical"} className="!font-roboto"  >
 
@@ -321,6 +291,8 @@ const IndicateSecondSourceStep = ({
                                     <DataList.Item className="w-full p-3 rounded-lg mb-5 card-container" key={people.personalData?.email}>
 
                                         <p className="text-[16px] font-bold text-center">Informações do participante (SF) </p>
+                                        <Separator size={"4"} className="my-2" />
+
                                         <DataList.Label minWidth="88px" >Tipo de relação</DataList.Label>
 
                                         <DataList.Value >{people.personalData?.relationship}</DataList.Value>
@@ -365,9 +337,7 @@ const IndicateSecondSourceStep = ({
                     className=" disabled:bg-neutral-dark disabled:hover:cursor-not-allowed"
                     disabled={!formData.secondSources?.length}
                     onClick={() => onSubmit()} title={"Salvar alterações"} color={!formData.secondSources?.length ? "gray" : "green"} children={<Icon.FloppyDisk size={18} weight="bold" />}                  >
-
                 </Button>
-
             </Flex>
         </Flex>
     );

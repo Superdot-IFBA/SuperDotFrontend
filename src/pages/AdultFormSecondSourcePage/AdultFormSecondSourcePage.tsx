@@ -72,6 +72,7 @@ const AdultFormSecondSourcePage = () => {
     const [formData, setFormData] = useState({} as ISecondSource);
     const [loading, setLoading] = useState(true);
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
 
     const [notificationData, setNotificationData] = useState<{
@@ -147,11 +148,18 @@ const AdultFormSecondSourcePage = () => {
 
     const allStepsCompleted = Object.values(completedSteps).every(Boolean);
     const scrollToTop = () => {
-
         try {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            window.scrollTo(0, 0);
+            if (scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        } catch {
+            if (scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTop = 0;
+            } else {
+                window.scrollTo(0, 0);
+            }
         }
     };
     const handleNextStep = () => {
@@ -270,7 +278,7 @@ const AdultFormSecondSourcePage = () => {
                                     </Flex>
                                 </header>
 
-                                <div className="flex-1 overflow-y-auto z-10 mt-2">
+                                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto z-10 mt-4">
                                     <Stepper ref={stepperRef}
                                         className="w-[100%] max-sm:w-full m-auto "
                                         initialStep={1}

@@ -33,31 +33,40 @@ const QuestionnaireCompleted = () => {
         </div>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-sm:p-4 shadow-2xl m-auto w-[50%] max-sm:w-[80%] transform transition-all hover:scale-[1.02] max-sm:hover:scale-100 duration-300">
-          <div className="flex flex-col items-center space-y-6 max-sm:space-y-4">
-            <div className="p-4 max-sm:p-2 bg-white/20 rounded-full animate-bounce">
-              <Icon.CheckCircle className="w-12 h-12 max-sm:w-8 max-sm:h-8 text-white" />
+        <div className="relative z-10 bg-white rounded-2xl  shadow-2xl m-auto w-[50%] max-sm:w-[80%] transform transition-all hover:scale-[1.02] max-sm:hover:scale-100 duration-300   overflow-hidden  max-w-md !font-roboto">
+          {/* Título com gradiente */}
+          <div className="text-xl font-bold max-sm:!text-[18px] text-white bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 w-full flex justify-center items-center">
+            Questionário Finalizado!
+          </div>
+
+          {/* Conteúdo principal */}
+          <div className="flex flex-col items-center space-y-6 max-sm:space-y-4 p-6 max-sm:p-4 text-center">
+            {/* Ícone animado */}
+            <div className="p-4 max-sm:p-2 bg-violet-100 rounded-full animate-bounce">
+              <Icon.CheckCircle
+                weight="duotone"
+                className="w-12 h-12 max-sm:w-8 max-sm:h-8 text-green-500"
+              />
             </div>
 
-            <div className="text-center space-y-4 max-sm:space-y-2">
-              <h2 className="heading-2 !text-white mb-2 max-sm:mb-1">
-                Questionário Finalizado!
-              </h2>
-
-              <p className="text-lg max-sm:text-[14px] text-purple-100/90 font-medium leading-relaxed max-sm:leading-snug">
-                Este questionário foi finalizado. Todas as respostas foram registradas com sucesso e não podem mais ser editadas. Obrigado pela sua participação!
+            {/* Texto */}
+            <div className="space-y-4 max-sm:space-y-2">
+              <p className="text-lg max-sm:text-[14px] text-gray-800 font-medium leading-relaxed max-sm:leading-snug">
+                Este questionário foi finalizado. Todas as respostas foram
+                registradas com sucesso e não podem mais ser editadas. Obrigado pela
+                sua participação!
               </p>
+            </div>
 
-              <div className="flex justify-center space-x-4 max-sm:space-x-2 mt-6 max-sm:mt-4">
-                <div className="flex flex-col items-center gap-4 w-full">
-                  <button
-                    onClick={handleClose}
-                    className="flex items-center bg-white/20 hover:bg-white/30 px-6 py-3 max-sm:px-4 max-sm:py-2 rounded-xl max-sm:rounded-lg text-white font-semibold max-sm:text-sm transition-all duration-300 w-full justify-center"
-                  >
-                    Sair
-                  </button>
-                </div>
-              </div>
+            {/* Botão */}
+            <div className="flex justify-center space-x-4 max-sm:space-x-2 mt-6 max-sm:mt-4 w-full">
+              <button
+                onClick={handleClose}
+                className="flex items-center justify-center bg-gradient-to-br from-violet-600 via-purple-500 to-primary hover:opacity-90 px-6 py-3 max-sm:px-4 max-sm:py-2 rounded-xl max-sm:rounded-lg text-white font-semibold max-sm:text-sm transition-all duration-300 w-full"
+              >
+                <Icon.SignOut size={20} weight="bold" className="mr-2" />
+                Sair
+              </button>
             </div>
           </div>
         </div>

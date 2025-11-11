@@ -295,9 +295,11 @@ const FormGroupsStep = ({
             <Modal
                 open={openModal}
                 setOpen={setOpenModal}
-                className="!p-4"
+                className="!p-0"
                 title={currentGroup.groupName}
-                accessibleDescription={""} children={
+                accessibleDescription={""}
+                classNameChildren="!p-0"
+                children={
                     <RenderQuestions
                         key={currentGroup.groupName}
                         questions={currentGroup.questions}
@@ -307,7 +309,7 @@ const FormGroupsStep = ({
                 } />
 
             <Box maxWidth="" >
-                <Card size="1" className={`card-container-variante-border group group/item transition-all pt-4  px-5`}>
+                <Card size="1" className={`card-container-variante-border group group/item transition-all pt-4 px-5`}>
                     <Inset clip="padding-box" side="top" pb="current">
                         <img
                             src={currentGroup?.groupName === "Características Gerais" ? Gerais : currentGroup?.groupName === "Criatividade" ? Criatividade : currentGroup?.groupName === "Liderança" ? Lideranca : currentGroup?.groupName === "Comprometimento da Tarefa" ? Comprometimento : currentGroup?.groupName === "Habilidade Acima da Média" ? Habilidades : Atividade}
@@ -327,7 +329,7 @@ const FormGroupsStep = ({
                             <Strong className="!font-roboto">{currentGroup?.groupName}</Strong>
                         </p>
                         {completQuestions ?
-                            <Badge size="1" color="green" variant="solid" className={`${completed ? "" : "invisible"} w-full justify-center h-[20px] absolute top-0 left-0 right-0 `}>
+                            <Badge size="2" color="green" variant="solid" className={`${completed ? "" : "invisible"} w-full justify-center h-[20px] absolute top-0 left-0 right-0 `}>
                                 Concluído!
                             </Badge> : <></>}
 

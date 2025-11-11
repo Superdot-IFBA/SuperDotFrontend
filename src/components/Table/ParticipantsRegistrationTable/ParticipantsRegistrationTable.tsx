@@ -93,8 +93,8 @@ const ParticipantsRegistrationTable = ({
                                 <SkeletonTableBody itens={5} columns={7} />
                             ) : (
                                 <Table.Body>
-                                    {data?.map((participant) => (
-                                        <Table.Row key={participant._id} align="center">
+                                    {data?.map((participant, index) => (
+                                        <Table.Row key={index} align="center">
                                             <Table.Cell justify="center">{getFirstAndLastName(participant.personalData.fullName)}</Table.Cell>
                                             <Table.Cell justify="center">{getParticipantProgress(participant)}</Table.Cell>
                                             <Table.Cell justify="center">

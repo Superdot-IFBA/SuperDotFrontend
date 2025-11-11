@@ -151,7 +151,7 @@ export default forwardRef(function Stepper(
         </StepContentWrapper>
 
         {!isCompleted && (
-          <div className={`px-8 pb-8 ${footerClassName}`}>
+          <div className={`px-8 ${footerClassName}`}>
             <div
               className={`mt-15 flex ${currentStep !== 1 ? "justify-between" : "justify-end"
                 }`}

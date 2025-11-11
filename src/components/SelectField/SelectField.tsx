@@ -25,7 +25,7 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
         return (
             <Form.Field className="max-xl:w-full" name={name}>
                 <Flex justify={"between"} align={"baseline"}>
-                    <Form.Label className="text-left text-xs font-bold tracking-wide">
+                    <Form.Label className="text-sm font-semibold text-gray-800 mb-2 block text-left">
                         {label} {required && <span className="text-red-600">*</span>}
                     </Form.Label>
                 </Flex>

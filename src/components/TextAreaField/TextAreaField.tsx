@@ -16,7 +16,7 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
                     {label}
                 </Form.Label>
                 <Form.Control asChild className="h-20 w-full rounded-[4px] p-2 text-sm">
-                    <textarea placeholder={placeholder} ref={ref} {...rest} />
+                    <textarea placeholder={placeholder} ref={ref} {...rest} className="modern-input" />
                 </Form.Control>
                 {errorMessage && (
                     <Form.Message className="error-message">{errorMessage}</Form.Message>

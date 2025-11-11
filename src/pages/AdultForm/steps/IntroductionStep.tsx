@@ -82,15 +82,7 @@ const IntroductionStep = ({
                             type: "error"
                         });
                         break;
-                    case 401:
-                        setNotificationData({
-                            title: "Questionário finalizado!",
-                            description:
-                                "Você já finalizou o preencimento do formulário, não é possível alterar as informações.",
-                            type: "success"
-                        });
-                        break;
-                    case 404: // Participant not found
+                    case 404:
                         setNotificationData({
                             title: "E-mail não encontrado.",
                             description:
@@ -98,14 +90,14 @@ const IntroductionStep = ({
                             type: "error"
                         });
                         break;
-                    case 409: // Email already in use
+                    case 409:
                         setNotificationData({
                             title: "E-mail em uso.",
                             description: "Esse endereço de e-mail já foi utilizado para preencher o formulário.",
                             type: "error"
                         });
                         break;
-                    default: // Others
+                    default:
                         setNotificationData({
                             title: "Erro no servidor.",
                             description: "Verifique se você está utilizando a URL fornecida pelo pesquisador.",

@@ -4,7 +4,7 @@ import * as Icon from "@phosphor-icons/react"
 import { useEffect, useState } from "react";
 import UserInfo from "../UserInfo/UserInfo";
 import { Flex } from "@radix-ui/themes";
-import { useMenu } from "../UseMenu/UseMenu ";
+import { useMenu } from "../UseMenu/UseMenu";
 import React from "react";
 interface SideBarProps {
     userRole?: USER_ROLE;

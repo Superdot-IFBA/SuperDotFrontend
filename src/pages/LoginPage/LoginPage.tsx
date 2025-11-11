@@ -68,7 +68,7 @@ export const LoginPage = () => {
 
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
+            setIsMobile(window.innerWidth < 1020);
         };
 
         checkMobile();

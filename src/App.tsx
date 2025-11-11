@@ -22,7 +22,7 @@ import { Box, Flex, ScrollArea } from "@radix-ui/themes";
 import { GuardRoute } from "./components/GuardRoute/GuardRoute";
 import { Header } from "./components/Header/Header";
 import * as Icon from "@phosphor-icons/react";
-import { MenuProvider, useMenu } from "./components/UseMenu/UseMenu ";
+import { MenuProvider, useMenu } from "./components/UseMenu/UseMenu";
 import BackToTop from "./components/BackToTop/BackToTop";
 import { PageContainer } from "./components/PageContainer/PageContainer";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
@@ -34,16 +34,6 @@ import WelcomeModal from "./components/NewUser/NewUser";
 
 
 function OuterLayout() {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!hasActiveSession()) {
-            clearTokens();
-            if (location.pathname !== "/") {
-                navigate("/?sessionExpired=true");
-            }
-        }
-    }, [navigate]);
     return (
         <Flex className="h-full w-full font-roboto bg-off-white">
             <GuardRoute scope="OUTER" publicRoute={true}>
@@ -58,18 +48,12 @@ function InnerLayout() {
     const location = useLocation();
     const navigate = useNavigate();
     const { isMobileMenuOpen, toggleMobileMenu } = useMenu();
-
-
     useEffect(() => {
-        const checkSession = () => {
-            if (!hasActiveSession()) {
-                clearTokens();
-                navigate("/?sessionExpired=true");
-            }
-        };
-
-        checkSession();
-    }, [navigate, location]);
+        if (!hasActiveSession()) {
+            clearTokens();
+            navigate("/");
+        }
+    }, [navigate]);
 
     const headerConfig: Record<string, { title: string; icon: JSX.Element }> = {
         "home": { title: "Dashboard", icon: <Icon.SquaresFour size={20} /> },

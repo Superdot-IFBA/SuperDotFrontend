@@ -87,7 +87,7 @@ const AutobiographyStep = ({
                     value={autobiographyText}
                     rows={20}
                     id="autobiographyText"
-                    className="mb-5 p-4 w-full text-black card-container  !border-gray-300 text-justify "
+                    className="mb-5 p-4 w-full text-black  modern-input !border-2 rounded-[4px] text-justify "
 
                 ></textarea>
                 <label htmlFor="autobiographyVideo" >
@@ -97,7 +97,7 @@ const AutobiographyStep = ({
                     onChange={(e) => setAutobiographyVideo(e.target.value)}
                     value={autobiographyVideo}
                     id="autobiographyVideo"
-                    className="my-6"
+                    className="my-6 modern-input !border-2"
                 ></input>
 
 

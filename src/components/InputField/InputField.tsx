@@ -30,12 +30,12 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         return (
             <Form.Field className={`w-full ${label ? "mb-2" : "mb-0"} rounded-lg ${className}`} name={name}>
                 {label && (
-                    <Form.Label className="block text-left text-xs font-bold tracking-wide">
+                    <Form.Label className="text-sm font-semibold text-gray-800 mb-2 block text-left">
                         {label} {required && <span className="text-red-600">*</span>}
                     </Form.Label>
                 )}
 
-                <Flex justify="center" align="center" className="border rounded-md bg-white">
+                <Flex justify="center" align="center" className="rounded-md border-2 bg-white modern-input !py-[2px]">
                     {icon && <Flex className="p-2">{icon}</Flex>}
 
                     <Form.Control asChild>
@@ -47,11 +47,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                             min={type === "number" ? 0 : undefined}
                             onKeyDown={handleKeyDown}
                             {...rest}
-                            className="bg-white border-none max-sm:placeholder:text-[12px] max-sm:p-2 !font-roboto"
+                            className="bg-white focus-within:ring-0 border-none max-sm:placeholder:text-[12px] max-sm:p-2 !font-roboto"
                         />
                     </Form.Control>
 
-                    {actionButton && <Flex className="p-1 pr-3">{actionButton}</Flex>}
+                    {actionButton && <Flex className="p-1 pr-3 text-gray-500">{actionButton}</Flex>}
                 </Flex>
 
                 {errorMessage && <Form.Message className="error-message">{errorMessage}</Form.Message>}

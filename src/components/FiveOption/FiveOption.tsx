@@ -8,7 +8,7 @@ interface FiveOptionProps {
 
 const FiveOption = ({ options, value, onSelect }: FiveOptionProps) => {
     return (
-        <Flex direction={"column"} align={"center"} justify={"center"} className="mt-4 gap-3">
+        <Flex direction={"column"} align={"center"} justify={"center"} className="mt-8 gap-3">
             {options?.map((option) => (
                 <Button
                     size="Large"
@@ -17,7 +17,7 @@ const FiveOption = ({ options, value, onSelect }: FiveOptionProps) => {
                     title={option}
                     color={`${option === value ? "green" : "white"}`}
                     // children={value === option ? <Icon.Check size={20} color={`#fff`} /> : ""}
-                    className={"w-[350px] text-[15px] max-sm:text-[14px] max-sm:w-[300px] gap-1"}
+                    className={"w-[350px] !text-[15px] max-sm:text-[14px] max-sm:w-[300px] gap-1"}
                 />
 
             ))}

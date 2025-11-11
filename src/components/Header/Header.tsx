@@ -2,7 +2,7 @@ import { Flex, Text } from '@radix-ui/themes';
 import UserInfo from '../UserInfo/UserInfo';
 import * as Icon from '@phosphor-icons/react';
 import React from 'react';
-import { useMenu } from '../UseMenu/UseMenu ';
+import { useMenu } from '../UseMenu/UseMenu';
 
 interface HeaderProps {
     title: string;

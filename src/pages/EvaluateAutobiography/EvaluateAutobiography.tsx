@@ -484,7 +484,7 @@ const EvaluateAutobiography: React.FC = () => {
                                         <Popover.Content className={`${limit ? "invisible" : ""} ${mark.gradienteBG} `} width="360px" size="1">
                                             <Flex gap="3">
                                                 <Box flexGrow="1">
-                                                    <TextArea
+                                                    <textarea
                                                         className="bg-white"
                                                         placeholder="Escreva um comentário..."
                                                         style={{ height: 80 }}
@@ -546,7 +546,7 @@ const EvaluateAutobiography: React.FC = () => {
                                             <Text className={`text-sm font-semibold  text-white rounded-full px-2 py-1`}>
                                                 {mark.title}
                                             </Text>
-                                            <TextArea
+                                            <textarea
                                                 className={`w-full`}
                                                 placeholder="Escreva um comentário...."
                                                 style={{ height: 80 }}
@@ -585,7 +585,7 @@ const EvaluateAutobiography: React.FC = () => {
                                         <Popover.Content className={limit ? "invisible" : ""} width="360px">
                                             <Flex gap="3">
                                                 <Box flexGrow="1">
-                                                    <TextArea
+                                                    <textarea
                                                         className="bg-white"
                                                         placeholder="Escreva um comentário..."
                                                         style={{ height: 80 }}

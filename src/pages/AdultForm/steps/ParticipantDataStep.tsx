@@ -107,19 +107,22 @@ const ParticipantDataStep = ({
                 <div className="grid grid-cols-1 gap-y-5  gap-3 ">
                     <InputField
                         {...register("personalData.fullName")}
-                        label="Nome completo*"
+                        label="Nome completo"
+                        required={true}
                         placeholder="Insira seu nome completo"
                         errorMessage={errors.personalData?.fullName?.message}
                     />
                     <InputField
                         {...register("personalData.phone")}
-                        label="Whatsapp*"
+                        label="Whatsapp"
+                        required={true}
                         placeholder="Insira seu número de whatsapp"
                         errorMessage={errors.personalData?.phone?.message}
                     />
                     <SelectField
                         {...register("personalData.maritalStatus")}
-                        label="Estado civil*"
+                        label="Estado civil"
+                        required={true}
                         placeholder="Selecione uma opção"
                         errorMessage={errors.personalData?.maritalStatus?.message}
                     >
@@ -129,13 +132,15 @@ const ParticipantDataStep = ({
                     </SelectField>
                     <InputField
                         {...register("personalData.job")}
-                        label="Profissão*"
+                        label="Profissão"
+                        required={true}
                         placeholder="Qual a sua profissão?"
                         errorMessage={errors.personalData?.job?.message}
                     />
                     <SelectField
                         {...register("personalData.educationLevel")}
-                        label="Grau de instrução*"
+                        label="Grau de instrução"
+                        required={true}
                         placeholder="Selecione uma opção"
                         errorMessage={errors.personalData?.educationLevel?.message}
                     >
@@ -145,7 +150,8 @@ const ParticipantDataStep = ({
                     </SelectField>
                     <SelectField
                         {...register("personalData.gender")}
-                        label="Sexo*"
+                        label="Sexo"
+                        required={true}
                         placeholder="Selecione uma opção"
                         errorMessage={errors.personalData?.gender?.message}
                     >
@@ -155,7 +161,7 @@ const ParticipantDataStep = ({
                     </SelectField>
                     <Form.Field name="birthDate" className="w-full">
                         <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
-                            Data de nascimento*
+                            Data de nascimento <span className="text-red-500">*</span>
                         </Form.Label>
                         <Flatpicker
                             className="h-[35px] w-full rounded-[4px] px-4 text-sm"
@@ -176,21 +182,24 @@ const ParticipantDataStep = ({
                     </Form.Field>
                     <InputField
                         {...register("familyData.qttChildrens")}
-                        label="Número de filhos*"
+                        label="Número de filhos"
+                        required={true}
                         type="number"
                         placeholder="Quantos filhos você tem?"
                         errorMessage={errors.familyData?.qttChildrens?.message}
                     />
                     <InputField
                         {...register("familyData.qttSiblings")}
-                        label="Número de irmãos/irmãs*"
+                        label="Número de irmãos/irmãs"
+                        required={true}
                         placeholder="Quantos irmãos ou irmãs você tem?"
                         type="number"
                         errorMessage={errors.familyData?.qttSiblings?.message}
                     />
                     <SelectField
                         {...register("familyData.qttFamilyMembers")}
-                        label="Quantas pessoas moram com você?*"
+                        label="Quantas pessoas moram com você?"
+                        required={true}
                         placeholder="Selecione uma opção"
                         errorMessage={errors.familyData?.qttFamilyMembers?.message}
                     >
@@ -201,7 +210,8 @@ const ParticipantDataStep = ({
                     </SelectField>
                     <SelectField
                         {...register("familyData.familyMonthIncome")}
-                        label="Renda familiar total mensal*"
+                        label="Renda familiar total mensal"
+                        required={true}
                         placeholder="selecione uma opção"
                         errorMessage={errors.familyData?.familyMonthIncome?.message}
                     >
@@ -245,10 +255,7 @@ const ParticipantDataStep = ({
                             className="text-black"
                             placeholder="Selecione uma ou várias opções"
                         />
-                        {/* <span className="error-message h-0 text-[12px]">
-                            {(watch("familyData.outsideHouseDevices")?.length || 0) > 0 &&
-                                "Você pode selecionar mais do que uma opção."}
-                        </span> */}
+
                     </Form.Field>
                     <Form.Field name="personalData.outsideHouseDevices" className="w-full">
                         <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
@@ -285,35 +292,39 @@ const ParticipantDataStep = ({
                                 })
                             }}
                         />
-                        {/* <span className="error-message h-0 text-[12px]">
-                            {(watch("familyData.houseDevices")?.length || 0) > 0 &&
-                                "Você pode selecionar mais do que uma opção."}
-                        </span> */}
+
                     </Form.Field>
                     <InputField
                         {...register("addressData.city")}
-                        label="Cidade*"
+                        label="Cidade"
+                        required={true}
                         placeholder="Informe o nome da sua cidade"
                         errorMessage={errors.addressData?.city?.message}
                     />
                     <InputField
                         {...register("addressData.district")}
-                        label="Bairro*"
+                        label="Bairro"
+                        required={true}
                         placeholder="Informe o nome do seu bairro"
                         errorMessage={errors.addressData?.district?.message}
                     />
                     <InputField
                         {...register("addressData.street")}
-                        label="Rua*"
+                        label="Rua"
+                        required={true}
                         placeholder="Informe o nome da sua rua"
                         errorMessage={errors.addressData?.street?.message}
                     />
                     <InputField
                         {...register("addressData.houseNumber")}
-                        label="Número da casa*"
+                        label="Número da casa"
+                        required={true}
                         placeholder="informe o número da casa"
                         errorMessage={errors.addressData?.houseNumber?.message}
                     />
+                </div>
+                <div className="text-sm text-gray-500 mt-3">
+                    <span className="text-red-500">*</span> Campos obrigatórios
                 </div>
                 <div className="flex justify-center gap-6 mt-6">
 

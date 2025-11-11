@@ -73,6 +73,8 @@ const AdultForm = () => {
     const [formData, setFormData] = useState<IParticipant>({} as IParticipant);
     const [currentStep, setCurrentStep] = useState(EAdultFormSteps.INTRODUCTION);
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
     const [notificationData, setNotificationData] = useState<{
         title: string;
         description: string;
@@ -129,13 +131,21 @@ const AdultForm = () => {
     }, [sampleId]);
 
     const scrollToTop = () => {
-
         try {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            window.scrollTo(0, 0);
+            if (scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        } catch {
+            if (scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTop = 0;
+            } else {
+                window.scrollTo(0, 0);
+            }
         }
     };
+
 
     /* It is used to validate the URL (receive in the user email) by making an asynchronous request to a server endpoint. */
     useEffect(() => {
@@ -155,6 +165,7 @@ const AdultForm = () => {
                         setCurrentStep(restoredStep);
                     }
                 }
+
             } catch (err) {
                 console.error(err);
                 setNotificationData({
@@ -287,7 +298,7 @@ const AdultForm = () => {
                                     </Flex>
                                 </header>
 
-                                <div className="flex-1 overflow-y-auto z-10 mt-4">
+                                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto z-10 mt-4">
                                     <Stepper
                                         ref={stepperRef}
                                         className="w-[100%] max-sm:w-full m-auto "
@@ -305,7 +316,7 @@ const AdultForm = () => {
 
                                         {stepsInfo.map((stepInfo) => (
                                             <Step key={stepInfo.step}>
-                                                <Flex className="w-full card-container-variante-border  font-roboto rounded-lg mb-5  mt-2">
+                                                <Flex className="w-full card-container  font-roboto rounded-lg mb-5  mt-2">
                                                     <Flex direction="column" className={`w-full p-6 max-sm:p-4 space-y-4 bg-glass`}>
                                                         {currentStep === EAdultFormSteps.PARTICIPANT_DATA && (
                                                             <ParticipantData

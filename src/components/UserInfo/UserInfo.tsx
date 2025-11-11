@@ -217,12 +217,12 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
                   Sair
                 </DropdownMenu.Item>
               }
-              title={'Tem certeza que deseja sair da plataforma?'}
-              description={''}
-              buttoncancel={<Button size='Small' color="gray" title={'Cancelar'} />}
+              title={'Você está prestes a sair da plataforma.'}
+              description={'Tem certeza que deseja sair da SuperDot?'}
+              buttoncancel={<Button size='Extra Small' color="gray" title={'Cancelar'} />}
               buttonAction={
                 <Button
-                  size='Small'
+                  size='Extra Small'
                   onClick={logout}
                   color="red"
                   title={'Sim, desejo sair.'}
