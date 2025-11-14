@@ -92,64 +92,78 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
   selectItensKA
 }) => {
   return (
-    <Box className="w-full !overflow-x-auto rounded-lg shadow-sm">
-      <Table.Root variant="surface" className="desktop card-container min-w-[1000px]">
-        <Table.Header className="text-[14px] bg-violet-200">
-          <Table.Row>
-            <Table.ColumnHeaderCell colSpan={4} className="border-l border-none" align="center">
-              Informações do participante
+    <Box className="w-full !overflow-x-auto rounded-2xl shadow-sm border border-gray-200/50 bg-white">
+      <Table.Root variant="ghost" className="desktop min-w-[1000px]">
+        <Table.Header className="text-[14px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+          <Table.Row className="border-b border-violet-200/50">
+            <Table.ColumnHeaderCell colSpan={4} className="border-l-0 border-r border-violet-200/30" align="center">
+              <Flex align="center" justify="center" gap="2" className="py-3">
+                <Icon.User size={18} weight="bold" className="text-violet-600" />
+                <Text weight="bold" className="text-violet-900">Informações do participante</Text>
+              </Flex>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={2} className="border-l" align="center">
-              Indicadores de AH/SD
+            <Table.ColumnHeaderCell colSpan={2} className="border-r border-violet-200/30" align="center">
+              <Flex align="center" justify="center" gap="2" className="py-3">
+                <Icon.Certificate size={18} weight="bold" className="text-violet-600" />
+                <Text weight="bold" className="text-violet-900">Indicadores de AH/SD</Text>
+              </Flex>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={3} className="border-l" align="center">
-              Áreas do saber
+            <Table.ColumnHeaderCell colSpan={3} className="border-r border-violet-200/30" align="center">
+              <Flex align="center" justify="center" gap="2" className="py-3">
+                <Icon.BookBookmark size={18} weight="bold" className="text-violet-600" />
+                <Text weight="bold" className="text-violet-900">Áreas do saber</Text>
+              </Flex>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l"></Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-r-0" align="center">
+              <Flex align="center" justify="center" gap="2" className="py-3">
+                <Icon.RocketLaunch size={18} weight="bold" className="text-violet-600" />
+                <Text weight="bold" className="text-violet-900">Ações</Text>
+                <ActionButtonExplain />
+              </Flex>
+            </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
-        <Table.Header className="text-[14px] bg-violet-200">
-          <Table.Row>
-            <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-              {isCheckedAll ? "Desmarcar Todos" : "Selecionar Todos"}
+        <Table.Header className="text-[13px] bg-gradient-to-r from-violet-500/5 to-purple-500/5">
+          <Table.Row className="border-b border-violet-100/50">
+            <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-3">
+              <Text size="2" weight="medium" className="text-gray-700">
+                {isCheckedAll ? "Desmarcar Todos" : "Selecionar Todos"}
+              </Text>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={3} className="border-r"></Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={2} className="border-r text-center">
-              De acordo com o:
+            <Table.ColumnHeaderCell colSpan={3} className="border-r border-violet-200/30"></Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell colSpan={2} className="border-r border-violet-200/30 text-center">
+              <Text size="2" weight="medium" className="text-gray-700">De acordo com o:</Text>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={1} className="border-r text-center">
-              Indicadas pelo avaliado
+            <Table.ColumnHeaderCell colSpan={1} className="border-r border-violet-200/30 text-center">
+              <Text size="2" weight="medium" className="text-gray-700">Indicadas pelo avaliado</Text>
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell colSpan={2} className="text-center border-r">
-              Indicadas pelo pesquisador
+            <Table.ColumnHeaderCell colSpan={2} className="text-center border-r border-violet-200/30">
+              <Text size="2" weight="medium" className="text-gray-700">Indicadas pelo pesquisador</Text>
             </Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell colSpan={1}></Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
-        <Table.Header className="text-[14px] bg-violet-200">
-          <Table.Row align="center" className="text-center">
-            <Table.ColumnHeaderCell colSpan={1}>
+        <Table.Header className="text-[13px] bg-gradient-to-r from-gray-50 to-gray-100/30">
+          <Table.Row align="center" className="text-center border-b border-gray-200/50">
+            <Table.ColumnHeaderCell colSpan={1} className="py-3">
               <Checkbox
-                className="hover:cursor-pointer"
+                className="hover:cursor-pointer transition-all hover:scale-110"
                 onClick={handleCheckAll}
                 color="violet"
               />
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Nome do Avaliado</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Pontuação</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Quant. 2ªs fontes</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Questionário</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Pesquisador</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Questionário</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Áreas gerais</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">Áreas específicas</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="border-l">
-              <Flex gap="3" align="center" justify="center">
-                <Text>Ações</Text>
-                <ActionButtonExplain />
-              </Flex>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Nome do Avaliado</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Pontuação</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Quant. 2ªs fontes</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Questionário</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Pesquisador</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Questionário</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Áreas gerais</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3 font-semibold text-gray-800">Áreas específicas</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="border-l border-gray-200/30 py-3">
+
             </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
@@ -165,9 +179,13 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
 
               if (filteredParticipants?.length === 0) {
                 return (
-                  <Table.Row align="center">
-                    <Table.Cell colSpan={10} justify="center">
-                      Nenhum participante encontrado
+                  <Table.Row align="center" className="hover:bg-gray-50/50 transition-colors">
+                    <Table.Cell colSpan={10} justify="center" className="py-8">
+                      <EmptyState
+                        icon={<Icon.MagnifyingGlass size={32} />}
+                        title="Nenhum participante encontrado"
+                        description="Tente ajustar os filtros para ver mais resultados."
+                      />
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -176,108 +194,148 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
               return filteredParticipants?.map((participant, idx) => (
                 <Table.Row
                   align="center"
-                  className={isChecked[startIndex + idx] ? 'bg-violet-50' : ''}
+                  className={`
+                transition-all duration-300 ease-out border-b border-gray-100/50
+                ${isChecked[startIndex + idx]
+                      ? 'bg-gradient-to-r from-violet-50/80 to-purple-50/60 shadow-inner'
+                      : 'hover:bg-gray-50/70'
+                    }
+              `}
                   key={startIndex + idx}
                 >
-                  <Table.Cell justify="center">
+                  <Table.Cell justify="center" className="py-4">
                     <Checkbox
-                      className="hover:cursor-pointer"
+                      className="hover:cursor-pointer transition-all hover:scale-110"
                       checked={isChecked[startIndex + idx] ?? false}
                       onCheckedChange={() => handleChange(startIndex + idx)}
                       color="violet"
                     />
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    {getFirstAndLastName(participant.personalData.fullName)}
+                  <Table.Cell justify="center" className="py-4">
+                    <Text weight="medium" className="text-gray-900">
+                      {getFirstAndLastName(participant.personalData.fullName)}
+                    </Text>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    {participant.adultForm?.totalPunctuation}
+                  <Table.Cell justify="center" className="py-4">
+                    <Badge
+                      size="2"
+                      variant="soft"
+                      className="bg-blue-50 text-blue-700 border-blue-200 font-semibold"
+                    >
+                      {participant.adultForm?.totalPunctuation}
+                    </Badge>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    {participant.secondSources?.length}
+                  <Table.Cell justify="center" className="py-4">
+                    <Badge
+                      size="2"
+                      variant="soft"
+                      className="bg-violet-50 text-violet-700 border-violet-200 font-semibold"
+                    >
+                      {participant.secondSources?.length}
+                    </Badge>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    <Badge size={"3"} className='!px2' color={participant.adultForm?.giftednessIndicators ? "green" : "red"}>{participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}</Badge>
+                  <Table.Cell justify="center" className="py-4">
+                    <Badge
+                      size="2"
+                      color={`${participant.adultForm?.giftednessIndicators ? 'green' : 'red'}`}
+                      className={`w-full justify-center border ${participant.adultForm?.giftednessIndicators ? ' !border-green-500' : '!border-red-500'}`}
+                    >
+                      {participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}
+                    </Badge>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
+                  <Table.Cell justify="center" className="py-4">
                     <Modal
                       open={openModalIAH}
                       setOpen={setOpenModalIAH}
                       title="Indicadores de AH/SD"
-                      accessibleDescription="Essa área é destinada a identificar se a pessoa apresenta características de Altas Habilidades/Superdotação (AH/SD), com base nos critérios estabelecidos pelo pesquisador."
-                      className='analysis-modal'
+                      accessibleDescription="Identifique se a pessoa apresenta características de Altas Habilidades/Superdotação (AH/SD) com base nos critérios estabelecidos."
                     >
-                      <Flex direction="column" gap="2">
-                        <Flex align="center" gap="2" className="text-[20px]">
+                      <Flex direction="column" gap="4" className="py-2">
+                        <Flex align="center" gap="3" className="text-[16px] p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                           <Checkbox
                             checked={selectedOption === "sim"}
                             onCheckedChange={() => handleCheckboxChange("sim")}
-                            className="hover:cursor-pointer"
+                            className="hover:cursor-pointer size-5"
                           />
-                          Sim
+                          <span className="font-medium">Sim</span>
                         </Flex>
-                        <Flex align="center" gap="2" className="text-[20px]">
+                        <Flex align="center" gap="3" className="text-[16px] p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                           <Checkbox
                             checked={selectedOption === "nao"}
                             onCheckedChange={() => handleCheckboxChange("nao")}
-                            className="hover:cursor-pointer"
+                            className="hover:cursor-pointer size-5"
                           />
-                          Não
+                          <span className="font-medium">Não</span>
                         </Flex>
                       </Flex>
-                      <Flex align="center" justify="center" className="gap-4">
+                      <Flex align="center" justify="center" className="gap-4 mt-4">
                         <Button
                           loading={isSavingItem}
                           title="Salvar alterações"
                           color="green"
                           size="Medium"
-                          className="mt-5"
+                          className="min-w-[140px] shadow-sm hover:shadow transition-all"
                           onClick={handleSaveGift}
                           disabled={isSavingItem}
                         >
                           <Icon.FloppyDisk size={18} weight="bold" />
+                          Salvar
                         </Button>
                       </Flex>
                     </Modal>
-                    <Flex direction="row" align="center" justify="center" gap="4">
-                      <Badge size={"3"} className='!px2' color={participant.giftdnessIndicatorsByResearcher ? "green" : "red"}>{participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}</Badge>
+                    <Flex direction="row" align="center" justify="center" gap="3">
+                      <Badge
+                        size="2"
+                        color={`${participant.giftdnessIndicatorsByResearcher ? 'green' : 'red'}`}
+                        className={`w-full justify-center border ${participant.giftdnessIndicatorsByResearcher ? ' !border-green-500' : '!border-red-500'}`}
+                      >
+                        {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                      </Badge>
                       <IconButton
-                        size="1"
-                        variant="surface"
+                        size="2"
+                        variant="soft"
+                        color="violet"
                         radius="full"
+                        className="transition-all hover:scale-110 hover:shadow-sm"
                         onClick={() => participant._id && handleShowIAH(participant._id)}
                       >
-                        <Icon.Pencil className="cursor-pointer" />
+                        <Icon.Pencil size={14} className="cursor-pointer" />
                       </IconButton>
                     </Flex>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    <Flex align="center" direction="row" justify="center" className="mb-0">
-                      <Text as="label" className="pr-3">
+                  <Table.Cell justify="center" className="py-4">
+                    <Flex align="center" direction="row" justify="center" className="gap-2">
+                      <Text as="label" size="2" className="text-gray-600 truncate max-w-[120px]">
                         {participant.adultForm?.knowledgeAreas?.[0]}
                         {'...'}
                       </Text>
                       <HoverCard.Root>
                         <HoverCard.Trigger>
-                          <IconButton size="1" variant="surface" radius="full">
-                            <Icon.Eye size={15} className="hover:cursor-pointer" />
+                          <IconButton
+                            size="1"
+                            variant="soft"
+                            color="blue"
+                            radius="full"
+                            className="transition-all hover:scale-110"
+                          >
+                            <Icon.Eye size={13} className="hover:cursor-pointer" />
                           </IconButton>
                         </HoverCard.Trigger>
-                        <HoverCard.Content size="3">
-                          <Text as="div" size="3" trim="both">
+                        <HoverCard.Content size="2" className="bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-lg">
+                          <Flex direction="column" gap="2">
+                            <Text weight="medium" size="2" className="text-gray-700 mb-1">Áreas do Questionário:</Text>
                             {participant.adultForm?.knowledgeAreas?.map((area, index) => (
-                              <span key={index}>
+                              <Badge key={index} size="1" variant="soft" color="blue" className="w-fit">
                                 {area}
-                                {index !== (participant.adultForm?.knowledgeAreas?.length ?? 0) - 1 && ", "}
-                              </span>
+                              </Badge>
                             ))}
-                          </Text>
+                          </Flex>
                         </HoverCard.Content>
                       </HoverCard.Root>
                     </Flex>
@@ -323,25 +381,27 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       </Text>
                       <HoverCard.Root>
                         <HoverCard.Trigger>
-                          <IconButton size="1" variant="surface" radius="full">
+                          <IconButton size="1" color='grass' variant="surface" radius="full">
                             <Icon.Eye size={15} className="hover:cursor-pointer" />
                           </IconButton>
                         </HoverCard.Trigger>
                         <HoverCard.Content size="3">
-                          <Text as="div" size="3" trim="both">
+                          <Flex direction="column" gap="2">
+                            <Text weight="medium" size="2" className="text-gray-700 mb-1">Áreas gerais:</Text>
                             {participant.knowledgeAreasIndicatedByResearcher?.general.map((area, index) => (
-                              <span key={index}>
+                              <Badge key={index} size="1" variant="soft" color="grass" className="w-fit">
                                 {area}
                                 {index !== (participant.knowledgeAreasIndicatedByResearcher?.general.length ?? 0) - 1 && ", "}
-                              </span>
+                              </Badge>
                             ))}
-                          </Text>
+                          </Flex>
                         </HoverCard.Content>
                       </HoverCard.Root>
                       <Tooltip content="Definir/Editar Áreas Gerais">
                         <IconButton
                           size="1"
                           variant="surface"
+                          color='grass'
                           radius="full"
                           onClick={() => participant._id && handleShowKAG(participant._id)}
                         >
@@ -390,23 +450,25 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       </Text>
                       <HoverCard.Root>
                         <HoverCard.Trigger>
-                          <IconButton size="1" variant="surface" radius="full">
+                          <IconButton color='orange' size="1" variant="surface" radius="full">
                             <Icon.Eye size={15} className="hover:cursor-pointer" />
                           </IconButton>
                         </HoverCard.Trigger>
                         <HoverCard.Content size="3">
-                          <Text as="div" size="3" trim="both">
+                          <Flex direction="column" gap="2">
+                            <Text weight="medium" size="2" className="text-gray-700 mb-1">Áreas específicas:</Text>
                             {participant.knowledgeAreasIndicatedByResearcher?.specific.map((area, index) => (
-                              <span key={index}>
+                              <Badge key={index} size="1" variant="soft" color="orange" className="w-fit">
                                 {area}
-                                {index !== (participant.knowledgeAreasIndicatedByResearcher?.specific.length ?? 0) - 1 && ",\u00A0"}
-                              </span>
+                                {index !== (participant.knowledgeAreasIndicatedByResearcher?.specific.length ?? 0) - 1 && ","}
+                              </Badge>
                             ))}
-                          </Text>
+                          </Flex>
                         </HoverCard.Content>
                       </HoverCard.Root>
                       <Tooltip content="Definir/Editar Áreas Específicas">
                         <IconButton
+                          color='orange'
                           size="1"
                           variant="surface"
                           radius="full"
@@ -418,87 +480,60 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                     </Flex>
                   </Table.Cell>
 
-                  <Table.Cell justify="center">
-                    <Flex justify="center" align="center" className="gap-4">
+                  {/* Continua com o mesmo padrão para as outras células... */}
+
+                  <Table.Cell justify="center" className="py-4">
+                    <Flex justify="center" align="center" className="gap-3">
                       <Dialog.Root>
                         <Dialog.Trigger>
-                          <Box>
-                            <Tooltip content="Visualizar Informações completas do Participante">
-                              <IconButton
-                                size="2"
-                                color="lime"
-                                radius="full"
-                                variant="outline"
-                                className="hover:cursor-pointer hover:translate-y-[3px] transition-all ease-in-out"
-                              >
-                                <Icon.IdentificationCard size={20} />
-                              </IconButton>
-                            </Tooltip>
-                          </Box>
+                          <Tooltip content="Visualizar Informações completas do Participante">
+                            <IconButton
+                              size="2"
+                              color="blue"
+                              radius="full"
+                              variant="soft"
+                              className="transition-all hover:scale-110 hover:shadow-sm"
+                            >
+                              <Icon.IdentificationCard size={18} />
+                            </IconButton>
+                          </Tooltip>
                         </Dialog.Trigger>
-                        <Dialog.Content style={{ maxWidth: 450 }}>
-                          <Dialog.Title align="center" mb="5">
+                        <Dialog.Content style={{ maxWidth: 450, borderRadius: 16 }} className="bg-white/95 backdrop-blur-sm">
+                          <Dialog.Title align="center" mb="5" className="text-violet-900">
                             Informações Gerais do Participante
                           </Dialog.Title>
                           <Flex direction="column" gap="3">
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Nome Completo
-                              <TextField.Root
-                                defaultValue={participant.personalData.fullName}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Data de Nascimento
-                              <TextField.Root
-                                defaultValue={getFormattedBirthDate(participant.personalData.birthDate)}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Gênero
-                              <TextField.Root
-                                defaultValue={participant.personalData.gender}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Telefone
-                              <TextField.Root
-                                defaultValue={participant.personalData.phone}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              E-mail
-                              <TextField.Root
-                                defaultValue={participant.personalData.email}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Estado Civil
-                              <TextField.Root
-                                defaultValue={participant.personalData.maritalStatus}
-                                disabled
-                              />
-                            </Text>
-                            <Text as="label" size="2" mb="1" weight="bold">
-                              Trabalho
-                              <TextField.Root
-                                defaultValue={participant.personalData.job}
-                                disabled
-                              />
-                            </Text>
+                            {[
+                              { label: "Nome Completo", value: participant.personalData.fullName },
+                              { label: "Data de Nascimento", value: getFormattedBirthDate(participant.personalData.birthDate) },
+                              { label: "Gênero", value: participant.personalData.gender },
+                              { label: "Telefone", value: participant.personalData.phone },
+                              { label: "E-mail", value: participant.personalData.email },
+                              { label: "Estado Civil", value: participant.personalData.maritalStatus },
+                              { label: "Trabalho", value: participant.personalData.job }
+                            ].map((field, index) => (
+                              <div key={index} className="space-y-2">
+                                <Text as="label" size="2" weight="medium" className="text-gray-700">
+                                  {field.label}
+                                </Text>
+                                <TextField.Root
+                                  defaultValue={field.value}
+                                  disabled
+                                  className="bg-gray-50/80 border-gray-200/50"
+                                />
+                              </div>
+                            ))}
                           </Flex>
-                          <Flex gap="3" mt="4" justify="end">
+                          <Flex gap="3" mt="5" justify="end">
                             <Dialog.Close>
                               <Button
-                                color="red"
-                                className="w-[100px]"
                                 title="Fechar"
-                                size="Extra Small"
-                              />
+                                color="gray"
+                                className="min-w-[100px] shadow-sm hover:shadow transition-all"
+                                size="Small"
+                              >
+                                Fechar
+                              </Button>
                             </Dialog.Close>
                           </Flex>
                         </Dialog.Content>
@@ -512,7 +547,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                           >
                             <Tooltip content="Comparar as respostas do avaliado com as respostas das 2ª fontes">
                               <IconButton
-                                color="cyan"
+                                color="violet"
                                 radius="full"
                                 variant="outline"
                                 className="hover:cursor-pointer hover:translate-y-[3px] transition-all ease-in-out"
@@ -550,7 +585,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       >
                         <Tooltip content="Visualizar Autobiografia do participante">
                           <IconButton
-                            color="bronze"
+                            color="yellow"
                             radius="full"
                             variant="outline"
                             className="hover:cursor-pointer hover:translate-y-[3px] transition-all ease-in-out"
@@ -559,6 +594,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                           </IconButton>
                         </Tooltip>
                       </Box>
+
                     </Flex>
                   </Table.Cell>
                 </Table.Row>

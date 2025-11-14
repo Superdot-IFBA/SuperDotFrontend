@@ -74,8 +74,9 @@ const IntroductionStep = ({
         } catch (error) {
             console.error(error);
             if (error instanceof AxiosError) {
+                const code = error.response?.data?.code;
                 switch (error.response?.status) {
-                    case 400: // DTO Validation Error
+                    case 400:
                         setNotificationData({
                             title: "E-mail inválido.",
                             description: "Verifique o seu e-mail e tente novamente.",
@@ -91,11 +92,31 @@ const IntroductionStep = ({
                         });
                         break;
                     case 409:
-                        setNotificationData({
-                            title: "E-mail em uso.",
-                            description: "Esse endereço de e-mail já foi utilizado para preencher o formulário.",
-                            type: "error"
-                        });
+                        switch (code) {
+                            case "SAMPLE_FULL":
+                                setNotificationData({
+                                    title: "Amostra cheia!",
+                                    description: "O limite de participantes dessa amostra já foi atingido.",
+                                    type: "error"
+                                });
+                                break;
+
+                            case "FORM_ALREADY_FINISHED":
+                                setNotificationData({
+                                    title: "Formulário finalizado!",
+                                    description: "Esse participante já completou o formulário.",
+                                    type: "warning"
+                                });
+                                break;
+
+                            default:
+                                setNotificationData({
+                                    title: "E-mail em uso.",
+                                    description: "Esse endereço de e-mail já foi utilizado para preencher o formulário.",
+                                    type: "error"
+                                });
+                                break;
+                        }
                         break;
                     default:
                         setNotificationData({

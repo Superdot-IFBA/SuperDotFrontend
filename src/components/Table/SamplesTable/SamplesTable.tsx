@@ -2,7 +2,7 @@ import Pagination from "../Pagination/Pagination";
 import { PAGE_SIZE } from "../../../api/researchers.api";
 import { PageSampleSummary, SampleSummary } from "../../../api/sample.api";
 import { SampleStatus } from "../../../utils/consts.utils";
-import { Box, Flex, IconButton, Select, Table, Tooltip, Text, DataList, Separator } from "@radix-ui/themes";
+import { Box, Flex, IconButton, Select, Table, Tooltip, Text, DataList, Separator, Badge } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
 import SkeletonTableBody from "../../Skeletons/SkeletonTableBody";
 import SkeletonDataList from "../../Skeletons/SkeletonDataList";
@@ -57,33 +57,45 @@ const SamplesTable = ({
                 </Text>
             </Flex>
 
-            {/* Versão Desktop */}
-            <Table.Root variant="surface" className="w-full m-auto desktop">
-                <Table.Header className="text-[15px]">
-                    <Table.Row>
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            Nome do Pesquisador
+            <Table.Root variant="ghost" className="w-full m-auto desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
+                {/* Header com gradiente */}
+                <Table.Header className="text-[15px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                    <Table.Row className="border-b border-violet-200/30">
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                Pesquisador
+                            </Flex>
                         </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            Nome da Amostra
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                Amostra
+                            </Flex>
                         </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
                             <Tooltip content="Certificado de Apresentação de Apreciação Ética">
-                                <Box>CAAE</Box>
+                                <Flex align="center" justify="center" gap="2" className="cursor-help">
+                                    CAAE
+                                </Flex>
                             </Tooltip>
                         </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            Participantes Solicitados
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                Solicitados
+                            </Flex>
                         </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            Participantes Autorizados
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                Autorizados
+                            </Flex>
                         </Table.ColumnHeaderCell>
-
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            <Flex direction="column">
-                                <Box className="mb-1">Status</Box>
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex direction="column" align="center" gap="2">
+                                <Flex align="center" gap="2">
+                                    <Icon.TrendUp size={16} weight="bold" />
+                                    Status
+                                </Flex>
                                 <Select.Root defaultValue="Todos" size="1" onValueChange={handleValueChange}>
-                                    <Select.Trigger />
+                                    <Select.Trigger className="w-24" />
                                     <Select.Content>
                                         <Select.Group>
                                             <Select.Label>Status</Select.Label>
@@ -96,9 +108,11 @@ const SamplesTable = ({
                                 </Select.Root>
                             </Flex>
                         </Table.ColumnHeaderCell>
-
-                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r">
-                            Ações
+                        <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r-0 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                <Icon.Gear size={16} weight="bold" />
+                                Ações
+                            </Flex>
                         </Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -106,61 +120,116 @@ const SamplesTable = ({
                 {loading ? (
                     <SkeletonTableBody itens={PAGE_SIZE} columns={7} />
                 ) : hasData ? (
-                    <>
-                        <Table.Body>
-                            {page.data.map((sample) => (
-                                <Table.Row align="center" key={sample.sampleId}>
-                                    <Table.Cell justify="center">{getFirstAndLastName(sample.researcherName)}</Table.Cell>
-                                    <Table.Cell justify="center">
-                                        <div>
-                                            <div >{sample.sampleName}</div>
-                                            <div className="text-[12px]">
-                                                Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
-                                            </div>
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell justify="center">{sample.cepCode}</Table.Cell>
-                                    <Table.Cell justify="center">{sample.qttParticipantsRequested}</Table.Cell>
-                                    <Table.Cell justify="center">{sample.qttParticipantsAuthorized}</Table.Cell>
-                                    <Table.Cell justify="center">{sample.currentStatus}</Table.Cell>
-                                    <Table.Cell justify="center">
-                                        <Flex justify="center" gap="4">
-                                            <Tooltip content="Alterar status.">
-                                                <IconButton size="1" variant="surface" radius="full">
-                                                    <Icon.Pencil
-                                                        onClick={() => onClickToReviewSample(sample.sampleId)}
-                                                        className="cursor-pointer"
-                                                    />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip content="Visualizar histórico de revisões.">
-                                                <IconButton size="1" variant="surface" radius="full">
-                                                    <Icon.MagnifyingGlass
-                                                        onClick={() => onClickToViewSampleReviews(sample)}
-                                                        className="cursor-pointer"
-                                                    />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip content="Visualizar documentos anexados.">
-                                                <IconButton size="1" variant="surface" radius="full">
-                                                    <Icon.Clipboard
-                                                        onClick={() => onClickToViewSampleAttachments(sample.files)}
-                                                        className="cursor-pointer"
-                                                    />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Flex>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-
-                    </>
+                    <Table.Body className="bg-white/50 backdrop-blur-sm">
+                        {page.data.map((sample) => (
+                            <Table.Row
+                                align="center"
+                                key={sample.sampleId}
+                                className="border-b border-gray-100/30 hover:bg-gray-50/50 transition-colors duration-200"
+                            >
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Text weight="medium" className="text-gray-900">
+                                        {getFirstAndLastName(sample.researcherName)}
+                                    </Text>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Flex direction="column" className="text-center">
+                                        <Text weight="medium" className="text-gray-900">
+                                            {sample.sampleName}
+                                        </Text>
+                                        <Text size="1" className="text-gray-500 mt-1">
+                                            Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
+                                        </Text>
+                                    </Flex>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Text size="2" className="">
+                                        {sample.cepCode}
+                                    </Text>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Badge
+                                        size="1"
+                                        variant="soft"
+                                        color="orange"
+                                        className="bg-orange-100 text-orange-700 border-orange-200 font-semibold"
+                                    >
+                                        {sample.qttParticipantsRequested}
+                                    </Badge>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Badge
+                                        size="1"
+                                        variant="soft"
+                                        color="green"
+                                        className="bg-green-100 text-green-700 border-green-200 font-semibold"
+                                    >
+                                        {sample.qttParticipantsAuthorized}
+                                    </Badge>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    <Badge
+                                        size="1"
+                                        variant="soft"
+                                        color={`${sample.currentStatus === 'Autorizado' ? 'grass' :
+                                            sample.currentStatus === 'Pendente' ? 'amber' : 'red'
+                                            }`}
+                                    >
+                                        {sample.currentStatus}
+                                    </Badge>
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="py-4">
+                                    <Flex justify="center" gap="3">
+                                        <Tooltip content="Alterar status">
+                                            <IconButton
+                                                size="1"
+                                                variant="soft"
+                                                color="violet"
+                                                radius="full"
+                                                onClick={() => onClickToReviewSample(sample.sampleId)}
+                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                            >
+                                                <Icon.Pencil size={14} weight="bold" />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip content="Visualizar histórico">
+                                            <IconButton
+                                                size="1"
+                                                variant="soft"
+                                                color="blue"
+                                                radius="full"
+                                                onClick={() => onClickToViewSampleReviews(sample)}
+                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                            >
+                                                <Icon.MagnifyingGlass size={14} weight="bold" />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip content="Visualizar documentos">
+                                            <IconButton
+                                                size="1"
+                                                variant="soft"
+                                                color="amber"
+                                                radius="full"
+                                                onClick={() => onClickToViewSampleAttachments(sample.files)}
+                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                            >
+                                                <Icon.Clipboard size={14} weight="bold" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Flex>
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
                 ) : (
                     <Table.Body>
                         <Table.Row>
-                            <Table.Cell colSpan={7} className="text-center">
-                                Nenhuma amostra encontrada.
+                            <Table.Cell colSpan={7} align="center" className="py-8">
+                                <EmptyState
+                                    icon={<Icon.FileX weight="thin" size={40} />}
+                                    title="Nenhuma amostra encontrada"
+                                    description="Não foram encontradas amostras que correspondam aos critérios de busca."
+                                />
                             </Table.Cell>
                         </Table.Row>
                     </Table.Body>
@@ -168,94 +237,187 @@ const SamplesTable = ({
             </Table.Root>
 
             {/* Versão Mobile */}
-            <DataList.Root orientation="vertical" className="w-full mobo">
-                <Flex justify="center" align="center" gap="4" className="card-container w-fit p-4 m-auto mb-5">
-                    <p>Filtrar Status por:</p>
-                    <Select.Root
-                        value={currentStatus || "Todos"}
-                        size="1"
-                        onValueChange={handleValueChange}
-                    >
-                        <Select.Trigger />
-                        <Select.Content>
-                            <Select.Group>
-                                <Select.Label>Status</Select.Label>
-                                <Select.Item value="Todos">Todos</Select.Item>
-                                <Select.Item value="Pendente">Pendente</Select.Item>
-                                <Select.Item value="Autorizado">Autorizado</Select.Item>
-                                <Select.Item value="Não Autorizado">Não Autorizado</Select.Item>
-                            </Select.Group>
-                        </Select.Content>
-                    </Select.Root>
-                </Flex>
+            <div className="w-full mobo">
+                {/* Filtro Mobile */}
+                <div className="bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-2xl p-4 border border-violet-200/30 shadow-sm mb-4">
+                    <Flex justify="center" align="center" gap="3">
+                        <Icon.Funnel size={18} weight="bold" className="text-violet-600" />
+                        <Text weight="medium" className="text-violet-900">Filtrar por Status:</Text>
+                        <Select.Root
+                            value={currentStatus || "Todos"}
+                            size="1"
+                            onValueChange={handleValueChange}
+                        >
+                            <Select.Trigger className="min-w-[120px]" />
+                            <Select.Content>
+                                <Select.Group>
+                                    <Select.Label>Status</Select.Label>
+                                    <Select.Item value="Todos">Todos</Select.Item>
+                                    <Select.Item value="Pendente">Pendente</Select.Item>
+                                    <Select.Item value="Autorizado">Autorizado</Select.Item>
+                                    <Select.Item value="Não Autorizado">Não Autorizado</Select.Item>
+                                </Select.Group>
+                            </Select.Content>
+                        </Select.Root>
+                    </Flex>
+                </div>
 
                 {loading ? (
                     <SkeletonDataList itens={PAGE_SIZE} columns={7} titles={1} />
                 ) : hasData ? (
-                    page.data.map((sample) => (
-                        <DataList.Item
-                            key={sample.sampleId}
-                            className="w-full p-4 rounded-lg mb-5 border-2 card-container"
-                        >
-                            <p className="text-[16px] font-bold text-center  border-b-black">Informações da Amostra</p>
-                            <DataList.Label>Nome do Pesquisador:</DataList.Label>
-                            <DataList.Value>{sample.researcherName}</DataList.Value>
-                            <Separator size="4" />
-
-                            <DataList.Label>Nome da Amostra:</DataList.Label>
-                            <DataList.Value><div>
-                                <div >{sample.sampleName}</div>
-                                <div style={{ fontSize: '0.675rem', color: '#64748b' }}>
-                                    Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
+                    <DataList.Root orientation="vertical" className="w-full">
+                        {page.data.map((sample) => (
+                            <DataList.Item
+                                key={sample.sampleId}
+                                className="w-full rounded-2xl mb-4 transition-all duration-500 ease-out transform
+            bg-gradient-to-br from-white to-violet-50 shadow-sm hover:shadow-md 
+            border border-violet-200/80 backdrop-blur-sm overflow-hidden
+            hover:border-violet-300/60"
+                            >
+                                {/* Header com gradiente */}
+                                <div className="bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-t-xl px-4 py-3 border-b border-violet-100/50">
+                                    <p className="text-[17px] font-semibold text-center text-violet-900 tracking-tight flex items-center justify-center gap-2">
+                                        <Icon.ClipboardText size={20} weight="bold" />
+                                        Informações da Amostra
+                                    </p>
                                 </div>
-                            </div></DataList.Value>
-                            <Separator size="4" />
 
-                            <DataList.Label>CAAE:</DataList.Label>
-                            <DataList.Value>{sample.cepCode}</DataList.Value>
-                            <Separator size="4" />
+                                <div className="p-2">
+                                    <div className="space-y-3">
+                                        {/* Pesquisador */}
+                                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                                            <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2">
+                                                <Icon.User size={16} weight="bold" />
+                                                Pesquisador:
+                                            </DataList.Label>
+                                            <DataList.Value className="text-gray-900 font-medium">
+                                                {sample.researcherName}
+                                            </DataList.Value>
+                                        </div>
 
-                            <DataList.Label>Participantes Solicitados:</DataList.Label>
-                            <DataList.Value>{sample.qttParticipantsRequested}</DataList.Value>
-                            <Separator size="4" />
+                                        {/* Amostra */}
+                                        <div className="p-3 bg-white rounded-lg border border-violet-100 shadow-sm flex justify-between">
+                                            <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                                                <Icon.ClipboardText size={16} weight="bold" />
+                                                Amostra:
+                                            </DataList.Label>
+                                            <DataList.Value>
+                                                <Flex direction="column" justify={"end"} align="center" className="text-center">
+                                                    <Text weight="medium" className="text-gray-900">
+                                                        {sample.sampleName}
+                                                    </Text>
+                                                    <Text size="1" className="text-gray-500 mt-1">
+                                                        Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
+                                                    </Text>
+                                                </Flex>
+                                            </DataList.Value>
+                                        </div>
 
-                            <DataList.Label>Participantes Autorizados:</DataList.Label>
-                            <DataList.Value>{sample.qttParticipantsAuthorized}</DataList.Value>
-                            <Separator size="4" />
+                                        {/* CAAE */}
+                                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                                            <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2">
+                                                <Icon.Certificate size={16} weight="bold" />
+                                                CAAE:
+                                            </DataList.Label>
+                                            <DataList.Value>
+                                                <Badge size="1" variant="soft" className="bg-blue-100 text-blue-700 border-blue-200 font-mono">
+                                                    {sample.cepCode}
+                                                </Badge>
+                                            </DataList.Value>
+                                        </div>
 
-                            <DataList.Label>Status:</DataList.Label>
-                            <DataList.Value>{sample.currentStatus}</DataList.Value>
-                            <Separator size="4" />
+                                        {/* Participantes */}
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-orange-100 shadow-sm">
+                                                <DataList.Label className="font-semibold text-gray-700 text-sm">
+                                                    Solicitados:
+                                                </DataList.Label>
+                                                <Badge size="1" variant="soft" color="orange" >
+                                                    {sample.qttParticipantsRequested}
+                                                </Badge>
+                                            </div>
+                                            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100 shadow-sm">
+                                                <DataList.Label className="font-semibold text-gray-700 text-sm">
+                                                    Autorizados:
+                                                </DataList.Label>
+                                                <Badge
+                                                    size="1"
+                                                    variant="soft"
+                                                    color="green"
+                                                    className="bg-green-100 text-green-700 border-green-200 font-semibold"
+                                                >
+                                                    {sample.qttParticipantsAuthorized}
+                                                </Badge>
+                                            </div>
+                                        </div>
 
-                            <DataList.Label>Ações:</DataList.Label>
-                            <Flex justify="center" gap="2" direction={"column"}>
-                                <Button title={"Alterar status"} className="w-full" onClick={() => onClickToReviewSample(sample.sampleId)} >
-                                    <Icon.Pencil
+                                        {/* Status */}
+                                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                                            <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2">
+                                                <Icon.TrendUp size={16} weight="bold" />
+                                                Status:
+                                            </DataList.Label>
+                                            <DataList.Value>
+                                                <Badge
+                                                    size="1"
+                                                    variant="soft"
+                                                    color={`${sample.currentStatus === 'Autorizado' ? 'grass' :
+                                                        sample.currentStatus === 'Pendente' ? 'amber' : 'red'
+                                                        }`}
+                                                >
+                                                    {sample.currentStatus}
+                                                </Badge>
+                                            </DataList.Value>
+                                        </div>
 
-                                        className="cursor-pointer"
-                                    />
-                                </Button>
-
-                                <Button title={"Visualizar Revisões"} className="w-full" onClick={() => onClickToViewSampleReviews(sample)} >
-                                    <Icon.MagnifyingGlass
-
-                                        className="cursor-pointer"
-                                    />
-                                </Button>
-
-                                <Button title={"Visualizar Documentos"} className="w-full" onClick={() => onClickToViewSampleAttachments(sample.files)}>
-                                    <Icon.Clipboard
-
-                                        className="cursor-pointer"
-                                    />
-                                </Button>
-                            </Flex>
-                        </DataList.Item>
-                    ))
+                                        <div className="p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                                            <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2 mb-3">
+                                                <Icon.Gear size={16} weight="bold" />
+                                                Ações:
+                                            </DataList.Label>
+                                            <Flex gap="2" direction="column">
+                                                <Button
+                                                    title="Alterar status"
+                                                    className="w-full shadow-sm hover:shadow transition-all"
+                                                    onClick={() => onClickToReviewSample(sample.sampleId)}
+                                                    color="violet"
+                                                    size="Small"
+                                                >
+                                                    <Icon.Pencil size={16} weight="bold" />
+                                                </Button>
+                                                <Button
+                                                    title="Visualizar Revisões"
+                                                    className="w-full shadow-sm hover:shadow transition-all"
+                                                    onClick={() => onClickToViewSampleReviews(sample)}
+                                                    color="blue"
+                                                    size="Small"
+                                                >
+                                                    <Icon.MagnifyingGlass size={16} weight="bold" />
+                                                </Button>
+                                                <Button
+                                                    title="Visualizar Documentos"
+                                                    className="w-full shadow-sm hover:shadow transition-all"
+                                                    onClick={() => onClickToViewSampleAttachments(sample.files)}
+                                                    color="amber"
+                                                    size="Small"
+                                                >
+                                                    <Icon.Clipboard size={16} weight="bold" />
+                                                </Button>
+                                            </Flex>
+                                        </div>
+                                    </div>
+                                </div>
+                            </DataList.Item>
+                        ))}
+                    </DataList.Root>
                 ) : (
-                    <EmptyState icon={<Icon.FileX weight="thin" size={100} />} title={"Nenhuma Solicitação encontrada."} description={"Não foram encontradas solicitações que correspondam aos critérios de busca ou filtros aplicados. Verifique os parâmetros utilizados e tente novamente."} />
+                    <EmptyState
+                        icon={<Icon.FileX weight="thin" size={80} />}
+                        title="Nenhuma Solicitação encontrada"
+                        description="Não foram encontradas solicitações que correspondam aos critérios de busca ou filtros aplicados. Verifique os parâmetros utilizados e tente novamente."
+                    />
                 )}
-            </DataList.Root>
+            </div >
             <Pagination
                 currentPage={currentPage}
                 pageSize={PAGE_SIZE}

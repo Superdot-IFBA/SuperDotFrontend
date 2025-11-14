@@ -1,7 +1,6 @@
-import { Badge, Box, DataList, Flex, Separator, Table, Tooltip } from "@radix-ui/themes"
+import { Badge, Box, DataList, Flex, Separator, Table, Tooltip, Text } from "@radix-ui/themes"
 import { useLocation } from "react-router-dom";
 import { IParticipant } from "../../interfaces/participant.interface";
-import * as  Icon from "@phosphor-icons/react";
 import Accordeon from "../../components/Accordeon/Accordeon";
 import { GridComponent } from "../../components/Grid/Grid";
 import { ApexOptions } from 'apexcharts';
@@ -9,7 +8,10 @@ import ApexChart from "react-apexcharts";
 import { SelectField } from "../../components/SelectField/SelectField";
 import { useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import { Button } from "../../components/Button/Button";
+import * as Icon from "@phosphor-icons/react";
+
+import { ParticipantBasicInfo } from "../../components/DataListView/DatalistViewBasicInfo";
+import { get } from "lodash";
 
 interface LocationState {
   selectedParticipants: IParticipant[];
@@ -87,7 +89,14 @@ const CompareParticipantsSelected = () => {
     }
     return punctuationS;
   }
-
+  const getFirstAndLastName = (fullName: string) => {
+    const names = fullName.split(' ');
+    if (names.length > 1) {
+      return `${names[0]} ${names[names.length - 1]}`;
+    } else {
+      return fullName;
+    }
+  };
 
   const punctuationS = calcularPunctuation(selectedParticipants);
   const generateRandomColor = (): string => {
@@ -181,109 +190,149 @@ const CompareParticipantsSelected = () => {
           title="Informações do(s) Participante(s) Selecionado(s)"
           content={
             <>
-              <Table.Root variant="surface" className="w-full desktop">
-                <Table.Header className="text-[18px]">
-                  <Table.Row>
-                    <Table.ColumnHeaderCell colSpan={5} className="border-r"></Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell colSpan={2} className="border-r text-center">Indicadores de AH/SD de acordo com o :</Table.ColumnHeaderCell>
+              <Table.Root variant="ghost" className="w-full desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
+                <Table.Header className="text-[18px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                  <Table.Row className="border-b border-violet-200/30">
+                    <Table.ColumnHeaderCell colSpan={5} className="border-r border-violet-200/30 py-4">
+                      <Flex align="center" justify="center" gap="3" className="text-violet-900">
+                        <Icon.User size={22} weight="bold" />
+                        <Text weight="bold" size="4">Informações do Participante</Text>
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell colSpan={2} className="border-r-0 py-4 text-center">
+                      <Flex align="center" justify="center" gap="3" className="text-violet-900">
+                        <Icon.Certificate size={22} weight="bold" />
+                        <Text weight="bold" size="4">Indicadores de AH/SD</Text>
+                      </Flex>
+                    </Table.ColumnHeaderCell>
                   </Table.Row>
                 </Table.Header>
-                <Table.Header className="text-[16px]">
-                  <Table.Row align="center" className="text-center">
-                    <Table.ColumnHeaderCell className="border-l">Identificação</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Nome do Avaliado</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Pontuação</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Idade</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Gênero</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Questionário</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell className="border-l">Pesquisador</Table.ColumnHeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {selectedParticipants.map((participant, index) => (
-                    <Table.Row key={index} align="center">
-                      <Table.Cell justify="center">
-                        <Tooltip content={`Avaliado - ${index + 1}`}>
-                          <Box>
-                            A-{index + 1}
-                          </Box>
-                        </Tooltip>
 
+                <Table.Header className="text-[16px] bg-gradient-to-r from-gray-50 to-gray-100/30">
+                  <Table.Row align="center" className="text-center border-b border-gray-200/50">
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Identificação
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Nome do Avaliado
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Pontuação
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Idade
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Gênero
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Questionário
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="border-r-0 py-3 font-semibold text-gray-800">
+                      <Flex align="center" justify="center" gap="2">
+                        Pesquisador
+                      </Flex>
+                    </Table.ColumnHeaderCell>
+                  </Table.Row>
+                </Table.Header>
+
+                <Table.Body className="bg-white/50 backdrop-blur-sm">
+                  {selectedParticipants.map((participant, index) => (
+                    <Table.Row
+                      key={index}
+                      align="center"
+                      className="border-b border-gray-100/30 hover:bg-gray-50/50 transition-colors duration-200"
+                    >
+                      <Table.Cell justify="center" className="py-4">
+                        <Tooltip content={`Avaliado - ${index + 1}`}>
+                          <Badge
+                            size="2"
+                            variant="soft"
+                            className="bg-violet-100 text-violet-700 border-violet-200 font-semibold cursor-help"
+                          >
+                            <Flex align="center" gap="2">
+                              <Icon.UserCircle size={14} />
+                              A-{index + 1}
+                            </Flex>
+                          </Badge>
+                        </Tooltip>
                       </Table.Cell>
-                      <Table.Cell justify="center">{participant.personalData.fullName}</Table.Cell>
-                      <Table.Cell justify="center">{participant.adultForm?.totalPunctuation}</Table.Cell>
-                      <Table.Cell justify="center">{handleAge(participant.personalData.birthDate)}</Table.Cell>
-                      <Table.Cell justify="center">{participant.personalData.gender}</Table.Cell>
-                      <Table.Cell justify="center"><Badge color={participant.adultForm?.giftednessIndicators ? "green" : "red"}>{participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}</Badge></Table.Cell>
-                      <Table.Cell justify="center">
-                        <Badge color={participant.giftdnessIndicatorsByResearcher ? "green" : "red"}>{participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}</Badge>
+
+                      <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                        <Text weight="medium" className="text-gray-900">
+                          {getFirstAndLastName(participant.personalData.fullName)}
+                        </Text>
+                      </Table.Cell>
+
+                      <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                        <Badge
+                          size="2"
+                          variant="soft"
+                          className="bg-blue-100 text-blue-700 border-blue-200 font-bold"
+                        >
+                          {participant.adultForm?.totalPunctuation}
+                        </Badge>
+                      </Table.Cell>
+
+                      <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                        <Text weight="medium" className="text-gray-700">
+                          {handleAge(participant.personalData.birthDate)}
+                        </Text>
+                      </Table.Cell>
+
+                      {/* Gênero */}
+                      <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                        <Text weight="medium" className="text-gray-700">
+                          {participant.personalData.gender}
+                        </Text>
+                      </Table.Cell>
+
+                      {/* Questionário */}
+                      <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                        <Badge
+                          size="2"
+                          color={`${participant.adultForm?.giftednessIndicators ? 'grass' : 'red'}`}
+                          className={`w-full justify-center font-semibold border ${participant.adultForm?.giftednessIndicators
+                            ? ' border-emerald-500'
+                            : ' border-red-500'
+                            }`}
+                        >
+                          {participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}
+                        </Badge>
+                      </Table.Cell>
+
+                      <Table.Cell justify="center" className="py-4">
+                        <Badge
+                          size="2"
+                          color={`${participant.adultForm?.giftednessIndicators ? 'grass' : 'red'}`}
+                          className={`w-full justify-center font-semibold border ${participant.adultForm?.giftednessIndicators
+                            ? ' border-emerald-500'
+                            : ' border-red-500'
+                            }`}
+                        >
+                          {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                        </Badge>
                       </Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
               </Table.Root>
               <div className="mobo">
-                <DataList.Root orientation="vertical" className="!font-roboto">
-                  {selectedParticipants.map((participant, index) => (
-                    <DataList.Item
-                      key={index}
-                      className={`w-full p-3 rounded-lg mb-5 card-container transition-all duration-300 ease-in-out 
-          ${participant._id && expandedParticipants[participant._id] ? 'max-h-[1000px]' : 'max-h-[300px]'}`}
-                    >
-
-                      {/* Informações Básicas */}
-                      <p className="text-[16px] font-bold text-center mb-4 text-black">Informações do participante</p>
-                      <Separator size="4" className="mt-2" />
-
-                      <DataList.Label >Nome:</DataList.Label>
-                      <DataList.Value>{participant.personalData.fullName}</DataList.Value>
-                      <Separator size="4" />
-
-                      <DataList.Label>Pontuação do questionário:</DataList.Label>
-                      <DataList.Value>{participant.adultForm?.totalPunctuation}</DataList.Value>
-                      <Separator size="4" />
-
-                      <DataList.Label>Quantidade de 2ªs Fontes:</DataList.Label>
-                      <DataList.Value>{participant.secondSources?.length}</DataList.Value>
-                      <Separator size="4" className="mb-2" />
-
-                      {participant?._id && expandedParticipants[participant._id] && (
-                        <>
-                          <p className="text-[16px] font-bold text-center">Indicadores de AH/SD:</p>
-                          <DataList.Label className='mt-2 !items-center'>Pelo Questionário: <Badge size={"3"} className='ml-2 !px2' color={participant.adultForm?.giftednessIndicators ? "green" : "red"}>{participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}</Badge> </DataList.Label>
-                          <Separator size="4" className='mt-2' />
-                          <DataList.Label className='mt-1 !items-center'>Pelo Pesquisador: <Badge size={"3"} className='ml-2 !px2' color={participant.giftdnessIndicatorsByResearcher ? "green" : "red"}>{participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}</Badge> </DataList.Label>
-
-                        </>
-                      )}
-
-                      <Button
-                        size="Small"
-                        className="justify-end flex mt-2"
-                        onClick={() =>
-                          setExpandedParticipants((prev) => ({
-                            ...prev,
-                            [String(participant._id)]: !prev[String(participant._id)],
-                          }))
-                        }
-                        title={
-                          participant._id && expandedParticipants[participant._id]
-                            ? "Veja menos"
-                            : "Ver mais"
-                        }
-                        color={""}
-                      >
-                        <Icon.CaretDown
-                          size={15}
-                          className={`transition-all duration-300 ${participant._id && expandedParticipants[participant._id]
-                            ? "rotate-180"
-                            : ""
-                            }`}
-                        />
-                      </Button>
-                    </DataList.Item>
-                  ))}
-                </DataList.Root>
+                {selectedParticipants.map((participant, index) => (
+                  <ParticipantBasicInfo key={index} setExpandedParticipants={setExpandedParticipants} expandedParticipants={expandedParticipants} selectedParticipants={selectedParticipants} getFirstAndLastName={getFirstAndLastName} />
+                ))}
               </div>
             </>
           }
@@ -342,20 +391,40 @@ const CompareParticipantsSelected = () => {
           className="mb-10"
           content={
             <>
-              <Table.Root variant="surface" className="h-[500px] overflow-auto desktop">
-                <Table.Header className="text-[16px]">
-                  <Table.Row align="center" className="text-center">
-                    <Table.ColumnHeaderCell className="border-l">Perguntas</Table.ColumnHeaderCell>
+              <Table.Root variant="ghost" className="h-[500px] overflow-auto desktop rounded-2xl border border-gray-200/50 shadow-sm">
+                <Table.Header className="text-[16px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                  <Table.Row align="center" className="text-center border-b border-violet-200/30">
+                    <Table.ColumnHeaderCell className="border-r border-violet-200/30 py-4">
+                      <Flex align="center" justify="center" gap="2" className="text-violet-900">
+                        <Icon.Question size={18} weight="bold" />
+                        <Text weight="bold">Perguntas</Text>
+                      </Flex>
+                    </Table.ColumnHeaderCell>
                     {selectedParticipants?.map((participant, index) => (
-                      <Table.ColumnHeaderCell key={index} className="border-l italic text-[#0400119c]">{participant.personalData?.fullName}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell key={index} className="border-r border-violet-200/30 py-4 last:border-r-0">
+                        <Flex align="center" justify="center" gap="2" className="text-blue-900">
+                          <Icon.User size={16} weight="bold" />
+                          <Text weight="medium" className="italic">
+                            {getFirstAndLastName(participant.personalData?.fullName)}
+                          </Text>
+                        </Flex>
+                      </Table.ColumnHeaderCell>
                     ))}
                   </Table.Row>
                 </Table.Header>
-                <Table.Body>
 
+                <Table.Body className="bg-white/50 backdrop-blur-sm">
                   {selectedQuestions.map((question, questionIndex) => (
-                    <Table.Row align="center" key={`question-${questionIndex}`}>
-                      <Table.Cell className="text-wrap font-bold">{question.statement}</Table.Cell>
+                    <Table.Row
+                      align="center"
+                      key={`question-${questionIndex}`}
+                      className="border-b border-gray-100/30 hover:bg-gray-50/30 transition-colors duration-200"
+                    >
+                      <Table.Cell className="text-wrap py-4">
+                        <Text size="3" weight="medium" className="text-gray-800 leading-relaxed pr-4">
+                          {question.statement}
+                        </Text>
+                      </Table.Cell>
 
                       {selectedParticipants.map((participant, participantIndex) => {
                         const answerGroup = participant.adultForm?.answersByGroup?.find(
@@ -373,24 +442,24 @@ const CompareParticipantsSelected = () => {
                           } else if (Array.isArray(matchedQuestion.answer)) {
                             processedAnswer = matchedQuestion.answer
                               .map(a => (typeof a === 'string' ? a.trim() : ''))
-                              .filter(a => a) // Remove valores vazios
+                              .filter(a => a)
                               .join(', ');
                           }
                         }
 
-                        const answerClass = () => {
-                          const baseClass = "rounded py-1 w-[200px] text-center text-[#6f6e77]";
+                        const answerStyle = () => {
+                          const baseClass = "rounded-lg py-2 px-3 text-center font-semibold  shadow-sm min-w-[140px] mx-auto border";
 
                           switch (processedAnswer) {
                             case 'Sempre':
                             case 'Frequentemente':
-                              return `${baseClass} bg-green-400 !text-white font-bold`;
+                              return `${baseClass} bg-emerald-500 text-white border-emerald-600 hover:bg-emerald-600 `;
                             case 'Ás vezes':
                             case 'Raramente':
                             case 'Nunca':
-                              return `${baseClass} bg-red-400 !text-white font-bold`;
+                              return `${baseClass} bg-red-500 text-white border-red-600 hover:bg-red-600 `;
                             default:
-                              return baseClass;
+                              return `${baseClass} bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300`;
                           }
                         };
 
@@ -398,11 +467,11 @@ const CompareParticipantsSelected = () => {
                           <Table.Cell
                             key={`participant-${participantIndex}`}
                             align="center"
-                            className="border-l"
+                            className="border-r border-gray-200/30 py-4 last:border-r-0"
                           >
-                            <p className={answerClass()}>
-                              {processedAnswer || '-'}
-                            </p>
+                            <div className={answerStyle()}>
+                              {processedAnswer || '—'}
+                            </div>
                           </Table.Cell>
                         );
                       })}

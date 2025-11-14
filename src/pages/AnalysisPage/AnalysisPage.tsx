@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { ISample } from "../../interfaces/sample.interface";
-import * as Icon from '@phosphor-icons/react'
 import { useLocation, useNavigate } from "react-router-dom";
 import { stateWithSample } from "../../validators/navigationStateValidators";
 import { Box, Flex, Skeleton, } from "@radix-ui/themes";
-import * as Theme from "@radix-ui/themes"
 import { IParticipant } from "../../interfaces/participant.interface";
 import { GridComponent } from "../../components/Grid/Grid";
 import { answerByGender, AnswerByGender, getSampleById } from "../../api/sample.api";
@@ -15,9 +13,9 @@ import ResponseChartByGender from "../../components/Charts/ResponseChartByGender
 import { useForm } from "react-hook-form";
 import SkeletonHeader from "../../components/Skeletons/SkeletonHeader";
 import DesktopTableView from "../../components/DesktopTableView/DesktopTableView";
-import MobileDataListView from "../../components/MobileDataListView/MobileDataListView";
+import MobileDataListView from "../../components/DataListView/MobileDataListView";
 import AnalysisHeaderAndFilters from "../../components/AnalysisHeaderAndFilters/AnalysisHeaderAndFilters";
-import { ScrollArea } from '@radix-ui/themes';
+import Pagination from "../../components/Table/Pagination/Pagination";
 
 interface Filters {
     searchName?: string;
@@ -70,8 +68,12 @@ const AnalysisPage = () => {
         reset();
     };
 
-    const itemsPerPage = 10;
-    const totalParticipants = sample.participants?.length;
+    const itemsPerPage = 5;
+    const participantsWithPunctuation = sample.participants?.filter(participant =>
+        participant.adultForm?.totalPunctuation !== undefined
+    ) || [];
+
+    const totalParticipants = participantsWithPunctuation.length;
     const totalPages = Math.ceil((totalParticipants || 0) / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalParticipants || 0);
@@ -201,31 +203,7 @@ const AnalysisPage = () => {
         }
     };
 
-    const renderPagination = () => {
-        if (!totalPages || totalPages <= 0) {
-            return null;
-        }
-        const pages = [];
 
-        for (let i = 1; i <= totalPages; i++) {
-            pages.push(
-                <>
-                    <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage - 1)}>{`<`}</Theme.Button>
-                    <Theme.Button
-                        key={i}
-                        variant={currentPage === i ? "solid" : "soft"}
-                        onClick={() => handlePageChange(i)}
-                        className="w-10 hover:cursor-pointer"
-                    >
-                        {i}
-                    </Theme.Button>
-                    <Theme.Button className="hover:cursor-pointer" variant="surface" onClick={() => handlePageChange(currentPage + 1)}>{`>`}</Theme.Button>
-                </>
-            );
-        }
-
-        return pages;
-    };
 
     useEffect(() => {
         const fetchDados = async () => {
@@ -275,17 +253,26 @@ const AnalysisPage = () => {
             return;
         }
 
-        const hasValidSecondSource = participant.secondSources.some(
-            (secondSource) => secondSource.adultForm?.endFillFormAt !== undefined
+        const validSecondSources = participant.secondSources.filter(
+            (secondSource) => {
+                return secondSource.adultForm?.endFillFormAt &&
+                    secondSource.personalData?.fullName &&
+                    secondSource.personalData?.fullName.trim() !== '' &&
+                    secondSource.personalData?.birthDate &&
+                    secondSource.personalData?.relationship;
+            }
         );
 
-        if (!hasValidSecondSource) {
+        if (validSecondSources.length === 0) {
             return;
         }
 
         navigate("/app/my-samples/seconds-source-compare", {
             state: {
-                participant,
+                participant: {
+                    ...participant,
+                    secondSources: validSecondSources
+                },
             },
         });
         scrollToTop();
@@ -503,7 +490,7 @@ const AnalysisPage = () => {
 
     return (
 
-        <Box className="overflow-y-auto px-4 pb-8 analyse-page">
+        <Box className="overflow-y-auto px-1 pb-8 analyse-page">
 
             <Notify
                 open={!!notificationData.title}
@@ -632,7 +619,12 @@ const AnalysisPage = () => {
 
             <Flex gap="2" mt="4" justify="center" align="center">
 
-                {renderPagination()}
+                <Pagination
+                    currentPage={currentPage}
+                    totalCount={totalParticipants || 0}
+                    pageSize={itemsPerPage}
+                    onPageChange={handlePageChange}
+                />
 
             </Flex>
             <GridComponent

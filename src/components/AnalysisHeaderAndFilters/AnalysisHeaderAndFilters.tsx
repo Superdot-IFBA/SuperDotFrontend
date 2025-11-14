@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, Flex, Strong } from '@radix-ui/themes';
+import { Badge, Box, Flex, Strong } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import * as Icon from '@phosphor-icons/react';
 import { InputField } from '../InputField/InputField';
@@ -89,13 +89,13 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
 
   return (
     <>
-      <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
-        <h2 className="heading-2 font-semibold text-gray-900">
-          Análise de Participantes
+      <header className="pb-3 pt-4">
+        <h2 className="heading-2 font-semibold text-gray-900 text-left max-sm:text-center">
+          <Badge size={'3'} color="violet" radius='large'>
+            <Icon.ChartBar size={25} weight="duotone" className="text-primary inline-block mr-2" />
+            Amostra: {sample.sampleTitle}
+          </Badge>
         </h2>
-        <p className="text-lg text-gray-600">
-          Amostra: <Strong className="text-primary-600 !font-roboto">{sample?.sampleGroup}</Strong>
-        </p>
       </header>
 
       <Box className="hidden lg:grid grid-cols-4 gap-4">
@@ -111,6 +111,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
               title={showSearch ? "Fechar Filtros" : "Mostrar Filtros"}
               color="primary"
               size="Medium"
+              classNameTitle="sm:block"
             >
               {showSearch ? <Icon.X size={20} /> : <Icon.Funnel size={20} />}
             </Button>
@@ -147,7 +148,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
                 defaultValue="default"
                 className="p-2 w-full xl:w-auto truncate"
               >
-                <option value='default'>Selecionar</option>
+                <option value='default'>Todas as Áreas</option>
                 {knowledgeAreaOptions}
               </SelectField>
 
@@ -157,7 +158,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
                 className="w-full xl:w-auto truncate"
                 defaultValue={99}
               >
-                <option value={99} className="text-gray-99">Selecionar</option>
+                <option value={99} className="text-gray-99">Qualquer pontuação</option>
                 {punctuationOptions}
               </SelectField>
             </Flex>
@@ -179,7 +180,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
               type="button"
               className="items-center w-full xl:w-[300px]"
               color="primary"
-              title="Limpar Filtro"
+              title="Limpar Filtros"
             />
           </div>
         </Form.Root>
@@ -187,37 +188,39 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
 
       <Flex
         direction={isDesktop ? "row" : "column"}
-        justify="between"
-        className="gap-4 m-auto w-[90%] max-w-4xl mt-5 mb-5 px-4"
+        justify="center"
+        align="center"
+        gap="3"
+        className="p-6  mx-auto w-full max-w-6xl"
       >
         <Modal
           open={openModalCompare}
           setOpen={setOpenModalCompare}
-          title={""}
-          accessibleDescription={""}
+          title="Comparação de Participantes"
+          accessibleDescription=""
         >
           <EmptyState
-            icon={<Icon.UserGear size={40} />}
-            title="Você não selecionou nenhum participante."
-            description="Para comparar as respostas entre os avaliados ou gerar a nuvem de palavras, você deve selecionar pelo menos um participante."
+            icon={<Icon.UsersThree size={48} weight="bold" className="text-violet-600" />}
+            title="Seleção necessária"
+            description="Para comparar as respostas entre os avaliados, você deve selecionar pelo menos um participante."
           />
         </Modal>
 
         <Button
           size="Medium"
-          title={"Comparar Selecionados"}
-          color={"primary"}
+          title="Comparar Selecionados"
+          color="violet"
           onClick={handleCompareSelected}
-          className="btn-primary"
+          className="shadow-sm hover:shadow transition-all xl:min-w-[200px] w-full"
         >
-          <Icon.ChartBar size={20} color="white" weight="bold" />
+          <Icon.ChartBar size={20} weight="bold" />
         </Button>
 
         <Modal
           open={openModal}
           setOpen={setOpenModal}
-          title={"Pontuação:"}
-          accessibleDescription={""}
+          title="Pontuação do Questionário"
+          accessibleDescription="Visualize as pontuações detalhadas do questionário"
         >
           <InstrumentResponsesTable />
         </Modal>
@@ -225,124 +228,143 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
         <Button
           size="Medium"
           onClick={handleShowPunctuation}
-          title={"Pontuação do Questionário"}
-          color={"primary"}
-          className="btn-primary"
+          title="Pontuação do Questionário"
+          color="blue"
+          className="shadow-sm hover:shadow transition-all xl:min-w-[200px] w-full "
         >
-          <Icon.Trophy size={20} color="white" weight="bold" />
+          <Icon.Trophy size={20} weight="bold" />
         </Button>
 
         <Modal
           open={openModalCloud}
           setOpen={setOpenModalCloud}
-          title={"Selecione as fontes de palavras:"}
-          accessibleDescription={""}
+          title="Gerar Nuvem de Palavras"
+          accessibleDescription="Selecione as fontes de texto para gerar a nuvem de palavras"
         >
-          <Flex justify={isDesktop ? "between" : "center"} direction={isDesktop ? "column" : "column"} className="gap-3 xl:pt-4 pb-4">
-            {CloudWord.map((itens, index) => (
-              <label key={index}>
-                <Flex gap="2" className="card-container p-2" direction={isDesktop ? "row" : "row"}>
-                  <Switch.Root
-                    className="w-11 h-6 rounded-full relative data-[state=checked]:bg-primary bg-gray-300 transition-colors duration-200"
-                    checked={isCheckedWC[index]}
-                    onCheckedChange={() => handleChangeWC(index)}
-                    value={itens.value}
+          <Flex direction="column" gap="4" className="py-2">
+
+            <Flex direction="column" gap="3">
+              {CloudWord.map((itens, index) => (
+                <label key={index} className="group cursor-pointer">
+                  <Flex
+                    gap="3"
+                    align="center"
+                    className={`
+                p-4 rounded-xl border-2 transition-all duration-200
+                ${isCheckedWC[index]
+                        ? 'bg-violet-50 border-violet-300 shadow-sm'
+                        : 'bg-white border-gray-200 group-hover:border-violet-200 group-hover:bg-violet-50/30'
+                      }
+              `}
                   >
-                    <Switch.Thumb className="block w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 translate-x-0.5 data-[state=checked]:translate-x-[26px]" />
-                  </Switch.Root>
-                  {itens.title}
-                </Flex>
-              </label>
-            ))}
-          </Flex>
-          <Flex justify="end">
-            <Button
-              onClick={cloudWords}
-              className={showNewComponent ? 'hidden' : 'items-end'}
-              color="green"
-              title={"Confirmar"}
-              size={"Medium"}
-            />
-          </Flex>
-          {showNewComponent && (
-            <>
-              {CloudWord.map((item, index) => {
-                if (isCheckedWC[index]) {
-                  switch (item.value) {
-                    case "RES-SUB":
-                      return (
-                        <Box key={index} className="xl:w-full m-auto">
-                          <p className="text-lg font-bold text-center mb-4">
-                            Respostas Subjetivas / Quantidade de Avaliados: {selectedParticipants.length}
-                          </p>
-                          <WordCloudGenerator
-                            textBio={selectedParticipants.map((participant) => {
-                              const combinedSubjective = [
-                                ...Array.from({ length: 8 }, (_, i) =>
-                                  participant.adultForm?.answersByGroup?.[0]?.questions[i]?.answer || []
-                                ).flat(),
-                                ...Array.from({ length: 5 }, (_, i) =>
-                                  participant.adultForm?.answersByGroup?.[5]?.questions[i]?.answer || []
-                                ).flat(),
-                              ];
-                              return combinedSubjective.join(', ') || '';
-                            })}
-                          />
-                        </Box>
-                      );
-                    case "AUT-BIO":
-                      return (
-                        <Box key={index} className="xl:w-full m-auto">
-                          <p className="text-lg font-bold text-center mb-4">
-                            Autobiografia / Quantidade de Avaliados: {selectedParticipants.length}
-                          </p>
-                          <WordCloudGenerator
-                            textBio={selectedParticipants.map((participant) => participant.autobiography?.text || '')}
-                          />
-                        </Box>
-                      );
-                    case "ARE-SAB":
-                      return (
-                        <Box key={index} className="xl:w-full m-auto">
-                          <p className="text-lg font-bold text-center mb-4">
-                            Áreas do Saber / Quantidade de Avaliados: {selectedParticipants.length}
-                          </p>
-                          <WordCloudGenerator
-                            textBio={selectedParticipants.map((participant) => {
-                              const combinedAreas = [
-                                ...(participant.knowledgeAreasIndicatedByResearcher?.general || []),
-                                ...(participant.knowledgeAreasIndicatedByResearcher?.specific || []),
-                                ...(participant.adultForm?.knowledgeAreas || []),
-                              ];
-                              return combinedAreas.join(', ') || '';
-                            })}
-                          />
-                        </Box>
-                      );
-                    default:
-                      return (
-                        <Box key={index}>
-                          <p className="text-lg font-bold text-center mb-4">
-                            Valor não reconhecido: {item.title}
-                          </p>
-                        </Box>
-                      );
+                    <Switch.Root
+                      className="w-12 h-6 rounded-full relative data-[state=checked]:bg-violet-600 bg-gray-300 transition-colors duration-200 shadow-inner"
+                      checked={isCheckedWC[index]}
+                      onCheckedChange={() => handleChangeWC(index)}
+                      value={itens.value}
+                    >
+                      <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-lg transition-transform duration-200 translate-x-0.5 data-[state=checked]:translate-x-[26px] data-[state=checked]:bg-white" />
+                    </Switch.Root>
+                    <p className="text-gray-700 font-medium">
+                      {itens.title}
+                    </p>
+                  </Flex>
+                </label>
+              ))}
+            </Flex>
+
+            <Flex justify="end" className="mt-6 pt-4 border-t border-gray-200/50">
+              <Button
+                onClick={cloudWords}
+                className={`${showNewComponent ? 'hidden' : ''} shadow-sm hover:shadow transition-all`}
+                color="violet"
+                title="Gerar Nuvem"
+                size="Medium"
+              >
+                <Icon.Cloud size={18} />
+              </Button>
+            </Flex>
+
+            {showNewComponent && (
+              <div className="space-y-6 mt-6">
+                {CloudWord.map((item, index) => {
+                  if (isCheckedWC[index]) {
+                    switch (item.value) {
+                      case "RES-SUB":
+                        return (
+                          <Box key={index} className="xl:w-full m-auto">
+                            <p className="text-lg font-bold text-center mb-4">
+                              Respostas Subjetivas / Quantidade de Avaliados: {selectedParticipants.length}
+                            </p>
+                            <WordCloudGenerator
+                              textBio={selectedParticipants.map((participant) => {
+                                const combinedSubjective = [
+                                  ...Array.from({ length: 8 }, (_, i) =>
+                                    participant.adultForm?.answersByGroup?.[0]?.questions[i]?.answer || []
+                                  ).flat(),
+                                  ...Array.from({ length: 5 }, (_, i) =>
+                                    participant.adultForm?.answersByGroup?.[5]?.questions[i]?.answer || []
+                                  ).flat(),
+                                ];
+                                return combinedSubjective.join(', ') || '';
+                              })}
+                            />
+                          </Box>
+                        );
+                      case "AUT-BIO":
+                        return (
+                          <Box key={index} className="xl:w-full m-auto">
+                            <p className="text-lg font-bold text-center mb-4">
+                              Autobiografia / Quantidade de Avaliados: {selectedParticipants.length}
+                            </p>
+                            <WordCloudGenerator
+                              textBio={selectedParticipants.map((participant) => participant.autobiography?.text || '')}
+                            />
+                          </Box>
+                        );
+                      case "ARE-SAB":
+                        return (
+                          <Box key={index} className="xl:w-full m-auto">
+                            <p className="text-lg font-bold text-center mb-4">
+                              Áreas do Saber / Quantidade de Avaliados: {selectedParticipants.length}
+                            </p>
+                            <WordCloudGenerator
+                              textBio={selectedParticipants.map((participant) => {
+                                const combinedAreas = [
+                                  ...(participant.knowledgeAreasIndicatedByResearcher?.general || []),
+                                  ...(participant.knowledgeAreasIndicatedByResearcher?.specific || []),
+                                  ...(participant.adultForm?.knowledgeAreas || []),
+                                ];
+                                return combinedAreas.join(', ') || '';
+                              })}
+                            />
+                          </Box>
+                        );
+                      default:
+                        return (
+                          <Box key={index}>
+                            <p className="text-lg font-bold text-center mb-4">
+                              Valor não reconhecido: {item.title}
+                            </p>
+                          </Box>
+                        );
+                    }
                   }
-                }
-                return null;
-              })}
-            </>
-          )}
+                  return null;
+                })}
+              </div>
+            )}
+          </Flex>
         </Modal>
 
         <Button
           size="Medium"
           onClick={handleShowCloud}
-          title={"Gerar Nuvem de Palavras"}
-          color={"primary"}
-          className="btn-primary"
+          title="Gerar Nuvem de Palavras"
+          color="emerald"
+          className="shadow-sm hover:shadow transition-all xl:min-w-[200px] w-full"
         >
-          <Icon.Cloud size={20} color="white" weight="bold" />
+          <Icon.Cloud size={20} weight="bold" />
         </Button>
       </Flex>
     </>

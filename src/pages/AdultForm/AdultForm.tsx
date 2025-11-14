@@ -22,6 +22,7 @@ import React from "react";
 import { PageLoader } from "../../components/Loading/Loading";
 import QuestionnaireCompleted from "../../components/QuestionnaireCompleted/QuestionnaireCompleted";
 import BackgroundComponent from "../../components/Background/Background";
+import axios, { AxiosError } from "axios";
 
 const stepsInfo = [
     {
@@ -168,15 +169,16 @@ const AdultForm = () => {
 
             } catch (err) {
                 console.error(err);
+
+
+
                 setNotificationData({
-                    title: "Link inválido!",
-                    description: "Verifique se está utilizando o código que foi enviado para o seu e-mail.",
+                    title: "Erro inesperado!",
+                    description: "Não foi possível validar o link de acesso.",
                     type: "error"
                 });
             } finally {
-                setTimeout(() => {
-                    setIsPageLoading(false);
-                }, 2000);
+                setTimeout(() => setIsPageLoading(false), 2000);
             }
         };
 

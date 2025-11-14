@@ -12,8 +12,7 @@ const SkeletonHeader = ({ filter, buttons }: SkeletonHeaderProps) => {
       <Box className="px-4 md:px-8 lg:px-0 max-w-7xl mx-auto desktop">
         <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
 
-          <Skeleton className="h-6 w-[400px] mb-2 m-auto" />
-          <Skeleton className="h-6 w-[700px] mb-2 m-auto" />
+          <Skeleton className="h-6 w-[400px] mb-2 " />
         </header>
       </Box>
       <header className="pt-8 pb-6 border-b border-gray-200 mb-8 mobo">

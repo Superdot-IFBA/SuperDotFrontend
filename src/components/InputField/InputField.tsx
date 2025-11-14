@@ -35,7 +35,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                     </Form.Label>
                 )}
 
-                <Flex justify="center" align="center" className="rounded-md border-2 bg-white modern-input !py-[2px]">
+                <Flex justify="center" align="center" className="rounded-md !border-2 bg-white modern-input !py-[2px]">
                     {icon && <Flex className="p-2">{icon}</Flex>}
 
                     <Form.Control asChild>

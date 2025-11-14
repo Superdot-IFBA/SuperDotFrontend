@@ -112,13 +112,55 @@ const ParticipantDataStep = ({
                         placeholder="Insira seu nome completo"
                         errorMessage={errors.personalData?.fullName?.message}
                     />
-                    <InputField
-                        {...register("personalData.phone")}
-                        label="Whatsapp"
-                        required={true}
-                        placeholder="Insira seu número de whatsapp"
-                        errorMessage={errors.personalData?.phone?.message}
-                    />
+                    <Form.Field name="personalData.phone">
+                        <Form.Label htmlFor="phone" className="block text-sm font-semibold text-gray-800 mb-2 text-left">
+                            Telefone <span className="text-red-500">*</span>
+                        </Form.Label>
+
+                        <input
+                            id="phoneDisplay"
+                            placeholder="(00) 00000-0000"
+                            autoComplete="tel"
+                            className="modern-input"
+                            onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                let value = target.value.replace(/\D/g, "");
+                                value = value.substring(0, 11);
+
+                                let maskedValue = value;
+                                if (value.length <= 10) {
+                                    maskedValue = value.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                                } else {
+                                    maskedValue = value.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+                                }
+
+                                target.value = maskedValue;
+
+                                setValue("personalData.phone", value, {
+                                    shouldValidate: true
+                                });
+                            }}
+                        />
+
+                        <Form.Control
+                            type="hidden"
+                            {...register("personalData.phone", {
+                                required: "Telefone é obrigatório",
+                                validate: {
+                                    validPhone: (value) => {
+                                        if (!value) return "Telefone é obrigatório";
+                                        return value.length >= 10 || "Telefone deve ter pelo menos 10 dígitos";
+                                    }
+                                }
+                            })}
+                        />
+
+                        {errors?.personalData?.phone && (
+                            <Form.Message className="error-message mt-2">
+                                {errors.personalData.phone.message}
+                            </Form.Message>
+                        )}
+                    </Form.Field>
                     <SelectField
                         {...register("personalData.maritalStatus")}
                         label="Estado civil"
@@ -160,7 +202,7 @@ const ParticipantDataStep = ({
                         ))}
                     </SelectField>
                     <Form.Field name="birthDate" className="w-full">
-                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide mb-2">
                             Data de nascimento <span className="text-red-500">*</span>
                         </Form.Label>
                         <Flatpicker
@@ -221,7 +263,7 @@ const ParticipantDataStep = ({
                     </SelectField>
 
                     <Form.Field name="personalData.houseDevices" className="w-full">
-                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide mb-2">
                             Aparelhos na casa
                         </Form.Label>
                         <Select
@@ -258,7 +300,7 @@ const ParticipantDataStep = ({
 
                     </Form.Field>
                     <Form.Field name="personalData.outsideHouseDevices" className="w-full">
-                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide">
+                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide mb-2">
                             Fora de casa, você tem acesso a
                         </Form.Label>
                         <Select

@@ -14,7 +14,7 @@ const ActionButtonExplain = () => {
           className="text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="Informações sobre indicadores de superdotação"
         >
-          <Icon.Info size={25} />
+          <Icon.Info size={18} />
         </button>
       </Tooltip>
 
@@ -41,7 +41,7 @@ const ActionButtonExplain = () => {
         {/* Conteúdo */}
         <div className="px-6 pt-4 pb-6 space-y-4">
           <AlertDialog.Description className="flex gap-3 items-start">
-            <IconButton size="2" color="lime" radius="full" variant="outline">
+            <IconButton size="2" color="cyan" radius="full" variant="outline">
               <Icon.IdentificationCard size={20} />
             </IconButton>
             <Text>
@@ -56,7 +56,7 @@ const ActionButtonExplain = () => {
           </AlertDialog.Description>
 
           <AlertDialog.Description className="flex gap-3 items-start">
-            <IconButton color="cyan" radius="full" variant="outline">
+            <IconButton color="violet" radius="full" variant="outline">
               <Icon.ClipboardText size={20} />
             </IconButton>
             <Text>
@@ -71,7 +71,7 @@ const ActionButtonExplain = () => {
           </AlertDialog.Description>
 
           <AlertDialog.Description className="flex gap-3 items-start">
-            <IconButton color="bronze" radius="full" variant="outline">
+            <IconButton color="yellow" radius="full" variant="outline">
               <Icon.IdentificationBadge size={20} />
             </IconButton>
             <Text>

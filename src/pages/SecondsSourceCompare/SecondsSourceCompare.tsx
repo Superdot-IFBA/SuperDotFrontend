@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { IParticipant, ISecondSource } from "../../interfaces/participant.interface";
-import * as Icon from "@phosphor-icons/react";
-import { Flex, Table, Box, Skeleton, Tooltip, DataList, Separator, Badge } from "@radix-ui/themes";
+import { Flex, Table, Box, Skeleton, Tooltip, DataList, Separator, Badge, Text } from "@radix-ui/themes";
 import Accordeon from "../../components/Accordeon/Accordeon";
 import { GridComponent } from "../../components/Grid/Grid";
 import ApexChart from "react-apexcharts";
@@ -9,7 +8,9 @@ import { ApexOptions } from 'apexcharts';
 import { SelectField } from "../../components/SelectField/SelectField";
 import * as Form from "@radix-ui/react-form";
 import { useState } from "react";
-import { Button } from "../../components/Button/Button";
+import { ParticipantBasicInfo } from "../../components/DataListView/DatalistViewBasicInfo";
+import SecondSourcesList from "../../components/DataListView/DatalistViewSecondSorce";
+import * as Icon from "@phosphor-icons/react";
 
 
 interface LocationState {
@@ -20,7 +21,7 @@ const SecondsSourceCompare = () => {
     const location = useLocation();
     const { participant } = location.state as LocationState;
     const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
-    const [expandedParticipants, setExpandedParticipants] = useState(false);
+    const [expandedParticipants, setExpandedParticipants] = useState<Record<string, boolean>>({});
     const [expandedSS, setExpandedSS] = useState<Record<string, boolean>>({});
 
     const handleAge = (birthDate: Date): number => {
@@ -232,11 +233,21 @@ const SecondsSourceCompare = () => {
             }
         },
     };
+    const getFirstAndLastName = (fullName: string) => {
+        const names = fullName.split(' ');
+        if (names.length > 1) {
+            return `${names[0]} ${names[names.length - 1]}`;
+        } else {
+            return fullName;
+        }
+    };
+
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedBlockIndex(parseInt(event.target.value));
     };
-    const selectedQuestions = secondSources[0].adultForm?.answersByGroup?.[selectedBlockIndex]?.questions || [];
+
+    const selectedQuestions = secondSources[0]?.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions || [];
 
     return (
         <>
@@ -245,92 +256,121 @@ const SecondsSourceCompare = () => {
                     title="Informações do Participante Avaliado"
                     content={
                         <>
-                            <Table.Root variant="surface" className="w-full truncate desktop">
-                                <Table.Header className="text-[18px]">
-                                    <Table.Row>
-                                        <Table.ColumnHeaderCell colSpan={4} className="border-r"></Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell colSpan={2} className="border-r text-center">Indicadores de AH/SD de acordo com o :</Table.ColumnHeaderCell>
+                            <Table.Root variant="ghost" className="w-full desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
+                                <Table.Header className="text-[18px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                                    <Table.Row className="border-b border-violet-200/30">
+                                        <Table.ColumnHeaderCell colSpan={4} className="border-r border-violet-200/30 py-4">
+                                            <Flex align="center" justify="center" gap="3" className="text-violet-900">
+                                                <Icon.User size={22} weight="bold" />
+                                                <Text weight="bold" size="4">Informações do Participante</Text>
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell colSpan={2} className="border-r-0 py-4 text-center">
+                                            <Flex align="center" justify="center" gap="3" className="text-violet-900">
+                                                <Icon.Certificate size={22} weight="bold" />
+                                                <Text weight="bold" size="4">Indicadores de AH/SD</Text>
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
                                     </Table.Row>
                                 </Table.Header>
-                                <Table.Header className="text-[16px]">
-                                    <Table.Row align="center" className="text-center">
-                                        <Table.ColumnHeaderCell className="border-l">Nome do Avaliado</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Pontuação</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Idade</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Gênero</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Questionário</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Pesquisador</Table.ColumnHeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    <Table.Row align="center">
-                                        <Table.Cell justify="center">{participant.personalData.fullName}</Table.Cell>
-                                        <Table.Cell justify="center">{participant.adultForm?.totalPunctuation}</Table.Cell>
-                                        <Table.Cell justify="center">{handleAge(participant.personalData.birthDate)}</Table.Cell>
-                                        <Table.Cell justify="center">{participant.personalData.gender}</Table.Cell>
-                                        <Table.Cell justify="center"><Badge color={participant.adultForm?.giftednessIndicators ? "green" : "red"}>{participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}</Badge></Table.Cell>
-                                        <Table.Cell justify="center">
-                                            <Badge color={participant.giftdnessIndicatorsByResearcher ? "green" : "red"}>{participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}</Badge>
 
+                                <Table.Header className="text-[16px] bg-gradient-to-r from-gray-50 to-gray-100/30">
+                                    <Table.Row align="center" className="text-center border-b border-gray-200/50">
+                                        <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Nome do Avaliado
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Pontuação
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Idade
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Gênero
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-gray-200/30 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Questionário
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r-0 py-3 font-semibold text-gray-800">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Pesquisador
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body className="bg-white/50 backdrop-blur-sm">
+                                    <Table.Row align="center" className="border-b border-gray-100/30 hover:bg-gray-50/50 transition-colors duration-200">
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text weight="medium" className="text-gray-900">
+                                                {getFirstAndLastName(participant.personalData.fullName)}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Badge
+                                                size="2"
+                                                variant="soft"
+                                                className="bg-blue-100 text-blue-700 border-blue-200 font-bold shadow-sm"
+                                            >
+                                                {participant.adultForm?.totalPunctuation}
+                                            </Badge>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text weight="medium" className="text-gray-700">
+                                                {handleAge(participant.personalData.birthDate)}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text weight="medium" className="text-gray-700">
+                                                {participant.personalData.gender}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Badge
+                                                size="2"
+                                                color={`${participant.adultForm?.giftednessIndicators ? 'grass' : 'red'}`}
+                                                className={`w-full justify-center font-semibold border ${participant.adultForm?.giftednessIndicators
+                                                    ? ' border-emerald-500'
+                                                    : ' border-red-500'
+                                                    }`}
+                                            >
+                                                {participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}
+                                            </Badge>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="py-4">
+                                            <Badge
+                                                size="2"
+                                                color={`${participant.adultForm?.giftednessIndicators ? 'grass' : 'red'}`}
+                                                className={`w-full justify-center font-semibold border ${participant.adultForm?.giftednessIndicators
+                                                    ? ' border-emerald-500'
+                                                    : ' border-red-500'
+                                                    }`}
+                                            >
+                                                {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                                            </Badge>
                                         </Table.Cell>
                                     </Table.Row>
                                 </Table.Body>
                             </Table.Root>
                             <div className="mobo">
                                 <DataList.Root orientation="vertical" className="!font-roboto">
-                                    <DataList.Item
-                                        className={`w-full p-3 rounded-lg mb-5  transition-all duration-300 ease-in-out card-container
-                  ${expandedParticipants ? 'max-h-[1000px]' : 'max-h-[300px]'}`}
-                                    >
-
-                                        {/* Informações Básicas */}
-                                        <p className="text-[16px] font-bold text-center">Informações do participante</p>
-                                        <Separator size="4" className="mt-2" />
-
-                                        <DataList.Label>Nome:</DataList.Label>
-                                        <DataList.Value>{participant.personalData.fullName}</DataList.Value>
-                                        <Separator size="4" />
-
-                                        <DataList.Label>Pontuação do questionário:</DataList.Label>
-                                        <DataList.Value>{participant.adultForm?.totalPunctuation}</DataList.Value>
-                                        <Separator size="4" />
-
-                                        <DataList.Label>Quantidade de 2ªs Fontes:</DataList.Label>
-                                        <DataList.Value>{participant.secondSources?.length}</DataList.Value>
-                                        <Separator size="4" className="mb-2" />
-
-                                        {expandedParticipants && (
-                                            <>
-                                                <p className="text-[16px] font-bold text-center">Indicadores de AH/SD:</p>
-                                                <DataList.Label className='mt-2 !items-center'>Pelo Questionário: <Badge size={"3"} className='ml-2 !px2' color={participant.adultForm?.giftednessIndicators ? "green" : "red"}>{participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}</Badge> </DataList.Label>
-                                                <Separator size="4" className='mt-2' />
-                                                <DataList.Label className='mt-1 !items-center'>Pelo Pesquisador: <Badge size={"3"} className='ml-2 !px2' color={participant.giftdnessIndicatorsByResearcher ? "green" : "red"}>{participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}</Badge> </DataList.Label>
-
-                                            </>
-                                        )}
-
-                                        <Button
-                                            size="Small"
-                                            className="!justify-end mt-2"
-                                            onClick={() =>
-                                                setExpandedParticipants(!expandedParticipants)
-                                            }
-                                            title={
-                                                expandedParticipants
-                                                    ? "Veja menos"
-                                                    : "Ver mais"
-                                            }
-                                            color={""}
-                                        >
-                                            <Icon.CaretDown
-                                                size={15}
-                                                className={`transition-all duration-300 ${expandedParticipants
-                                                    ? "rotate-180"
-                                                    : ""
-                                                    }`}
-                                            />
-                                        </Button>
-                                    </DataList.Item>
+                                    <ParticipantBasicInfo
+                                        setExpandedParticipants={setExpandedParticipants} expandedParticipants={expandedParticipants} selectedParticipants={[participant]} getFirstAndLastName={getFirstAndLastName} />
 
                                 </DataList.Root>
                             </div>
@@ -340,126 +380,127 @@ const SecondsSourceCompare = () => {
                     defaultValue="item-1"
                 />
                 <Accordeon
-                    title="Informações do(s) Participante(s) Avaliado(s) Segundas Fontes"
+                    title="Informações do(s) Participante(s) Avaliado(s) Segunda(s) Fonte(s)"
                     content={
                         <>
-                            <Table.Root variant="surface" className="w-full truncate desktop">
-                                <Table.Header className="text-[16px]">
-                                    <Table.Row align="center" className="text-center">
-                                        <Table.ColumnHeaderCell className="border-l">Identificação</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Nome do Avaliado</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Pontuação</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Idade</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Grau de Escolaridade</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Relação com o Avaliado</Table.ColumnHeaderCell>
-                                        <Table.ColumnHeaderCell className="border-l">Tempo de Relação com o Avaliado</Table.ColumnHeaderCell>
+                            <Table.Root variant="ghost" className="w-full desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
+                                <Table.Header className="text-[16px] bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-sm">
+                                    <Table.Row align="center" className="text-center border-b border-blue-200/30">
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Identificação
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Nome do Avaliado
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Pontuação
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Idade
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Escolaridade
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r border-blue-200/30 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Relação
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+                                        <Table.ColumnHeaderCell className="border-r-0 py-4 font-semibold text-blue-900">
+                                            <Flex align="center" justify="center" gap="2">
+                                                Tempo de Relação
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
                                     </Table.Row>
                                 </Table.Header>
-                                <Table.Body>
-                                    {participant?.secondSources?.map((secondSource, index) => (
-                                        <Table.Row align="center" key={index}>
-                                            <Table.Cell justify="center">
-                                                <Tooltip content={`Avaliado Segundas Fontes - ${index + 1}`}>
-                                                    <Box>
-                                                        ASF - {index + 1}
-                                                    </Box>
-                                                </Tooltip>
 
+                                <Table.Body className="bg-white/50 backdrop-blur-sm">
+                                    {participant?.secondSources?.map((secondSource, index) => (
+                                        <Table.Row
+                                            align="center"
+                                            key={index}
+                                            className="border-b border-gray-100/30 hover:bg-blue-50/30 transition-colors duration-200"
+                                        >
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Tooltip content={`Avaliado Segundas Fontes - ${index + 1}`}>
+                                                    <Badge
+                                                        size="2"
+                                                        variant="soft"
+                                                        className="bg-blue-100 text-blue-700 border-blue-200 font-semibold cursor-help shadow-sm"
+                                                    >
+                                                        <Flex align="center" gap="2">
+                                                            <Icon.UserCircle size={14} weight="bold" />
+                                                            ASF - {index + 1}
+                                                        </Flex>
+                                                    </Badge>
+                                                </Tooltip>
                                             </Table.Cell>
-                                            <Table.Cell justify="center">{secondSource.personalData?.fullName}</Table.Cell>
-                                            <Table.Cell justify="center">{secondSource.adultForm?.totalPunctuation}</Table.Cell>
-                                            <Table.Cell justify="center">{handleAge(secondSource.personalData?.birthDate ?? new Date())}</Table.Cell>
-                                            <Table.Cell justify="center">{secondSource.personalData?.educationLevel}</Table.Cell>
-                                            <Table.Cell justify="center">{secondSource.personalData?.relationship}</Table.Cell>
-                                            <Table.Cell justify="center">{secondSource.personalData?.relationshipTime}</Table.Cell>
+
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Text weight="medium" className="text-gray-900">
+                                                    {getFirstAndLastName(secondSource?.personalData?.fullName ?? "")}
+                                                </Text>
+                                            </Table.Cell>
+
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Badge
+                                                    size="2"
+                                                    variant="soft"
+                                                    className="bg-cyan-100 text-cyan-700 border-cyan-200 font-bold shadow-sm"
+                                                >
+                                                    {secondSource.adultForm?.totalPunctuation}
+                                                </Badge>
+                                            </Table.Cell>
+
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Text weight="medium" className="text-gray-700">
+                                                    {handleAge(secondSource.personalData?.birthDate ?? new Date())}
+                                                </Text>
+                                            </Table.Cell>
+
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Text weight="medium" className="text-gray-700">
+                                                    {secondSource.personalData?.educationLevel}
+                                                </Text>
+                                            </Table.Cell>
+
+                                            <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                                <Badge
+                                                    size="1"
+                                                    variant="soft"
+                                                    className="bg-purple-100 text-purple-700 border-purple-200 font-medium"
+                                                >
+                                                    {secondSource.personalData?.relationship}
+                                                </Badge>
+                                            </Table.Cell>
+
+                                            <Table.Cell justify="center" className="py-4">
+                                                <Text weight="medium" className="text-gray-700">
+                                                    {secondSource.personalData?.relationshipTime}
+                                                </Text>
+                                            </Table.Cell>
                                         </Table.Row>
                                     ))}
                                 </Table.Body>
                             </Table.Root>
                             <div className="mobo">
-                                <DataList.Root orientation="vertical" className="!font-roboto">
-                                    {participant?.secondSources?.map((secondSource, index) => (
-                                        <DataList.Item
-                                            key={index}
-                                            className={`w-full p-3 rounded-lg mb-5 card-container transition-all duration-300 ease-in-out 
-                                      ${secondSource._id && expandedSS[secondSource._id] ? 'max-h-[1000px]' : 'max-h-[300px]'}`}
-                                        >
-
-                                            {/* Informações Básicas */}
-
-                                            <DataList.Label>Avaliado Segundas Fontes (ASF)</DataList.Label>
-                                            <DataList.Value className="gap-2">
-                                                <Tooltip content={`Avaliado Segundas Fontes - ${index + 1}`}>
-                                                    <Box>
-                                                        Identificação:  <strong>ASF - {index + 1}</strong>
-                                                    </Box>
-                                                </Tooltip>
-                                            </DataList.Value>
-                                            <Separator size="4" />
-
-                                            <DataList.Label>Nome:</DataList.Label>
-                                            <DataList.Value className="gap-2">{secondSource.personalData?.fullName}</DataList.Value>
-                                            <Separator size="4" />
-
-                                            <DataList.Label>Pontuação:</DataList.Label>
-                                            <DataList.Value className="gap-2">{secondSource.adultForm?.totalPunctuation}</DataList.Value>
-                                            <Separator size="4" />
-
-                                            <DataList.Label>Idade</DataList.Label>
-                                            <DataList.Value className="gap-2">{handleAge(secondSource.personalData?.birthDate ?? new Date())}</DataList.Value>
-                                            <Separator size="4" className="mb-2" />
-
-                                            {secondSource?._id && expandedSS[secondSource._id] && (
-                                                <>
-
-                                                    <DataList.Label>Grau de Escolaridade</DataList.Label>
-                                                    <DataList.Value className="gap-2">
-                                                        {secondSource.personalData?.educationLevel}
-                                                    </DataList.Value>
-                                                    <Separator size="4" />
-
-                                                    <DataList.Label>Relação com o Avaliado</DataList.Label>
-                                                    <DataList.Value className="gap-2">
-                                                        {secondSource.personalData?.relationship}
-                                                    </DataList.Value>
-                                                    <Separator size="4" />
-
-                                                    <DataList.Label>Tempo de Relação com o Avaliado</DataList.Label>
-                                                    <DataList.Value className="gap-2">
-                                                        {secondSource.personalData?.relationshipTime}
-                                                    </DataList.Value>
-                                                    <Separator size="4" />
-
-                                                </>
-                                            )}
-
-                                            <Button
-                                                size="Small"
-                                                className="!justify-end flex mt-2"
-                                                onClick={() =>
-                                                    setExpandedSS((prev) => ({
-                                                        ...prev,
-                                                        [String(secondSource._id)]: !prev[String(secondSource._id)],
-                                                    }))
-                                                }
-                                                title={
-                                                    secondSource._id && expandedSS[secondSource._id]
-                                                        ? "Veja menos"
-                                                        : "Ver mais"
-                                                }
-                                                color={""}
-                                            >
-                                                <Icon.CaretDown
-                                                    size={15}
-                                                    className={`transition-all duration-300 ${secondSource._id && expandedSS[secondSource._id]
-                                                        ? "rotate-180"
-                                                        : ""
-                                                        }`}
-                                                />
-                                            </Button>
-                                        </DataList.Item>
-                                    ))}
-                                </DataList.Root>
+                                <SecondSourcesList
+                                    secondSources={secondSources}
+                                    expandedSS={expandedSS}
+                                    setExpandedSS={setExpandedSS}
+                                    handleAge={handleAge}
+                                    getFirstAndLastName={getFirstAndLastName}
+                                />
                             </div>
                         </>
                     }
@@ -517,52 +558,146 @@ const SecondsSourceCompare = () => {
                     className="mb-10"
                     content={
                         <>
-                            <Table.Root variant="surface" className="w-full truncate h-[500px] overflow-auto desktop">
-                                <Table.Header className="text-[16px]">
-                                    <Table.Row align="center" className="text-center">
-                                        <Table.ColumnHeaderCell className="border-l">Perguntas</Table.ColumnHeaderCell>
+                            <Table.Root variant="ghost" className="w-full h-[500px] overflow-auto desktop rounded-2xl border border-gray-200/50 shadow-sm">
+                                <Table.Header className="text-[16px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                                    <Table.Row align="center" className="text-center border-b border-violet-200/30">
+                                        <Table.ColumnHeaderCell className="border-r border-violet-200/30 py-4">
+                                            <Flex align="center" justify="center" gap="2" className="text-violet-900">
+                                                <Icon.Question size={18} weight="bold" />
+                                                <p className="font-bold">Perguntas</p>
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+
+                                        <Table.ColumnHeaderCell className="border-r border-violet-200/30 py-4">
+                                            <Flex align="center" justify="center" gap="2" className="text-violet-900">
+                                                <Icon.User size={18} weight="bold" />
+                                                <p className="font-bold">{getFirstAndLastName(participant?.personalData?.fullName ?? "")}</p>
+                                            </Flex>
+                                        </Table.ColumnHeaderCell>
+
                                         {participant?.secondSources?.map((secondSource, index) => (
-                                            <Table.ColumnHeaderCell key={index} className="border-l">{secondSource.personalData?.fullName} </Table.ColumnHeaderCell>
+                                            <Table.ColumnHeaderCell key={index} className="border-r border-violet-200/30 py-4">
+                                                <Flex align="center" justify="center" gap="2" className="text-blue-900">
+                                                    <Icon.UserCircle size={18} weight="bold" />
+                                                    <p className="font-bold">{getFirstAndLastName(secondSource.personalData?.fullName ?? "")}</p>
+                                                </Flex>
+                                            </Table.ColumnHeaderCell>
                                         ))}
                                     </Table.Row>
                                 </Table.Header>
-                                <Table.Body>
-                                    <Table.Row align="center">
-                                        <Table.Cell>Pontuação:</Table.Cell>
-                                        {participant?.secondSources?.map((secondSource, index) => (
-                                            <Table.Cell key={index} justify="center">
-                                                {secondSource.adultForm?.totalPunctuation}
-                                            </Table.Cell>
 
+                                <Table.Body className="bg-white/50 backdrop-blur-sm">
+                                    <Table.Row align="center" className="border-b border-gray-100/50 hover:bg-gray-50/50 transition-colors">
+                                        <Table.Cell className="py-3">
+                                            <Flex align="center" gap="2" className="text-gray-700 font-semibold">
+                                                <Icon.Trophy size={16} weight="bold" />
+                                                Pontuação Total:
+                                            </Flex>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-3">
+                                            <Badge
+                                                size="2"
+                                                variant="soft"
+                                                className="bg-violet-100 text-violet-700 border-violet-200 font-bold shadow-sm"
+                                            >
+                                                {participant.adultForm?.totalPunctuation}
+                                            </Badge>
+                                        </Table.Cell>
+
+                                        {participant?.secondSources?.map((secondSource, index) => (
+                                            <Table.Cell key={index} justify="center" className="border-r border-gray-200/30 py-3">
+                                                <Badge
+                                                    size="2"
+                                                    variant="soft"
+                                                    className="bg-blue-100 text-blue-700 border-blue-200 font-bold shadow-sm"
+                                                >
+                                                    {secondSource.adultForm?.totalPunctuation}
+                                                </Badge>
+                                            </Table.Cell>
                                         ))}
                                     </Table.Row>
-                                    {selectedQuestions?.map((question, questionIndex) => (
-                                        <Table.Row align="center" key={questionIndex}>
-                                            <Table.Cell className="text-wrap">{question?.statement}</Table.Cell>
-                                            {secondSources.map((secondSouce, secondSouceIndex) => {
-                                                const answers = secondSouce.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
-                                                    ?.filter(q => q.statement === question.statement)
-                                                    ?.map(q => {
-                                                        if (typeof q.answer === 'string') {
-                                                            return q.answer.trim();
-                                                        } else if (Array.isArray(q.answer)) {
-                                                            return q.answer.map(a => (typeof a === 'string' ? a.trim() : '')).join(', ');
-                                                        } else {
-                                                            return '';
+
+                                    {selectedQuestions.map((question, questionIndex) => (
+                                        <Table.Row
+                                            key={questionIndex}
+                                            align="center"
+                                            className="border-b border-gray-100/30 hover:bg-gray-50/30 transition-colors duration-200"
+                                        >
+                                            <Table.Cell className="py-4">
+                                                <p className="text-gray-800 leading-relaxed pr-4">
+                                                    {question.statement}
+                                                </p>
+                                            </Table.Cell>
+
+                                            <Table.Cell align="center" className="border-r border-gray-200/30 py-4">
+                                                {(() => {
+                                                    const getQuestionCode = (statement?: string) => {
+                                                        if (!statement) return "";
+                                                        return statement.trim().split(" ")[0];
+                                                    };
+                                                    const q = participant.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
+                                                        ?.find(x => getQuestionCode(x.statement) === getQuestionCode(question.statement));
+
+                                                    const answers = typeof q?.answer === "string"
+                                                        ? q.answer.trim()
+                                                        : Array.isArray(q?.answer)
+                                                            ? q.answer.join(", ")
+                                                            : "";
+
+                                                    const answerStyle = () => {
+                                                        const baseClass = "rounded-lg py-2 px-3 text-center font-semibold transition-all duration-200 shadow-sm min-w-[140px] mx-auto";
+                                                        switch (answers) {
+                                                            case "Sempre":
+                                                            case "Frequentemente":
+                                                                return `${baseClass} bg-emerald-500 text-white border border-emerald-600 hover:bg-emerald-600`;
+                                                            case "Ás vezes":
+                                                            case "Raramente":
+                                                            case "Nunca":
+                                                                return `${baseClass} bg-red-500 text-white border border-red-600 hover:bg-red-600`;
+                                                            default:
+                                                                return `${baseClass} bg-gray-200 text-gray-700 hover:bg-gray-300  border border-gray-300`;
                                                         }
-                                                    })
-                                                    ?.join(', ');
+                                                    };
+
+                                                    return (
+                                                        <p className={answerStyle()}>
+                                                            {answers || "—"}
+                                                        </p>
+                                                    );
+                                                })()}
+                                            </Table.Cell>
+
+                                            {secondSources.map((source, sourceIndex) => {
+                                                const q = source.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
+                                                    ?.find(x => x.statement === question.statement);
+
+                                                const answers = typeof q?.answer === "string"
+                                                    ? q.answer.trim()
+                                                    : Array.isArray(q?.answer)
+                                                        ? q.answer.join(", ")
+                                                        : "";
+
+                                                const answerStyle = () => {
+                                                    const baseClass = "rounded-lg py-2 px-3 text-center font-semibold transition-all duration-200 shadow-sm min-w-[140px] mx-auto";
+                                                    switch (answers) {
+                                                        case "Sempre":
+                                                        case "Frequentemente":
+                                                            return `${baseClass} bg-emerald-500 text-white border border-emerald-600 hover:bg-emerald-600`;
+                                                        case "Ás vezes":
+                                                        case "Raramente":
+                                                        case "Nunca":
+                                                            return `${baseClass} bg-red-500 text-white border border-red-600 hover:bg-red-600`;
+                                                        default:
+                                                            return `${baseClass} bg-gray-200 text-gray-700 border hover:bg-gray-300 border-gray-300`;
+                                                    }
+                                                };
 
                                                 return (
-                                                    <Table.Cell key={secondSouceIndex} align="center" className="border-l">
-                                                        <p className={` rounded py-1   
-                                                        ${answers === "Sempre" ? "bg-green-400 text-white w-[200px] text-center font-semibold " :
-                                                                answers === "Frequentemente" ? "bg-green-400 text-white  w-[200px] text-center font-semibold " :
-                                                                    answers === "Ás vezes" ? "bg-red-400 text-white  w-[200px] text-center font-semibold " :
-                                                                        answers === "Raramente" ? "bg-red-400 text-white w-[200px] text-center font-semibold " :
-                                                                            answers === "Nunca" ? "bg-red-400 text-white w-[200px] text-center font-semibold " : " "
-                                                            }}`}
-                                                        >{answers}</p>
+                                                    <Table.Cell key={sourceIndex} align="center" className="border-r border-gray-200/30 py-4">
+                                                        <p className={answerStyle()}>
+                                                            {answers || "—"}
+                                                        </p>
                                                     </Table.Cell>
                                                 );
                                             })}
@@ -572,73 +707,183 @@ const SecondsSourceCompare = () => {
                             </Table.Root>
                             <div className="mobo">
                                 <DataList.Root orientation="vertical" className="!font-roboto">
-                                    {/* Pontuação das Segundas Fontes */}
-                                    <DataList.Item className="w-full p-3 rounded-lg mb-5 card-container ">
-                                        <p className="text-[16px] font-bold text-center mb-4 text-black">Pontuação das 2ªs Fontes</p>
+                                    <DataList.Item className="w-full rounded-2xl mb-4 transition-all duration-500 ease-out transform
+                                    bg-gradient-to-br from-white to-violet-50 shadow-sm hover:shadow-md 
+                                    border border-violet-200/80 backdrop-blur-sm overflow-hidden
+                                    hover:border-violet-300/60">
 
-                                        {participant?.secondSources?.map((secondSource, index) => (
-                                            <div key={index} className="mb-4">
-                                                <DataList.Label className="font-semibold italic">{secondSource.personalData?.fullName}</DataList.Label>
-                                                <DataList.Value>{secondSource.adultForm?.totalPunctuation}</DataList.Value>
+                                        <div className="bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-t-xl px-4 py-3 border-b border-violet-100/50">
+                                            <p className="text-[17px] font-semibold text-center text-violet-900 tracking-tight flex items-center justify-center gap-2">
+                                                <Icon.ChartBar size={20} weight="bold" />
+                                                Pontuações
+                                            </p>
+                                        </div>
+
+                                        <div className="p-4">
+                                            <div className="mb-4">
+                                                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon.User size={18} weight="bold" className="text-violet-600" />
+                                                        <DataList.Label className="font-semibold text-gray-700">
+                                                            {getFirstAndLastName(participant.personalData?.fullName ?? "")}
+                                                        </DataList.Label>
+                                                    </div>
+                                                    <Badge
+                                                        size="2"
+                                                        variant="soft"
+                                                        className="bg-violet-100 text-violet-700 border-violet-200 font-bold"
+                                                    >
+                                                        {participant?.adultForm?.totalPunctuation}
+                                                    </Badge>
+                                                </div>
                                             </div>
-                                        ))}
-                                    </DataList.Item>
-                                    <DataList.Item className="w-full p-3 rounded-lg mb-1 card-container">
-                                        <p className="text-[16px] font-bold text-center mb-4 text-black">Questionário:</p>
-                                        {selectedQuestions?.map((question, questionIndex) => (
-                                            <div key={questionIndex}>
-                                                <p className="text-[16px] font-bold mb-4 text-black">{question.statement}</p>
-                                                {secondSources.map((secondSource, secondSourceIndex) => {
-                                                    const answers = secondSource.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
-                                                        ?.filter(q => q.statement === question.statement)
-                                                        ?.map(q => {
-                                                            if (typeof q.answer === 'string') {
-                                                                return q.answer.trim();
-                                                            } else if (Array.isArray(q.answer)) {
-                                                                return q.answer.map(a => (typeof a === 'string' ? a.trim() : '')).join(', ');
-                                                            } else {
-                                                                return '';
-                                                            }
-                                                        })
-                                                        ?.join(', ');
 
-                                                    const answerStyle = () => {
-                                                        switch (answers) {
-                                                            case "Sempre":
-                                                            case "Frequentemente":
-                                                                return "bg-green-400 text-white font-semibold text-center px-2 py-1 rounded justify-center";
-                                                            case "Ás vezes":
-                                                            case "Raramente":
-                                                            case "Nunca":
-                                                                return "bg-red-400 text-white font-semibold text-center px-2 py-1 rounded justify-center";
-                                                            default:
-                                                                return "gap-2";
-                                                        }
-                                                    };
+                                            {participant?.secondSources && participant.secondSources.length > 0 && (
+                                                <>
+                                                    <Separator size="4" className="bg-gray-200/50 my-3" />
+                                                    <p className="text-[15px] font-semibold text-center text-gray-600 mb-3 flex items-center justify-center gap-2">
+                                                        <Icon.Users size={18} weight="bold" />
+                                                        Segundas Fontes
+                                                    </p>
 
-                                                    return (
-                                                        <>
-                                                            <div key={secondSourceIndex} className="mb-2">
-                                                                <DataList.Label className=" italic font-semibold">
-                                                                    {secondSource.personalData?.fullName}:
-                                                                </DataList.Label>
-                                                                <DataList.Value className={`${answerStyle()}  !mb-5 `} >
-                                                                    {answers === "" ? (
-                                                                        <p className="text-red-500">Nenhuma resposta encontrada.</p>
-                                                                    ) : (
-                                                                        <>
-                                                                            {answers}
-                                                                        </>
-                                                                    )}
-                                                                </DataList.Value>
-
+                                                    <div className="space-y-2">
+                                                        {participant.secondSources.map((secondSource, index) => (
+                                                            <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
+                                                                <div className="flex items-center gap-2">
+                                                                    <Icon.UserCircle size={16} weight="bold" className="text-blue-600" />
+                                                                    <DataList.Label className="font-medium text-gray-700">
+                                                                        {getFirstAndLastName(secondSource.personalData?.fullName ?? "")}
+                                                                    </DataList.Label>
+                                                                </div>
+                                                                <Badge
+                                                                    size="1"
+                                                                    variant="soft"
+                                                                    className="bg-blue-100 text-blue-700 border-blue-200 font-semibold"
+                                                                >
+                                                                    {secondSource.adultForm?.totalPunctuation}
+                                                                </Badge>
                                                             </div>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </DataList.Item>
 
-                                                        </>
-                                                    );
-                                                })}<Separator size="4" className="my-2" />
-                                            </div>
-                                        ))}
+                                    <DataList.Item className="w-full rounded-2xl mb-4 transition-all duration-500 ease-out transform
+                                    bg-gradient-to-br from-white to-amber-50 shadow-sm hover:shadow-md 
+                                    border border-amber-200/80 backdrop-blur-sm overflow-hidden
+                                    hover:border-amber-300/60">
+
+                                        <div className="bg-gradient-to-r from-amber-500/5 to-yellow-500/5 rounded-t-xl px-4 py-3 border-b border-amber-100/50">
+                                            <p className="text-[17px] font-semibold text-center text-amber-900 tracking-tight flex items-center justify-center gap-2">
+                                                <Icon.ClipboardText size={20} weight="bold" />
+                                                Questionário - Bloco {selectedBlockIndex + 1}
+                                            </p>
+                                        </div>
+
+                                        <div className="p-4">
+                                            {selectedQuestions.map((question, questionIndex) => (
+                                                <div key={questionIndex} className="mb-6 last:mb-0">
+                                                    <div className="bg-white rounded-xl p-4 border border-gray-200/50 shadow-sm mb-3">
+                                                        <p className="text-[15px] font-semibold text-gray-800 leading-relaxed">
+                                                            {question.statement}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="space-y-3">
+                                                        {(() => {
+                                                            const getQuestionCode = (statement?: string) => {
+                                                                if (!statement) return "";
+                                                                return statement.trim().split(" ")[0];
+                                                            };
+                                                            const q = participant.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
+                                                                ?.find(x => getQuestionCode(x.statement) === getQuestionCode(question.statement));
+
+                                                            const answers = typeof q?.answer === "string"
+                                                                ? q.answer.trim()
+                                                                : Array.isArray(q?.answer)
+                                                                    ? q.answer.join(", ")
+                                                                    : "";
+
+                                                            const answerStyle = () => {
+                                                                const baseClass = "rounded-lg px-3 py-2 text-center font-semibold transition-all duration-200";
+                                                                switch (answers) {
+                                                                    case "Sempre":
+                                                                    case "Frequentemente":
+                                                                        return `${baseClass} bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm`;
+                                                                    case "Ás vezes":
+                                                                    case "Raramente":
+                                                                    case "Nunca":
+                                                                        return `${baseClass} bg-red-100 text-red-800 border border-red-200 shadow-sm`;
+                                                                    default:
+                                                                        return `${baseClass} bg-gray-100 text-gray-600 border border-gray-200`;
+                                                                }
+                                                            };
+
+                                                            return (
+                                                                <div className="flex items-center gap-3 p-2 bg-violet-50/50 rounded-lg border border-violet-100 flex-col">
+                                                                    <div className="flex items-center gap-2 min-w-[120px]">
+                                                                        <Icon.User size={16} weight="bold" className="text-violet-600" />
+                                                                        <DataList.Label className="font-medium text-violet-700 text-sm ">
+                                                                            {getFirstAndLastName(participant.personalData?.fullName)}
+                                                                        </DataList.Label>
+                                                                    </div>
+                                                                    <DataList.Value className={`${answerStyle()}  w-[250px] justify-center`}>
+                                                                        {answers || "—"}
+                                                                    </DataList.Value>
+                                                                </div>
+                                                            );
+                                                        })()}
+
+                                                        {secondSources.map((source, sourceIndex) => {
+                                                            const q = source.adultForm?.answersByGroup?.[selectedBlockIndex]?.questions
+                                                                ?.find(x => x.statement === question.statement);
+
+                                                            const answers = typeof q?.answer === "string"
+                                                                ? q.answer.trim()
+                                                                : Array.isArray(q?.answer)
+                                                                    ? q.answer.join(", ")
+                                                                    : "";
+
+                                                            const answerStyle = () => {
+                                                                const baseClass = "rounded-lg px-3 py-2 text-center font-semibold transition-all duration-200";
+                                                                switch (answers) {
+                                                                    case "Sempre":
+                                                                    case "Frequentemente":
+                                                                        return `${baseClass} bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm`;
+                                                                    case "Ás vezes":
+                                                                    case "Raramente":
+                                                                    case "Nunca":
+                                                                        return `${baseClass} bg-red-100 text-red-800 border border-red-200 shadow-sm`;
+                                                                    default:
+                                                                        return `${baseClass} bg-gray-100 text-gray-600 border border-gray-200`;
+                                                                }
+                                                            };
+
+                                                            return (
+                                                                <div key={sourceIndex} className="flex items-center gap-3 p-2 bg-blue-50/50 rounded-lg border border-blue-100 flex-col">
+                                                                    <div className="flex items-center gap-2 min-w-[120px]">
+                                                                        <Icon.UserCircle size={16} weight="bold" className="text-blue-600" />
+                                                                        <DataList.Label className="font-medium text-blue-700 text-sm">
+                                                                            {getFirstAndLastName(source.personalData?.fullName)}
+                                                                        </DataList.Label>
+                                                                    </div>
+                                                                    <DataList.Value className={`${answerStyle()} w-[250px] justify-center`}>
+                                                                        {answers || "—"}
+                                                                    </DataList.Value>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+
+                                                    {/* Separador entre perguntas (exceto na última) */}
+                                                    {questionIndex < selectedQuestions.length - 1 && (
+                                                        <Separator size="4" className="bg-gray-200/30 my-4" />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </DataList.Item>
                                 </DataList.Root>
                             </div>
