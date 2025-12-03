@@ -221,9 +221,11 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                   <Table.Cell justify="center" className="py-4">
                     <Badge
                       size="2"
-                      variant="soft"
+                      variant='soft'
+                      color="blue"
                       className="bg-blue-50 text-blue-700 border-blue-200 font-semibold"
                     >
+                      <Icon.Trophy size={16} weight="regular" className="mr-1" />
                       {participant.adultForm?.totalPunctuation}
                     </Badge>
                   </Table.Cell>
@@ -241,6 +243,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                   <Table.Cell justify="center" className="py-4">
                     <Badge
                       size="2"
+                      variant="soft"
                       color={`${participant.adultForm?.giftednessIndicators ? 'green' : 'red'}`}
                       className={`w-full justify-center border ${participant.adultForm?.giftednessIndicators ? ' !border-green-500' : '!border-red-500'}`}
                     >
@@ -284,13 +287,13 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                           disabled={isSavingItem}
                         >
                           <Icon.FloppyDisk size={18} weight="bold" />
-                          Salvar
                         </Button>
                       </Flex>
                     </Modal>
                     <Flex direction="row" align="center" justify="center" gap="3">
                       <Badge
                         size="2"
+                        variant="soft"
                         color={`${participant.giftdnessIndicatorsByResearcher ? 'green' : 'red'}`}
                         className={`w-full justify-center border ${participant.giftdnessIndicatorsByResearcher ? ' !border-green-500' : '!border-red-500'}`}
                       >
@@ -381,7 +384,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       </Text>
                       <HoverCard.Root>
                         <HoverCard.Trigger>
-                          <IconButton size="1" color='grass' variant="surface" radius="full">
+                          <IconButton size="1" color='grass' variant="soft" radius="full" className="transition-all hover:scale-110">
                             <Icon.Eye size={15} className="hover:cursor-pointer" />
                           </IconButton>
                         </HoverCard.Trigger>
@@ -400,9 +403,10 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       <Tooltip content="Definir/Editar Áreas Gerais">
                         <IconButton
                           size="1"
-                          variant="surface"
+                          variant="soft"
                           color='grass'
                           radius="full"
+                          className="transition-all hover:scale-110"
                           onClick={() => participant._id && handleShowKAG(participant._id)}
                         >
                           <Icon.Pencil className="cursor-pointer" />
@@ -427,6 +431,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                         className="text-black"
                         placeholder="Selecione uma ou várias opções"
                         menuPosition="fixed"
+
                         onChange={handleChangeKA}
                       />
                       <Flex align="center" justify="center" className="gap-4">
@@ -450,7 +455,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       </Text>
                       <HoverCard.Root>
                         <HoverCard.Trigger>
-                          <IconButton color='orange' size="1" variant="surface" radius="full">
+                          <IconButton color='orange' size="1" variant="soft" radius="full" className="transition-all hover:scale-110">
                             <Icon.Eye size={15} className="hover:cursor-pointer" />
                           </IconButton>
                         </HoverCard.Trigger>
@@ -470,8 +475,9 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                         <IconButton
                           color='orange'
                           size="1"
-                          variant="surface"
+                          variant="soft"
                           radius="full"
+                          className="transition-all hover:scale-110"
                           onClick={() => participant._id && handleShowKAE(participant._id)}
                         >
                           <Icon.Pencil className="cursor-pointer" />
@@ -480,29 +486,28 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                     </Flex>
                   </Table.Cell>
 
-                  {/* Continua com o mesmo padrão para as outras células... */}
-
                   <Table.Cell justify="center" className="py-4">
                     <Flex justify="center" align="center" className="gap-3">
                       <Dialog.Root>
-                        <Dialog.Trigger>
-                          <Tooltip content="Visualizar Informações completas do Participante">
+                        <Tooltip content="Visualizar Informações Gerais do Participante">
+                          <Dialog.Trigger>
                             <IconButton
                               size="2"
                               color="blue"
                               radius="full"
                               variant="soft"
-                              className="transition-all hover:scale-110 hover:shadow-sm"
+                              className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                             >
                               <Icon.IdentificationCard size={18} />
                             </IconButton>
-                          </Tooltip>
-                        </Dialog.Trigger>
-                        <Dialog.Content style={{ maxWidth: 450, borderRadius: 16 }} className="bg-white/95 backdrop-blur-sm">
-                          <Dialog.Title align="center" mb="5" className="text-violet-900">
+                          </Dialog.Trigger>
+                        </Tooltip>
+
+                        <Dialog.Content style={{ maxWidth: 450, borderRadius: 16 }} className='!p-0'>
+                          <Dialog.Title align="center" mb="5" className="text-white bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 w-full flex justify-center items-center !text-[18px]">
                             Informações Gerais do Participante
                           </Dialog.Title>
-                          <Flex direction="column" gap="3">
+                          <Flex direction="column" gap="3" className='p-4'>
                             {[
                               { label: "Nome Completo", value: participant.personalData.fullName },
                               { label: "Data de Nascimento", value: getFormattedBirthDate(participant.personalData.birthDate) },
@@ -512,27 +517,27 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                               { label: "Estado Civil", value: participant.personalData.maritalStatus },
                               { label: "Trabalho", value: participant.personalData.job }
                             ].map((field, index) => (
-                              <div key={index} className="space-y-2">
-                                <Text as="label" size="2" weight="medium" className="text-gray-700">
+                              <div key={index} className="space-y-1">
+                                <Text as="label" size="2" className="text-gray-700 font-semibold">
                                   {field.label}
                                 </Text>
                                 <TextField.Root
                                   defaultValue={field.value}
                                   disabled
-                                  className="bg-gray-50/80 border-gray-200/50"
+                                  className="bg-gray-50 border-gray-200"
                                 />
                               </div>
                             ))}
                           </Flex>
                           <Flex gap="3" mt="5" justify="end">
-                            <Dialog.Close>
+                            <Dialog.Close className='absolute top-2 right-2'>
                               <Button
-                                title="Fechar"
-                                color="gray"
-                                className="min-w-[100px] shadow-sm hover:shadow transition-all"
-                                size="Small"
+                                title=""
+                                color="red"
+                                className="shadow-sm"
+                                size="Extra Small"
                               >
-                                Fechar
+                                <Icon.X size={18} weight="bold" />
                               </Button>
                             </Dialog.Close>
                           </Flex>
@@ -549,8 +554,8 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                               <IconButton
                                 color="violet"
                                 radius="full"
-                                variant="outline"
-                                className="hover:cursor-pointer hover:translate-y-[3px] transition-all ease-in-out"
+                                variant="soft"
+                                className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                               >
                                 <Icon.ClipboardText size={20} />
                               </IconButton>
@@ -587,8 +592,8 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                           <IconButton
                             color="yellow"
                             radius="full"
-                            variant="outline"
-                            className="hover:cursor-pointer hover:translate-y-[3px] transition-all ease-in-out"
+                            variant="soft"
+                            className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                           >
                             <Icon.IdentificationBadge size={20} />
                           </IconButton>
@@ -603,7 +608,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
           </Table.Body>
         )}
       </Table.Root>
-    </Box>
+    </Box >
   );
 };
 

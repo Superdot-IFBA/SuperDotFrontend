@@ -155,19 +155,27 @@ const SideBar = ({ userRole }: SideBarProps) => {
                                 </span>
                             </Link>
                         )}
-                        <Link
-                            to="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
-                            onClick={() => setExpanded(false)}
-                            className={`group flex items-center truncate ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} p-3 rounded-md transition-all duration-300 hover:bg-white/20 text-white  `}
+                        <a
+                            href="https://www.notion.so/Documenta-o-do-Sistema-SUPERDOT-209b16a3ceed80368dd4c0040a7a0a9c?source=copy_link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+
+                            className={`group flex items-center truncate ${expanded ? "!justify-start pl-4 gap-4" : "justify-center pl-3 gap-3"} p-3 rounded-md transition-all duration-300 hover:bg-white/20 text-white`}
                         >
-                            <Icon.BookOpen size={20} className={`transition-transform duration-300 ${expanded ? "translate-x-0" : "translate-x-1"}`} />
-                            <span className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
-                                ? "opacity-100 translate-x-0 max-w-[200px] delay-200"
-                                : "opacity-0 translate-x-4 max-w-0 pointer-events-none"
-                                }`}>
+                            <Icon.BookOpen
+                                size={20}
+                                className={`transition-transform duration-300 ${expanded ? "translate-x-0" : "translate-x-1"}`}
+                            />
+                            <span
+                                className={`origin-left font-medium transition-[opacity,transform] duration-300 ${expanded
+                                    ? "opacity-100 translate-x-0 max-w-[200px] delay-200"
+                                    : "opacity-0 translate-x-4 max-w-0 pointer-events-none"
+                                    }`}
+                            >
                                 Documentação SuperDot
                             </span>
-                        </Link>
+                        </a>
+
                     </nav>
                 </div>
                 {/* Elementos flutuantes */}

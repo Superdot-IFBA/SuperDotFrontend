@@ -26,7 +26,7 @@ const LoginInfoForm = ({
     const {
         register,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: { errors },
     } = useForm({
         resolver: yupResolver(loginInfoSchema),
         mode: "onChange",

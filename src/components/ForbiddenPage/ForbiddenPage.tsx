@@ -1,4 +1,3 @@
-// src/pages/ForbiddenPage/ForbiddenPage.tsx
 import { Heading, Text } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Warning } from "@phosphor-icons/react";

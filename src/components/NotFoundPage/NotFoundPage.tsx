@@ -1,10 +1,7 @@
-// src/pages/NotFoundPage/NotFoundPage.tsx
 import { Heading, Text } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "@phosphor-icons/react";
 import { Button } from "../Button/Button";
 import BackgroundComponent from "../Background/Background";
-import * as  Icon from "@phosphor-icons/react";
 
 export const NotFoundPage = () => {
   const navigate = useNavigate();

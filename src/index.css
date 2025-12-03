@@ -8,7 +8,6 @@
     font-weight: 400;
 
     color: rgba(255, 255, 255, 0.87);
-    /* background-color: #242424; */
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -57,6 +56,9 @@ thead.multi-rows th {
 .rt-BaseDialogOverlay::before {
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
+[data-radix-alert-dialog-overlay] {
+    background-color: rgba(0, 0, 0, 0.5);
+}
 /** BACKGROUNDS, COLORS AND GRADIENTS **/
 * {
     transition: background-color 0.2s ease, color 0.2s ease;
@@ -69,6 +71,15 @@ thead.multi-rows th {
 ::-webkit-scrollbar-thumb {
     background: var(--primary-light);
     border-radius: 4px;
+}
+.radix-themes {
+    --scrollarea-scrollbar-horizontal-margin: 0px;
+    --scrollarea-scrollbar-vertical-margin: 0px;
+}
+
+[data-radix-dialog-overlay] {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 /* Estilização register page */
 .modern-input {
@@ -83,9 +94,7 @@ thead.multi-rows th {
     @apply ml-2 mt-1 flex items-center gap-1 text-sm font-medium text-red-500;
 }
 /* ==================== */
-.bg-professional {
-    @apply bg-neutral-50;
-}
+
 .shadow-bottom-lg {
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
@@ -114,6 +123,7 @@ thead.multi-rows th {
 .rt-Badge {
     @apply !font-roboto;
 }
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -126,6 +136,7 @@ thead.multi-rows th {
 .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
 }
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
@@ -153,11 +164,6 @@ thead.multi-rows th {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
-.centralizado {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
 
 /** Background animate **/
 @keyframes forward-expand {
@@ -167,12 +173,6 @@ thead.multi-rows th {
     100% {
         transform: scale(1.2);
     }
-}
-
-.animate-forward-expand {
-    animation: forward-expand 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 0.3s;
-    transform-origin: center;
 }
 
 /** PDF VIWER **/

@@ -26,7 +26,7 @@ const FloatingPopupAuto: React.FC<FloatingPopupAutoProps> = ({
   // Redireciona ao clicar no botão
   const handleButtonClick = () => {
     if (redirectUrl) {
-      window.location.href = redirectUrl;
+      window.open(redirectUrl, "_blank");
     }
   };
 

@@ -412,19 +412,19 @@ function DashBoardPage() {
         rejectedPercentage
     ];
 
-    const ageDistributionSeries = [
-        {
-            name: 'Participantes',
-            data: dados?.ageDistribution?.series || []
-        }
-    ];
+    // const ageDistributionSeries = [
+    //     {
+    //         name: 'Participantes',
+    //         data: dados?.ageDistribution?.series || []
+    //     }
+    // ];
 
-    const knowledgeAreaDistributionSeries = [
-        {
-            name: 'Participantes',
-            data: dados?.knowledgeAreaDistribution?.series || []
-        }
-    ];
+    // const knowledgeAreaDistributionSeries = [
+    //     {
+    //         name: 'Participantes',
+    //         data: dados?.knowledgeAreaDistribution?.series || []
+    //     }
+    // ];
 
     const participantProgressSeries = [
         dados?.participantProgress?.["Finalizado"] || 0,
@@ -481,13 +481,7 @@ function DashBoardPage() {
                                     const result = await getinfoDashboard(sample?.sampleId);
                                     setDados(result.data);
                                     setLoading(false);
-                                    if (result.status === 200) {
-                                        setNotificationData({
-                                            title: "Amostra Selecionada",
-                                            description: "Você selecionou a amostra com sucesso. Agora você pode visualizar os detalhes.",
-                                            type: "success"
-                                        });
-                                    }
+
                                 } catch (error: any) {
                                     setNotificationData({
                                         title: "Erro",
@@ -534,15 +528,7 @@ function DashBoardPage() {
                                 icon={<Icon.ChartLineUp size={24} weight="light" className="text-white" />}
                                 style="bg-gradient-to-br from-lime-500/60 to-lime-600 shadow-lg"
                             />
-                            {/* <Dcard
-                                loading={loading}
-                                title="Participantes"
-                                value={1500}
-                                icon={<Icon.UsersThree size={20} />}
-                                style="bg-gradient-to-br from-green-500 to-green-600"
-                                trend={{ value: 12, isPositive: true }}
-                                linkTo="/participants"
-                            /> */}
+
                         </div>
 
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
@@ -606,9 +592,7 @@ function DashBoardPage() {
                         </div>
                     </div>
 
-                    {/* Coluna Direita - Sidebar de Métricas */}
                     <div className="col-span-12 lg:col-span-4 space-y-6">
-                        {/* Gráficos Verticais */}
                         <ChartContainer
                             title="Distribuição por Gênero"
                             loading={loading}
@@ -637,7 +621,6 @@ function DashBoardPage() {
                             />
                         </ChartContainer>
 
-                        {/* Métricas Rápidas */}
                         <div className="bg-white rounded-xl shadow-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                                 <Icon.ChartBar size={20} className="mr-2 text-blue-500" />

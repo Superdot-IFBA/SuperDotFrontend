@@ -1,4 +1,3 @@
-// components/PageContainer/PageContainer.tsx
 import { Flex } from "@radix-ui/themes";
 
 interface PageContainerProps {

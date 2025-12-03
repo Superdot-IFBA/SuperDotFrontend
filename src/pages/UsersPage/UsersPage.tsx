@@ -161,7 +161,7 @@ const UsersPage = () => {
                                 <Form.Submit asChild className="hidden xl:block">
                                     <Button
                                         size="Large"
-                                        className="items-center w-full xl:w-[300px] xl:mt-2"
+                                        className="items-center w-full xl:w-[300px] xl:mt-5"
                                         title="Filtrar"
                                         color="primary"
                                     >
@@ -201,12 +201,11 @@ const UsersPage = () => {
                                         reset({ userName: "", userEmail: "" });
                                     }}
                                     type="reset"
-                                    className="items-center w-full xl:w-[300px] xl:mt-2"
+                                    className="items-center w-full xl:w-[300px] xl:mt-5"
                                     color="primary"
                                     title="Limpar Filtro"
                                 >
                                 </Button>
-
                             </motion.div>
                         )}
                     </AnimatePresence>

@@ -201,27 +201,96 @@ const ParticipantDataStep = ({
                             <option key={gender}>{gender}</option>
                         ))}
                     </SelectField>
-                    <Form.Field name="birthDate" className="w-full">
-                        <Form.Label className="block text-left text-xs font-bold uppercase tracking-wide mb-2">
+
+                    <Form.Field name="personalData.birthDate" className="w-full">
+                        <Form.Label
+                            htmlFor="birthDate"
+                            className="block text-sm font-semibold text-gray-800 mb-2 text-left"
+                        >
                             Data de nascimento <span className="text-red-500">*</span>
                         </Form.Label>
-                        <Flatpicker
-                            className="h-[35px] w-full rounded-[4px] px-4 text-sm"
-                            placeholder="Informe sua data de nascimento"
-                            multiple={false}
-                            onChange={([date]) => setValue("personalData.birthDate", date)}
-                            options={{
-                                dateFormat: "d/m/Y",
-                                maxDate: minDate,
-                                locale: Portuguese,
-                            }}
-                        />
+
+                        <div className="relative">
+                            <Flatpicker
+                                id="birthDate"
+                                placeholder="dd/mm/aaaa"
+                                autoComplete="bday"
+                                multiple={false}
+                                className="modern-input"
+                                onChange={([date]) => {
+                                    setValue("personalData.birthDate", date, { shouldValidate: true });
+                                }}
+                                options={{
+                                    dateFormat: "d/m/Y",
+                                    maxDate: minDate,
+                                    locale: Portuguese,
+                                    allowInput: true,
+                                    clickOpens: true,
+                                    onReady: (selectedDates, dateStr, instance) => {
+                                        instance._input.removeAttribute("readonly");
+
+                                        instance._input.addEventListener("input", function (e: Event) {
+                                            const target = e.target as HTMLInputElement;
+                                            let value = target.value.replace(/\D/g, "");
+
+                                            if (value.length > 2) {
+                                                value = value.substring(0, 2) + "/" + value.substring(2);
+                                            }
+                                            if (value.length > 5) {
+                                                value = value.substring(0, 5) + "/" + value.substring(5, 9);
+                                            }
+
+                                            target.value = value;
+                                        });
+                                    },
+                                }}
+                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                    const value = e.target.value;
+
+                                    if (value.length === 10) {
+                                        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+                                        if (regex.test(value)) {
+                                            const [day, month, year] = value.split("/").map(Number);
+                                            const date = new Date(year, month - 1, day);
+
+                                            const isValid =
+                                                date.getDate() === day &&
+                                                date.getMonth() === month - 1 &&
+                                                date.getFullYear() === year;
+
+                                            if (isValid && date <= minDate) {
+                                                setValue("personalData.birthDate", date);
+                                            }
+                                        }
+                                    }
+                                }}
+                            />
+
+                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                <svg
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
                         {errors.personalData?.birthDate?.message && (
-                            <Form.Message className="error-message">
-                                {errors.personalData?.birthDate?.message}
+                            <Form.Message className="error-message mt-2">
+                                {errors.personalData.birthDate.message}
                             </Form.Message>
                         )}
                     </Form.Field>
+
                     <InputField
                         {...register("familyData.qttChildrens")}
                         label="Número de filhos"

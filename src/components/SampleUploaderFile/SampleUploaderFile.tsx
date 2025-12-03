@@ -71,11 +71,8 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
         if (localError) setLocalError(undefined);
     };
 
-    /** FILES RULES */
 
-    /** PREVIEW A FILE */
     const handleViewPDFUploaded = async (fileName: string | undefined, fileKey: string) => {
-        // File uploaded only in frontend
         if (!fileName) {
             const sampleFile = sampleFiles.find((sampleFile) => sampleFile.key === fileKey);
 
@@ -85,7 +82,6 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
             }
         }
 
-        // File uploaded in backend
         const response = await seeAttachment(fileName || "");
         if (response.status === 200) {
             const fileObjectURL = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
@@ -123,7 +119,7 @@ const SampleUploadFile = ({ sampleFiles, setSampleFiles, notifyFileChange, messa
                                 htmlFor="chooseFile"
                                 onClick={(e) => {
                                     if (!currentFileKeyToUpload) {
-                                        e.preventDefault(); // impede abrir o file dialog
+                                        e.preventDefault();
                                         setLocalError("Selecione o tipo de arquivo antes de anexar.");
                                     }
                                 }}

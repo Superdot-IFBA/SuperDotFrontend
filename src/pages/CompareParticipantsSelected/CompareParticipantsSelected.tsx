@@ -11,7 +11,6 @@ import * as Form from "@radix-ui/react-form";
 import * as Icon from "@phosphor-icons/react";
 
 import { ParticipantBasicInfo } from "../../components/DataListView/DatalistViewBasicInfo";
-import { get } from "lodash";
 
 interface LocationState {
   selectedParticipants: IParticipant[];

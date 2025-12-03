@@ -22,7 +22,6 @@ import React from "react";
 import { PageLoader } from "../../components/Loading/Loading";
 import QuestionnaireCompleted from "../../components/QuestionnaireCompleted/QuestionnaireCompleted";
 import BackgroundComponent from "../../components/Background/Background";
-import axios, { AxiosError } from "axios";
 
 const stepsInfo = [
     {
@@ -92,7 +91,6 @@ const AdultForm = () => {
         handleNext: () => void;
         handleBack: () => void;
     }>(null);
-    // const [showFooter, setShowFooter] = useState(false);
     const [completedSteps, setCompletedSteps] = useState<Record<FormGroupSteps, boolean>>({
         [EAdultFormSteps.GENERAL_CHARACTERISTICS]: false,
         [EAdultFormSteps.HIGH_ABILITIES]: false,
@@ -266,26 +264,20 @@ const AdultForm = () => {
                                             alt="Logo"
                                         />
 
-
                                         <div className="h-8 w-px bg-gray-200 mx-2" />
-
-
                                         <div className="flex items-center gap-3 max-sm:flex-col">
                                             {stepsInfo[currentStep - 1]?.icon && (
                                                 <div className="text-primary flex-shrink-0">
                                                     {React.cloneElement(stepsInfo[currentStep - 1]?.icon, {
                                                         className: "w-6 h-6"
                                                     })}
-
                                                 </div>
                                             )}
 
                                             {currentStep === 10 && (
                                                 <div className="text-primary flex-shrink-0">
-
                                                     {React.cloneElement(stepsInfo[4].icon, { className: "w-6 h-6" })
                                                     }
-
                                                 </div>)
                                             }
 
@@ -294,7 +286,6 @@ const AdultForm = () => {
                                                     {stepsInfo[currentStep - 1]?.title}
                                                     {currentStep === 10 ? stepsInfo[4].title : ""}
                                                 </h1>
-
                                             </div>
                                         </div>
                                     </Flex>
@@ -369,7 +360,6 @@ const AdultForm = () => {
 
                                                                 </header>
                                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-5">
-
                                                                     {[
                                                                         EAdultFormSteps.GENERAL_CHARACTERISTICS,
                                                                         EAdultFormSteps.HIGH_ABILITIES,
@@ -403,7 +393,6 @@ const AdultForm = () => {
                                                                     />
 
                                                                     <Button
-                                                                        // loading={loading}
                                                                         size="Full"
                                                                         onClick={handleNextStep}
                                                                         className={`disabled:bg-neutral-dark disabled:hover:cursor-not-allowed`}
@@ -435,7 +424,6 @@ const AdultForm = () => {
                     )}
                     {
                         currentStep === EAdultFormSteps.INTRODUCTION && (
-
                             <Flex
                                 direction={"column"}
                                 className="relative h-screen w-full overflow-hidden"

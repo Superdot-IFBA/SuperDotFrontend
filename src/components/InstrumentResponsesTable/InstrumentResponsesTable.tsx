@@ -1,5 +1,5 @@
-import { DataList, Badge } from "@radix-ui/themes";
-
+import { DataList, Badge, Flex, Text } from "@radix-ui/themes";
+import * as Icon from "@phosphor-icons/react"
 
 
 const quantificacaoRespostas = [
@@ -119,93 +119,159 @@ const quantificacaoRespostas = [
 
 export default function InstrumentResponsesList() {
   return (
-    <div className="w-full space-y-2">
-      {quantificacaoRespostas.map((item) => (
-        <DataList.Item key={item.pergunta} className="rounded-md border px-3 py-2">
-          <div className="grid grid-cols-2 gap-x-2 text-xs">
-            <div>
-              <Badge variant="soft" color="purple" className="text-sm font-semibold">
-                Pergunta {item.pergunta}
-              </Badge>
-            </div>
+    <DataList.Root orientation="vertical" className="!font-roboto p-2">
+      <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-t-xl px-4 py-3 border-b border-blue-100/50 mb-4">
+        <p className="text-[17px] font-semibold text-center text-blue-900 tracking-tight flex items-center justify-center gap-2">
+          <Icon.ListNumbers size={20} weight="bold" />
+          Quantificação das Respostas - QIIAHSD
+        </p>
+      </div>
 
+      {quantificacaoRespostas.map((item, index) => (
+        <DataList.Item
+          key={index}
+          className="w-full rounded-2xl mb-4 transition-all duration-300 ease-out transform
+            bg-gradient-to-br from-white to-blue-50 shadow-sm hover:shadow-md 
+            border border-blue-200/80 backdrop-blur-sm overflow-hidden
+            hover:border-blue-300/60"
+        >
+          <div className="bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-t-xl px-4 py-3 border-b border-blue-100/50">
+            <Flex align="center" justify="center" gap="2">
+              <Badge
+                size="2"
+                color="blue"
+                className="font-semibold"
+              >
+                <Flex align="center" gap="2">
+                  <Icon.Question size={16} weight="bold" />
+                  Pergunta {item.pergunta}
+                </Flex>
+              </Badge>
+            </Flex>
           </div>
 
-          <span className="text-sm font-medium">Respostas</span>
+          <div className="p-4">
+            <Text weight="medium" className="text-gray-700 mb-3 block text-center">
+              Respostas e Pontuações
+            </Text>
 
-          <div className="grid grid-cols-2 gap-x-2 text-xs mt-1">
-            {/* Coluna: Adulto */}
-            <div>
-              <span className="block font-medium underline">Adulto</span>
-              {item.adulto.respostaComum && (
-                <>
-                  <span className="font-medium">Comum:</span> {item.adulto.respostaComum}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto.pontosC}
-                  <br />
-                </>
-              )}
-              {item.adulto.respostaNC && (
-                <>
-                  <span className="font-medium">Não comum:</span> {item.adulto.respostaNC}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto.pontosNC}
-                </>
-              )}
-              {/* Caso só haja "pontos" direto, como nas perguntas 9 a 70 */}
-              {item.adulto.pontos && (
-                <>
-                  <span className="font-medium">Resposta:</span> {item.adulto.respostaComum}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto.pontos}
-                </>
-              )}
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
+                <DataList.Label className="text-sm font-semibold text-blue-700 flex items-center justify-center gap-2 border-b border-blue-100 pb-2">
+                  <Icon.User size={16} weight="bold" />
+                  Adulto
+                </DataList.Label>
 
-            {/* Coluna: Adulto - 2ª Fonte */}
-            <div>
-              <span className="block font-medium underline">2ª Fonte</span>
-              {item.adulto2.respostaComum && (
-                <>
-                  <span className="font-medium">Comum:</span> {item.adulto2.respostaComum}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto2.pontosC}
-                  <br />
-                </>
-              )}
-              {item.adulto2.respostaNC && (
-                <>
-                  <span className="font-medium">Não comum:</span> {item.adulto2.respostaNC}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto2.pontosNC}
-                </>
-              )}
-              {item.adulto2.pontos && (
-                <>
-                  <span className="font-medium">Resposta:</span> {item.adulto2.respostaComum}
-                  <br />
-                  <span className="font-medium">Pontos:</span> {item.adulto2.pontos}
-                </>
-              )}
+                <div className="space-y-1">
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-medium text-gray-600">Comum:</span>
+                      <Badge size="1" color="blue" className="font-semibold">
+                        {item.adulto.pontosC}
+                      </Badge>
+                    </div>
+                    <DataList.Value className="text-xs text-gray-900">
+                      {item.adulto.respostaComum}
+                    </DataList.Value>
+                  </div>
+
+                  <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-medium text-gray-600">Não comum:</span>
+                      <Badge size="1" color="red" className="font-semibold">
+                        {item.adulto.pontosNC}
+                      </Badge>
+                    </div>
+                    <DataList.Value className="text-xs text-gray-900">
+                      {item.adulto.respostaNC}
+                    </DataList.Value>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2 p-3 bg-white rounded-lg border border-cyan-100 shadow-sm">
+                <DataList.Label className="text-sm font-semibold text-cyan-700 flex items-center justify-center gap-2 border-b border-cyan-100 pb-2">
+                  <Icon.Users size={16} weight="bold" />
+                  2ª Fonte
+                </DataList.Label>
+
+                <div className="space-y-1">
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-medium text-gray-600">Comum:</span>
+                      <Badge size="1" color="cyan" className="font-semibold">
+                        {item.adulto2.pontosC}
+                      </Badge>
+                    </div>
+                    <DataList.Value className="text-xs text-gray-900">
+                      {item.adulto2.respostaComum}
+                    </DataList.Value>
+                  </div>
+
+                  <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-medium text-gray-600">Não comum:</span>
+                      <Badge size="1" color="red" className="font-semibold">
+                        {item.adulto2.pontosNC}
+                      </Badge>
+                    </div>
+                    <DataList.Value className="text-xs text-gray-900">
+                      {item.adulto2.respostaNC}
+                    </DataList.Value>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </DataList.Item>
       ))}
 
-      <DataList.Item className="rounded-md border bg-gray-50 px-3 py-2">
-        <div className="flex justify-between items-center">
-          <span className="text-sm font-semibold">Totais</span>
+      <DataList.Item className="w-full rounded-2xl mb-4
+        bg-gradient-to-br from-green-50 to-emerald-50 shadow-sm
+        border border-green-200/80 backdrop-blur-sm overflow-hidden">
+
+        <div className="bg-gradient-to-r from-green-500/5 to-emerald-500/5 rounded-t-xl px-4 py-3 border-b border-green-100/50">
+          <Flex align="center" justify="center" gap="2">
+            <Badge
+              size="2"
+              color="green"
+              className="font-semibold"
+            >
+              <Flex align="center" gap="2">
+                <Icon.Calculator size={16} weight="bold" />
+                Totais Finais
+              </Flex>
+            </Badge>
+          </Flex>
         </div>
-        <div className="grid grid-cols-2 gap-x-2 text-xs mt-1">
-          <div>
-            <span className="font-medium">QIIAHSD-Adulto:</span> 132
-          </div>
-          <div>
-            <span className="font-medium">QIIAHSD-Adulto-2ª Fonte:</span> 138
+
+        <div className="p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-white rounded-lg border border-green-100 shadow-sm">
+              <DataList.Label className="text-sm font-semibold text-green-700 mb-2">
+                QIIAHSD-Adulto
+              </DataList.Label>
+              <DataList.Value>
+                <Badge size="2" color="green" className="font-bold text-lg">
+                  132
+                </Badge>
+              </DataList.Value>
+            </div>
+
+            <div className="text-center p-3 bg-white rounded-lg border border-cyan-100 shadow-sm">
+              <DataList.Label className="text-sm font-semibold text-cyan-700 mb-2">
+                QIIAHSD-Adulto-2ª Fonte
+              </DataList.Label>
+              <DataList.Value>
+                <Badge size="2" color="cyan" className="font-bold text-lg">
+                  138
+                </Badge>
+              </DataList.Value>
+            </div>
           </div>
         </div>
       </DataList.Item>
-    </div>
+    </DataList.Root>
   );
 }
 

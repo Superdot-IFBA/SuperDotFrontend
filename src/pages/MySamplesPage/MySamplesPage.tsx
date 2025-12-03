@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { stateWithNotification } from "../../validators/navigationStateValidators";
 import { DateTime } from "luxon";
 import { ISample } from "../../interfaces/sample.interface";
-import { Badge, Box, Container, Flex, IconButton, Separator, Skeleton, Text, Tooltip } from "@radix-ui/themes";
+import { Badge, Box, Container, Flex, IconButton, Separator, Skeleton, Text, Tooltip, } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
 import { GridComponent } from "../../components/Grid/Grid";
 import { Button } from "../../components/Button/Button";
@@ -33,11 +33,8 @@ const MySamplesPage = () => {
     const [isDesktop, setIsDesktop] = useState(false);
 
     const [pageData, setPageData] = useState<Page<ISample>>();
-    //const [currentPage, setCurrentPage] = useState(1);
     const [filters, setFilters] = useState<MySamplesFilters>();
-    //const [sampleSelecteds, setSampleSelecteds] = useState();
 
-    /* STATES TO SHOW NOTIFICATION */
     const [notificationData, setNotificationData] = useState<{
         title: string;
         description: string;
@@ -48,7 +45,6 @@ const MySamplesPage = () => {
         type: undefined,
     });
 
-    /* STATES TO DELETE SAMPLE REQUEST*/
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [sampleIdToDelete, setSampleIdToDelete] = useState<string>();
 
@@ -185,7 +181,7 @@ const MySamplesPage = () => {
             />
 
 
-            <Box className="w-full  pt-10 pb-10 max-xl:pt-2 max-xl:pb-2">
+            <Box className="w-full pt-5 pb-5 max-xl:pt-2 max-xl:pb-2">
                 <Form.Root
                     onSubmit={handleSubmit((data) => {
                         setFilters({
@@ -219,7 +215,7 @@ const MySamplesPage = () => {
                                 <Form.Submit asChild className="hidden xl:block">
                                     <Button
                                         size="Large"
-                                        className="items-center w-full xl:w-[300px] xl:mt-2"
+                                        className="items-center w-full xl:w-[300px] xl:mt-5"
                                         title="Filtrar"
                                         color="primary"
                                     >
@@ -255,7 +251,7 @@ const MySamplesPage = () => {
                                     size="Large"
                                     onClick={() => setFilters({})}
                                     type="reset"
-                                    className="items-center w-full xl:w-[300px] xl:mt-2"
+                                    className="items-center w-full xl:w-[300px] xl:mt-5"
                                     color="primary"
                                     title="Limpar Filtro"
                                 >
@@ -269,138 +265,223 @@ const MySamplesPage = () => {
             </Box>
 
             <Container className="mb-4 p-4 max-lg:p-0">
-                {pageData?.data?.length === 0 ? <EmptyState icon={<Icon.FileX weight="thin" size={100} />} title={"Nenhuma amostra encontrada."} description={"Não foram encontradas amostras que correspondam aos critérios de busca ou filtros aplicados. Verifique os parâmetros utilizados e tente novamente."} />
-                    :
-
-                    <GridComponent columns={2} className="gap-5">
-                        {loading
-                            ? (
-                                Array.from({ length: 2 }).map((_, idx) => (
-                                    <Card.Root
-                                        key={idx}
-                                        className="rounded-lg shadow-lg border border-gray-200 animate-pulse"
-                                    >
-                                        {/* Header */}
-                                        <Card.Header>
-                                            <Flex justify="between" className="space-x-4 items-center">
-                                                <Skeleton className="h-5 w-3/5" />
-                                            </Flex>
-                                        </Card.Header>
-
-                                        {/* Content */}
-                                        <Card.Content >
-                                            <div className="space-y-4 mt-2">
-                                                <Separator size={"4"} />
-                                            </div>
-                                            <ul className="space-y-2 text-sm">
-                                                {Array.from({ length: 7 }).map((_, idx) => (
-                                                    <li key={idx}>
-                                                        <Skeleton className="h-4 w-full sm:w-[80%]" />
-                                                    </li>
-                                                ))}
-                                                {/* Badge simulada */}
-                                                <li className="flex items-center gap-2">
-                                                    <Skeleton className="h-5 w-24 rounded-full" />
-                                                </li>
-                                            </ul>
-                                        </Card.Content>
-
-                                        {/* Ações */}
-                                        <Card.Actions className="flex gap-4 justify-between max-sm:flex-col mt-4">
-                                            <Skeleton className="h-10 w-full  rounded-md" />
-                                            <Skeleton className="h-10 w-full  rounded-md" />
-                                        </Card.Actions>
-                                    </Card.Root>
-                                ))) :
-                            pageData?.data?.map((sample, index) => (
-
+                {pageData?.data?.length === 0 ? (
+                    <EmptyState
+                        icon={<Icon.FileX weight="thin" size={100} />}
+                        title={"Nenhuma amostra encontrada."}
+                        description={"Não foram encontradas amostras que correspondam aos critérios de busca ou filtros aplicados. Verifique os parâmetros utilizados e tente novamente."}
+                    />
+                ) : (
+                    <GridComponent columns={2} className="gap-6 max-sm:gap-4">
+                        {loading ? (
+                            Array.from({ length: 2 }).map((_, idx) => (
                                 <Card.Root
-                                    className={`${sample.status === "Autorizado" ? "!border-confirm" : sample.status === "Pendente" ? "!border-yellow-500" : "!border-red-500"} rounded-lg shadow-lg transition-all hover:drop-shadow-md`}>
-                                    <Card.Header>
-                                        <Flex justify="between" className="space-x-4">
-                                            {sample.status !== "Autorizado" && (
-                                                <Tooltip content="Editar Amostra">
-                                                    <IconButton color="amber" radius="full" variant="outline">
-                                                        <Icon.Pencil
-                                                            onClick={() => handleNavigateToEditSample(sample)}
-                                                            className="cursor-pointer"
-                                                            size={20}
-                                                        />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            )}
-                                            <Text as="label" className="text-xl font-medium text-gray-800">{sample.sampleGroup}
-
-                                            </Text>
-
-                                            {sample.status !== "Autorizado" && (
-                                                <Tooltip content="Excluir Amostra">
-                                                    <IconButton color="red" radius="full" variant="outline">
-                                                        <Icon.Trash
-                                                            className="cursor-pointer"
-                                                            onClick={() => handleNavigateToDeleteSample(sample._id)}
-                                                            size={20}
-                                                        />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            )}
+                                    key={idx}
+                                    className="rounded-2xl border border-gray-200/60 bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm"
+                                    loading={true}
+                                >
+                                    <Card.Header >
+                                        <Flex justify="between" align="center" className="space-x-4">
+                                            <Skeleton className="h-6 w-32 rounded-lg" />
+                                            <Flex gap="2">
+                                                <Skeleton className="h-8 w-8 rounded-full" />
+                                                <Skeleton className="h-8 w-8 rounded-full" />
+                                            </Flex>
                                         </Flex>
                                     </Card.Header>
 
                                     <Card.Content>
                                         <div className="space-y-4">
-                                            <Separator size={"4"} ></Separator>
-
-                                            <ul className="text-gray-700 text-sm">
-                                                <li>
-                                                    <span className="font-medium text-gray-900">Amostra:</span> {sample.sampleTitle}
-                                                </li>
-                                                <li>
-                                                    <span className="font-medium text-gray-900">Pesquisa:</span> {sample.researchTitle}
-                                                </li>
-                                                {sample.qttParticipantsAuthorized && (
-                                                    <li>
-                                                        <span className="font-medium text-gray-900">Limite de participantes:</span> {sample.qttParticipantsAuthorized}
-                                                    </li>
-                                                )}
-                                                {sample.participants && (
-                                                    <li>
-                                                        <span className="font-medium text-gray-900">Participantes cadastrados:</span> {sample.participants.length}
-                                                    </li>
-                                                )}
-                                                <li>
-                                                    <span className="font-medium text-gray-900">Código do Comitê de Ética:</span> {sample.researchCep.cepCode}
-                                                </li>
-                                                <li>
-                                                    <span className="font-medium text-gray-900">Data da Solicitação da amostra:</span>{" "}
-                                                    {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
-                                                </li>
-                                                <li>
-                                                    <span className="font-medium text-gray-900">Data da última atualização:</span>{" "}
-                                                    {sample.updatedAt && DateTime.fromISO(sample.updatedAt).toFormat("dd/LL/yyyy - HH:mm")}
-                                                </li>
-                                                <li className="flex items-center gap-2">
-                                                    <span className="font-medium text-gray-900">Status da amostra:</span>
-                                                    {sample.status === "Autorizado" ? (
-                                                        <Badge color="green" className="rounded-full px-2 py-0.5 text-xs">Autorizado</Badge>
-                                                    ) : sample.status === "Pendente" ? (
-                                                        <Badge color="orange" className="rounded-full px-2 py-0.5 text-xs">
-                                                            Aguardando aprovação pelo administrador do sistema...
-                                                        </Badge>
-                                                    ) : (
-                                                        <Badge color="red" className="rounded-full px-2 py-0.5 text-xs">{sample.status}</Badge>
-                                                    )}
-
-                                                </li>
-                                            </ul>
+                                            <Skeleton className="h-4 w-full rounded" />
+                                            <div className="space-y-3">
+                                                {Array.from({ length: 5 }).map((_, idx) => (
+                                                    <div key={idx} className="flex justify-between">
+                                                        <Skeleton className="h-4 w-24 rounded" />
+                                                        <Skeleton className="h-4 w-32 rounded" />
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     </Card.Content>
 
-                                    <Card.Actions className=" flex gap-4 max-sm:gap-2 max-sm:flex-col">
+                                    <Card.Actions className="flex gap-3">
+                                        <Skeleton className="h-11 flex-1 rounded-xl" />
+                                        <Skeleton className="h-11 flex-1 rounded-xl" />
+                                    </Card.Actions>
+                                </Card.Root>
+                            ))
+                        ) : (
+                            pageData?.data?.map((sample, index) => (
+                                <Card.Root
+                                    key={index}
+                                    className={`rounded-2xl card-container overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-[1.02] bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm 
+                                    ${sample.status === "Autorizado"
+                                            ? " !border-l-4 !border-l-emerald-500"
+                                            : sample.status === "Pendente"
+                                                ? "!border-l-4 !border-l-amber-500"
+                                                : "!border-l-4 !border-l-red-500"
+                                        }`}
+                                >
+                                    <div className={`bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-t-xl px-4 py-3 border-b border-violet-100/50`}>
+                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex items-center gap-2">
+                                                    <Text as="label" className="text-[20px] font-semibold text-center text-violet-900 tracking-tight flex items-center justify-center gap-2">
+                                                        {sample.sampleGroup}
+                                                    </Text>
+                                                </div>
+                                            </div>
+
+                                            {sample.status !== "Autorizado" && (
+                                                <div className="flex gap-2 justify-end">
+                                                    <Tooltip content="Editar Amostra">
+                                                        <IconButton
+                                                            color="purple"
+                                                            variant="soft"
+                                                            size="2"
+                                                            className="hover:scale-105 transition-transform bg-amber-500/10 text-amber-700 border border-amber-200 !cursor-pointer"
+                                                            title="Editar Amostra"
+                                                            onClick={() => handleNavigateToEditSample(sample)}
+                                                        >
+                                                            <Icon.Pencil size={16} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip content="Excluir Amostra">
+                                                        <IconButton
+                                                            color="red"
+                                                            variant="soft"
+                                                            size="2"
+                                                            className="hover:scale-105 transition-transform bg-red-500/10 text-red-700 border border-red-200 !cursor-pointer"
+                                                            title="Excluir Amostra"
+                                                            onClick={() => handleNavigateToDeleteSample(sample._id)}
+                                                        >
+                                                            <Icon.Trash size={16} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <Card.Content >
+                                        <div className="space-y-2 text-sm">
+
+                                            <div className="grid gap-1">
+                                                <div className="flex justify-between items-center px-2 py-1.5 border rounded-lg">
+                                                    <span className="flex items-center gap-1.5 text-gray-600">
+                                                        <Icon.ClipboardText size={13} /> Amostra:
+                                                    </span>
+                                                    <span className="font-semibold truncate">{sample.sampleTitle}</span>
+                                                </div>
+
+                                                <div className="flex justify-between items-center px-2 py-1.5 border rounded-lg">
+                                                    <span className="flex items-center gap-1.5 text-gray-600">
+                                                        <Icon.MagnifyingGlass size={13} /> Pesquisa:
+                                                    </span>
+                                                    <span className="font-semibold truncate">{sample.researchTitle}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-1 border rounded-lg px-2 py-1.5">
+                                                <span className="flex justify-center items-center gap-1.5 text-gray-600">
+                                                    Participantes
+                                                </span>
+                                                <Separator size={"4"} />
+                                                <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-1">
+                                                    <div className="flex gap-2 items-center px-2 ">
+                                                        <span className="flex items-center gap-1.5 text-gray-600">
+                                                            <Icon.UsersThree size={13} /> Limite:
+                                                        </span>
+                                                        {sample.qttParticipantsAuthorized || 0}
+                                                    </div>
+
+                                                    <div className="flex gap-2 items-center px-2">
+                                                        <span className="flex items-center gap-1.5 text-gray-600">
+                                                            <Icon.UserList size={13} /> Cadastrados:
+                                                        </span>
+                                                        {sample.participants?.length || 0}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex justify-between items-center px-2 py-1.5 border rounded-lg">
+                                                <span className="flex items-center gap-1.5 text-gray-600">
+                                                    <Icon.Certificate size={13} /> CEP
+                                                </span>
+                                                {sample.researchCep.cepCode}
+                                            </div>
+
+                                            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-1">
+                                                <div className="px-2 py-1.5 border rounded-lg text-center">
+                                                    <span className="text-xs text-gray-600 flex justify-center items-center gap-1">
+                                                        <Icon.CalendarPlus size={13} /> Data solicitada
+                                                    </span>
+                                                    <span className="text-xs font-semibold">
+                                                        {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yy")}
+                                                    </span>
+                                                </div>
+
+                                                <div className="px-2 py-1.5 border rounded-lg text-center">
+                                                    <span className="text-xs text-gray-600 flex justify-center items-center gap-1">
+                                                        <Icon.CalendarCheck size={13} /> Última atualização
+                                                    </span>
+                                                    <span className="text-xs font-semibold">
+                                                        {sample.updatedAt && DateTime.fromISO(sample.updatedAt).toFormat("dd/LL/yy")}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                className={`px-2 py-1.5 rounded-lg border flex justify-between items-center ${sample.status === "Autorizado"
+                                                    ? "bg-emerald-50 border-emerald-200"
+                                                    : sample.status === "Pendente"
+                                                        ? "bg-amber-50 border-amber-200"
+                                                        : "bg-red-50 border-red-200"
+                                                    }`}
+                                            >
+                                                <span className="flex items-center gap-1.5 text-gray-700 text-sm">
+                                                    <Icon.TrendUp size={13} /> Status
+                                                </span>
+
+                                                {sample.status === "Autorizado" ? (
+                                                    <Badge
+                                                        size="2"
+                                                        color="green"
+                                                        variant="solid"
+                                                        className="rounded-full px-3 py-1 text-sm font-semibold border border-emerald-500 shadow-sm justify-center"
+                                                    >
+                                                        <Icon.CheckCircle size={12} weight="bold" className="mr-1" />
+                                                        Autorizado
+                                                    </Badge>
+                                                ) : sample.status === "Pendente" ? (
+                                                    <Badge
+                                                        size="2"
+                                                        color="orange"
+                                                        variant="solid"
+                                                        className="rounded-full px-3 py-1 text-xs font-semibold border border-amber-500 shadow-sm justify-center"
+                                                    >
+                                                        <Icon.Clock size={12} weight="bold" className="mr-1" />
+                                                        Aguardando aprovação pelo <br className="sm:hidden" /> administrador do sistema...
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge
+                                                        size="2"
+                                                        color="red"
+                                                        variant="solid"
+                                                        className="rounded-full px-3 py-1 text-xs font-semibold border border-red-500 shadow-sm justify-center"
+                                                    >
+                                                        <Icon.XCircle size={12} weight="bold" className="mr-1" />
+                                                        {sample.status}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                    </Card.Content>
+
+                                    <Card.Actions className="flex gap-3 max-sm:flex-col bg-gradient-to-r from-violet-500/5 to-purple-500/5  px-4 py-3 border-b border-violet-100/50">
                                         <Card.Action
-                                            disabled={
-                                                sample.status !== "Autorizado"
-                                            }
+                                            disabled={sample.status !== "Autorizado"}
                                             onClick={() => handleRegisterPeople(sample._id as string)}
                                         >
                                             Cadastrar Pessoas
@@ -412,15 +493,15 @@ const MySamplesPage = () => {
                                             }
                                             onClick={() => handleClickToAnalyzeSampleParticipantes(sample)}
                                         >
+
                                             Avaliar Pessoas
                                         </Card.Action>
                                     </Card.Actions>
                                 </Card.Root>
-                            ))}
+                            ))
+                        )}
                     </GridComponent>
-
-
-                }
+                )}
             </Container>
             <Modal
                 open={openModalDelete}

@@ -108,7 +108,7 @@ const SecondsSourceCompare = () => {
         const punctuationS: number[][] = [];
 
         for (const secondSource of secondSources) {
-            let segundaFontePontuacao = [0, 0, 0, 0, 0, 0];
+            const segundaFontePontuacao = [0, 0, 0, 0, 0, 0];
 
             if (secondSource.adultForm && secondSource.adultForm.answersByGroup) {
                 for (const group of secondSource.adultForm.answersByGroup) {
@@ -323,6 +323,7 @@ const SecondsSourceCompare = () => {
                                                 variant="soft"
                                                 className="bg-blue-100 text-blue-700 border-blue-200 font-bold shadow-sm"
                                             >
+                                                <Icon.Trophy size={16} weight="bold" />
                                                 {participant.adultForm?.totalPunctuation}
                                             </Badge>
                                         </Table.Cell>
@@ -355,8 +356,8 @@ const SecondsSourceCompare = () => {
                                         <Table.Cell justify="center" className="py-4">
                                             <Badge
                                                 size="2"
-                                                color={`${participant.adultForm?.giftednessIndicators ? 'grass' : 'red'}`}
-                                                className={`w-full justify-center font-semibold border ${participant.adultForm?.giftednessIndicators
+                                                color={`${participant.giftdnessIndicatorsByResearcher ? 'grass' : 'red'}`}
+                                                className={`w-full justify-center font-semibold border ${participant.giftdnessIndicatorsByResearcher
                                                     ? ' border-emerald-500'
                                                     : ' border-red-500'
                                                     }`}
@@ -436,7 +437,8 @@ const SecondsSourceCompare = () => {
                                                     <Badge
                                                         size="2"
                                                         variant="soft"
-                                                        className="bg-blue-100 text-blue-700 border-blue-200 font-semibold cursor-help shadow-sm"
+                                                        color="blue"
+                                                        className="cursor-help shadow-sm"
                                                     >
                                                         <Flex align="center" gap="2">
                                                             <Icon.UserCircle size={14} weight="bold" />
@@ -455,9 +457,11 @@ const SecondsSourceCompare = () => {
                                             <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
                                                 <Badge
                                                     size="2"
+                                                    color="cyan"
                                                     variant="soft"
-                                                    className="bg-cyan-100 text-cyan-700 border-cyan-200 font-bold shadow-sm"
+                                                    className=" font-bold shadow-sm"
                                                 >
+                                                    <Icon.Trophy size={16} weight="bold" />
                                                     {secondSource.adultForm?.totalPunctuation}
                                                 </Badge>
                                             </Table.Cell>
@@ -478,7 +482,8 @@ const SecondsSourceCompare = () => {
                                                 <Badge
                                                     size="1"
                                                     variant="soft"
-                                                    className="bg-purple-100 text-purple-700 border-purple-200 font-medium"
+                                                    color="cyan"
+                                                    className=" font-medium"
                                                 >
                                                     {secondSource.personalData?.relationship}
                                                 </Badge>
@@ -599,7 +604,7 @@ const SecondsSourceCompare = () => {
                                             <Badge
                                                 size="2"
                                                 variant="soft"
-                                                className="bg-violet-100 text-violet-700 border-violet-200 font-bold shadow-sm"
+                                                className=" font-bold shadow-sm"
                                             >
                                                 {participant.adultForm?.totalPunctuation}
                                             </Badge>
@@ -609,9 +614,11 @@ const SecondsSourceCompare = () => {
                                             <Table.Cell key={index} justify="center" className="border-r border-gray-200/30 py-3">
                                                 <Badge
                                                     size="2"
+                                                    color="blue"
                                                     variant="soft"
                                                     className="bg-blue-100 text-blue-700 border-blue-200 font-bold shadow-sm"
                                                 >
+
                                                     {secondSource.adultForm?.totalPunctuation}
                                                 </Badge>
                                             </Table.Cell>
@@ -731,8 +738,9 @@ const SecondsSourceCompare = () => {
                                                     <Badge
                                                         size="2"
                                                         variant="soft"
-                                                        className="bg-violet-100 text-violet-700 border-violet-200 font-bold"
+                                                        className=" font-bold"
                                                     >
+                                                        <Icon.Trophy size={16} weight="bold" />
                                                         {participant?.adultForm?.totalPunctuation}
                                                     </Badge>
                                                 </div>
@@ -758,8 +766,11 @@ const SecondsSourceCompare = () => {
                                                                 <Badge
                                                                     size="1"
                                                                     variant="soft"
+                                                                    color="blue"
                                                                     className="bg-blue-100 text-blue-700 border-blue-200 font-semibold"
                                                                 >
+                                                                    <Icon.Trophy size={16} weight="bold" className="text-blue-600" />
+
                                                                     {secondSource.adultForm?.totalPunctuation}
                                                                 </Badge>
                                                             </div>

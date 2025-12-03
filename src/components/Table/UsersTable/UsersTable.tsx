@@ -34,8 +34,12 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
 
     return (
         <>
+            <Flex direction="column" className="w-full mb-6 px-4 sm:px-6 lg:px-8">
+                <Text className="text-sm text-gray-600">
+                    Gerencie os usuários cadastrados no sistema
+                </Text>
+            </Flex>
             <Table.Root variant="ghost" className="w-full m-auto desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
-                {/* Header Principal */}
                 <Table.Header className="text-[18px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
                     <Table.Row className="border-b border-violet-200/30">
                         <Table.ColumnHeaderCell align="center" colSpan={4} className="border-r border-violet-200/30 py-4">
@@ -93,10 +97,10 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                                         {user.email}
                                     </Text>
                                 </Table.Cell>
-                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4 ">
                                     <Badge
                                         size="2"
-                                        variant="soft"
+                                        variant="solid"
                                         color={
                                             user.role === "Revisor"
                                                 ? "orange"
@@ -104,6 +108,7 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                                                     ? "red"
                                                     : "blue"
                                         }
+                                        className={`font-semibold border text-xs  w-full justify-center`}
                                     >
                                         {user.role}
                                     </Badge>
@@ -198,6 +203,7 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                                                                 ? "red"
                                                                 : "blue"
                                                     }
+                                                    className={`font-semibold border text-xs ${user.role === "Revisor" ? "!border-orange-500" : user.role === "Administrador" ? "!border-red-500" : "!border-blue-500"}`}
                                                 >
                                                     {user.role}
                                                 </Badge>

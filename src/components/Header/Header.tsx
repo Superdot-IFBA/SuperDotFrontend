@@ -1,8 +1,6 @@
-import { Flex, Text } from '@radix-ui/themes';
+import { Flex } from '@radix-ui/themes';
 import UserInfo from '../UserInfo/UserInfo';
-import * as Icon from '@phosphor-icons/react';
 import React from 'react';
-import { useMenu } from '../UseMenu/UseMenu';
 
 interface HeaderProps {
     title: string;
@@ -10,8 +8,7 @@ interface HeaderProps {
     onMenuToggle?: () => void;
 }
 
-export function Header({ title, icon, onMenuToggle }: HeaderProps) {
-    const { isMobileMenuOpen } = useMenu();
+export function Header({ title, icon }: HeaderProps) {
 
 
     return (
@@ -21,7 +18,6 @@ export function Header({ title, icon, onMenuToggle }: HeaderProps) {
         >
             <header>
                 <Flex align="center" className="w-full h-full">
-                    {/* Left Section - Mobile Menu Button + Title */}
                     <Flex align="center" gap="4" className="flex-1">
                         <Flex align="center" className="text-gray-800 gap-3">
                             {icon && React.cloneElement(icon as React.ReactElement, {
@@ -33,7 +29,6 @@ export function Header({ title, icon, onMenuToggle }: HeaderProps) {
                         </Flex>
                     </Flex>
 
-                    {/* Right Section - User Info */}
                     <Flex align="center" gap="4" className="flex-shrink-0 mr-14 max-xl:!hidden">
                         <div className="hidden md:flex">
                             <UserInfo />

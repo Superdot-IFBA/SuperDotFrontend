@@ -59,7 +59,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     const videoId = getYouTubeVideoId(videoUrl);
     if (!videoId || !containerRef.current) return;
 
-    if (!window.YT) {
+    if (!window.YT || !window.YT.Player) {
+
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
@@ -73,6 +74,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           modestbranding: 1,
           rel: 0,
           playsinline: 1,
+          origin: window.location.origin,
         },
         events: {
           onStateChange: (event: any) => {
@@ -126,7 +128,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     return (
       <Box className={`flex flex-col items-center ${className}`}>
         <div
-          ref={containerRef}
+          ref={el => {
+            containerRef.current = el;
+          }}
           className="w-full aspect-video max-w-4xl rounded-lg overflow-hidden shadow-lg"
         />
         <Flex

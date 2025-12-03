@@ -18,7 +18,7 @@ interface AccordionContentProps {
 
 }
 interface AccordionProps {
-  title: string;
+  title: React.ReactNode;
   content: React.ReactNode;
   className?: string;
   defaultValue: string;
@@ -44,7 +44,7 @@ const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
   ({ children, value, className, ...props }, forwardedRef) => (
     <Accordion.Item
       className={classNames(
-        'focus-within:shadow-mauve12 mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:shadow-[0_0_0_2px]',
+        'focus-within:shadow-primary mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:shadow-[0_0_0_2px]',
         className
       )}
       value={value}
@@ -62,7 +62,7 @@ const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerPro
     <Accordion.Header>
       <Accordion.Trigger
         className={classNames(
-          'text-primary  shadow-mauve6 hover:bg-mauve2 group flex h-[60px] w-full flex-1 cursor-default items-center justify-between bg-white px-5 max-xl:px-2 leading-none shadow-[0_1px_0] outline-none',
+          'text-primary  shadow-mauve6 hover:bg-mauve2 group flex h-[60px] w-full flex-1 cursor-default items-center justify-between bg-white px-5 max-xl:px-2 leading-none shadow-[0_1px_0] outline-none ',
           className
         )}
         {...props}
@@ -71,7 +71,7 @@ const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerPro
         {children}
         <Icon.CaretDoubleDown
           size={20}
-          className="text-violet10 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
+          className="text-violet10 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180 "
 
         />
       </Accordion.Trigger>
@@ -90,7 +90,7 @@ const AccordionContent = React.forwardRef<HTMLDivElement, AccordionContentProps>
       {...props}
       ref={forwardedRef}
     >
-      <div className="py-[15px] px-5 max-xl:px-0">{children}</div>
+      <div className="py-[15px] px-5 max-xl:px-2">{children}</div>
     </Accordion.Content>
   )
 );

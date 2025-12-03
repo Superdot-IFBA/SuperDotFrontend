@@ -56,8 +56,10 @@ const ChooseSampleGroupPage = () => {
                         :
                         sampleGroups?.map((group, index) => (
 
-                            <Card.Root key={index} className={`${group.available ? "!border-confirm" : ""} min-h-[300px]`}>
-                                <Card.Header>{group.title}</Card.Header>
+                            <Card.Root key={index} className={`${group.available ? "!border-l-confirm !border-l-4" : ""} min-h-[300px]`}>
+                                <Card.Header >
+                                    <p className="heading-2">{group.title} </p>
+                                </Card.Header>
                                 <Card.Content>
                                     <ul>
                                         {group.forms.map((form, index) => (

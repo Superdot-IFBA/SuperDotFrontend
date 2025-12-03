@@ -19,7 +19,7 @@ const colors = ['#143059', '#2F6B9A', '#82a6c2', '#FF6B6B', '#4ECDC4', '#FFD700'
 const WordCloudGenerator: React.FC<WordCloudGeneratorProps> = ({ textBio = [] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 300, height: 300 });
+  const [dimensions, setDimensions] = useState({ width: 500, height: 300 });
   const [spiralType, setSpiralType] = useState<'archimedean' | 'rectangular'>('archimedean');
   const [withRotation, setWithRotation] = useState(false);
 
@@ -76,18 +76,34 @@ const WordCloudGenerator: React.FC<WordCloudGeneratorProps> = ({ textBio = [] })
   const exitFullScreen = () => {
     if (document.fullscreenElement) {
       document.exitFullscreen();
-      setDimensions({ width: 300, height: 300 });
-
     }
-    setIsFullScreen(false)
+    setDimensions({ width: 500, height: 300 });
+    setIsFullScreen(false);
 
   };
 
   useEffect(() => {
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        exitFullScreen();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+
+  }, []);
+
+
+  useEffect(() => {
     const handleResize = () => {
       if (!document.fullscreenElement && containerRef.current) {
-        setDimensions({ width: 300, height: 300 });
-        containerRef.current.style.width = '300px';
+        setDimensions({ width: 500, height: 300 });
+        containerRef.current.style.width = '500px';
         containerRef.current.style.height = '300px';
       }
     };
@@ -178,8 +194,6 @@ const WordCloudGenerator: React.FC<WordCloudGeneratorProps> = ({ textBio = [] })
             Fechar Tela Cheia
           </button>
         )}
-
-
 
       </div>
 

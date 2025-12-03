@@ -11,7 +11,7 @@ import { ISecondSource } from "../../interfaces/secondSource.interface";
 import { DeepPartial } from "react-hook-form";
 import ParticipantsIndicationForm from "../../components/ParticipantsIndicationForm/ParticipantsIndicationForm";
 import { getSampleById } from "../../api/sample.api";
-import { DataList, Flex, IconButton, Separator, Strong, Table, Text, Tooltip } from "@radix-ui/themes";
+import { DataList, Flex, IconButton, Separator, Badge, Table, Text, Tooltip } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
 import { Button } from "../../components/Button/Button";
 import EmptyState from "../../components/EmptyState/EmptyState";
@@ -37,6 +37,26 @@ const ParticipantsRegistration = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+    const getFirstAndLastName = (fullName: string) => {
+        const names = fullName.split(' ');
+        if (names.length > 1) {
+            return `${names[0]} ${names[names.length - 1]}`;
+        } else {
+            return fullName;
+        }
+    };
+
+    const badgeColorMap: Record<
+        ReturnType<typeof getFormFillStatus>,
+        "yellow" | "green"
+    > = {
+        "Não iniciado": "yellow",
+        "Preenchendo": "yellow",
+        "Aguardando 2ª fonte": "yellow",
+        "Finalizado": "green",
+    };
 
     useEffect(() => {
         const getSampleInfo = async (sampleId: string) => {
@@ -198,18 +218,19 @@ const ParticipantsRegistration = () => {
                 <SkeletonHeader />
             ) : (
                 <>
-                    <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
-                        <h2 className="heading-2 font-semibold text-gray-900">
-                            Gerenciamento de Participantes
+                    <header className="pb-3 pt-4">
+                        <h2 className="heading-2 font-semibold text-gray-900 text-left max-sm:text-center">
+                            <Badge size={'3'} color="violet" radius='large'>
+                                <Icon.ChartBar size={25} weight="duotone" className="text-primary inline-block mr-2" />
+                                Amostra: {sample.sampleTitle}
+                            </Badge>
                         </h2>
-                        <p className="text-lg text-gray-600">
-                            Amostra: <Strong className="text-primary-600 !font-roboto">{sample?.sampleGroup}</Strong>
-                        </p>
                     </header>
+
                 </>)
             }
 
-            <div className="card-container p-5 ">
+            <div className="card-container p-5 mb-5">
                 {loading ? (
                     <SkeletonURLCard />
                 ) : (
@@ -220,7 +241,7 @@ const ParticipantsRegistration = () => {
                         </Flex>
 
                         <Flex align="center" gap="3" className={`${copied ? "bg-confirm" : "bg-violet-200"} p-3 rounded`}>
-                            <Text className="text-ellipsis overflow-hidden whitespace-nowrap flex-1 bg-gray-50 rounded p-2">
+                            <Text className="text-ellipsis overflow-hidden flex-1 bg-gray-50 rounded p-2 break-all text-sm">
                                 {urlParticipantForm}
                             </Text>
                             <Tooltip content="Copiar URL">
@@ -238,7 +259,6 @@ const ParticipantsRegistration = () => {
                                             height={20}
                                         />
 
-                                        {/* Ícone de check */}
                                         <Icon.Check
                                             className={`absolute inset-0  transition-opacity duration-300 ${copied ? "opacity-100" : "opacity-0"}`}
                                             width={20}
@@ -251,7 +271,6 @@ const ParticipantsRegistration = () => {
 
                         <Separator size="4" />
 
-                        {/* Estatísticas com Layout Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <StatItem
                                 icon={<Icon.Users size={20} />}
@@ -271,12 +290,11 @@ const ParticipantsRegistration = () => {
                                 value={(sample?.qttParticipantsAuthorized || 0) - (sample?.participants?.length || 0)} background={"bg-amber-200"} />
                             {sample?.participants?.length !== sample?.qttParticipantsAuthorized && (
                                 <Button
-
                                     size="Large"
-
                                     className="w-full md:w-auto bg-am"
                                     children={<Icon.PlusCircle size={20} />}
-                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Participantes"} color={"green"}                                >
+                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Participantes"}
+                                    color={"green"}                                >
 
 
                                 </Button>
@@ -298,6 +316,8 @@ const ParticipantsRegistration = () => {
                     pageSize={PAGE_SIZE}
                     totalCount={sample?.participants?.length || 0}
                     onPageChange={setCurrentPage}
+                    expandedParticipants={expanded}
+                    setExpandedParticipants={setExpanded}
                 />
 
             </div>
@@ -314,7 +334,6 @@ const ParticipantsRegistration = () => {
                 />
             </Modal>
 
-            {/* Modal de Segundas Fontes */}
             <Modal
                 open={modalSecondSourcesOpen}
                 setOpen={setModalSecondSourcesOpen}
@@ -322,80 +341,170 @@ const ParticipantsRegistration = () => {
                 {currentParticipant?.secondSources?.length ? (
                     <>
 
-                        <Table.Root className="hidden md:table">
-                            <Table.Header className="bg-gray-50">
-                                <Table.Row>
+                        <Table.Root variant="ghost" className="w-full rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden desktop">
+                            <Table.Header className="text-[18px] bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-sm">
+                                <Table.Row className="border-b border-blue-200/30">
+                                    <Table.ColumnHeaderCell colSpan={5} className="py-4">
+                                        <Flex align="center" justify="center" gap="3" className="text-blue-900">
+                                            <Icon.Users size={22} weight="bold" />
+                                            <Text weight="bold" size="4">Segundas Fontes do Participante</Text>
+                                        </Flex>
+                                    </Table.ColumnHeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Header className="text-[16px] bg-gradient-to-r from-gray-50 to-gray-100/30">
+                                <Table.Row align="center" className="text-center border-b border-gray-200/50">
                                     {["Nome", "Status", "Relação", "Início", "Término"].map((header) => (
-                                        <Table.ColumnHeaderCell key={header} className="font-semibold">
-                                            {header}
+                                        <Table.ColumnHeaderCell
+                                            key={header}
+                                            className="border-r border-gray-200/30 py-3 font-semibold text-gray-800 last:border-r-0"
+                                        >
+                                            <Flex align="center" justify="center" gap="2">
+                                                {header === "Nome"}
+                                                {header === "Status"}
+                                                {header === "Relação"}
+                                                {header === "Início"}
+                                                {header === "Término"}
+                                                {header}
+                                            </Flex>
                                         </Table.ColumnHeaderCell>
                                     ))}
                                 </Table.Row>
                             </Table.Header>
-                            <Table.Body>
+
+                            <Table.Body className="bg-white/50 backdrop-blur-sm">
                                 {currentParticipant.secondSources.map((secondSource) => (
-                                    <Table.Row key={secondSource._id} className="hover:bg-gray-50" align="center">
-                                        <Table.Cell justify="center">{secondSource.personalData?.fullName}</Table.Cell>
-                                        <Table.Cell justify="center">{getFormFillStatus(secondSource)}</Table.Cell>
-                                        <Table.Cell justify="center">{secondSource.personalData?.relationship}</Table.Cell>
-                                        <Table.Cell justify="center"> {secondSource.adultForm?.startFillFormAt
-                                            ? DateTime.fromISO(secondSource.adultForm.startFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
-                                            : "Não iniciado"}</Table.Cell>
-                                        <Table.Cell justify="center"> {secondSource.adultForm?.endFillFormAt
-                                            ? DateTime.fromISO(secondSource.adultForm.endFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
-                                            : "Não finalizado"}</Table.Cell>
+                                    <Table.Row
+                                        key={secondSource._id}
+                                        align="center"
+                                        className="border-b border-gray-100/30 hover:bg-blue-50/30 transition-colors duration-200"
+                                    >
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text weight="medium" className="text-gray-900">
+                                                {secondSource.personalData?.fullName}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+
+                                            <Badge
+                                                size="1"
+                                                color={badgeColorMap[getFormFillStatus(secondSource)]}
+                                                className="font-semibold"
+                                            >
+                                                {getFormFillStatus(secondSource)}
+                                            </Badge>
+
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text weight="medium" className="text-gray-700">
+                                                {secondSource.personalData?.relationship}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                            <Text size="2" className="text-gray-600">
+                                                {secondSource.adultForm?.startFillFormAt
+                                                    ? DateTime.fromISO(secondSource.adultForm.startFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
+                                                    : "Não iniciado"}
+                                            </Text>
+                                        </Table.Cell>
+
+                                        <Table.Cell justify="center" className="py-4">
+                                            <Text size="2" className="text-gray-600">
+                                                {secondSource.adultForm?.endFillFormAt
+                                                    ? DateTime.fromISO(secondSource.adultForm.endFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
+                                                    : "Não finalizado"}
+                                            </Text>
+                                        </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>
                         </Table.Root>
 
-                        {/* Cards Mobile */}
                         <div className="mobo">
-                            <DataList.Root orientation={"vertical"} className="!font-roboto " >
-                                <DataList.Item >
-                                    <p className="text-[16px] font-bold text-center  border-b-black">Informações do participante Segunda fonte</p>
-                                    {currentParticipant?.secondSources?.map((secondSource) => (
-                                        <div className="w-full p-2 rounded-lg card-container mb-5 " key={secondSource._id}>
-
-
-                                            <DataList.Label minWidth="88px" >Nome</DataList.Label>
-
-                                            <DataList.Value >{secondSource.personalData?.fullName}</DataList.Value>
-                                            <Separator size={"4"} className="mb-2 mt-2" />
-                                            <DataList.Label minWidth="88px">Andamento</DataList.Label>
-
-                                            <DataList.Value >
-                                                {getFormFillStatus(secondSource)}
-                                            </DataList.Value>
-                                            <Separator size={"4"} className="mb-2 mt-2" />
-                                            <DataList.Label minWidth="88px">Relação</DataList.Label>
-
-                                            <DataList.Value >
-                                                {secondSource.personalData?.relationship}
-                                            </DataList.Value>
-                                            <Separator size={"4"} className="mb-2 mt-2" />
-                                            <DataList.Label minWidth="88px">Data de início</DataList.Label>
-
-                                            <DataList.Value >
-                                                {secondSource.adultForm?.startFillFormAt
-                                                    ? DateTime.fromISO(secondSource.adultForm.startFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
-                                                    : "Não iniciado"}
-                                            </DataList.Value>
-                                            <Separator size={"4"} className="mb-2 mt-2" />
-                                            <DataList.Label minWidth="88px">Data de finalização</DataList.Label>
-
-                                            <DataList.Value >
-                                                {secondSource.adultForm?.endFillFormAt
-                                                    ? DateTime.fromISO(secondSource.adultForm.endFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
-                                                    : "Não finalizado"}
-                                            </DataList.Value>
+                            <DataList.Root orientation="vertical" className="!font-roboto p-2">
+                                {currentParticipant?.secondSources?.map((secondSource, index) => (
+                                    <DataList.Item
+                                        key={secondSource._id || index}
+                                        className="w-full rounded-2xl mb-4 transition-all duration-300 ease-out transform
+                    bg-gradient-to-br from-white to-blue-50 shadow-sm hover:shadow-md 
+                    border border-blue-200/80 backdrop-blur-sm overflow-hidden
+                    hover:border-blue-300/60"
+                                    >
+                                        <div className="bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-t-xl px-4 py-3 border-b border-blue-100/50">
+                                            <p className="text-[17px] font-semibold text-center text-blue-900 tracking-tight flex items-center justify-center gap-2">
+                                                <Icon.Users size={20} weight="bold" />
+                                                Segunda Fonte
+                                            </p>
                                         </div>
-                                    ))}
-                                </DataList.Item>
 
+                                        <div className="p-4">
+                                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                                <div className="space-y-1">
+                                                    <DataList.Label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Nome</DataList.Label>
+                                                    <DataList.Value className="text-sm font-semibold text-gray-900">
+                                                        {getFirstAndLastName(secondSource.personalData?.fullName || '')}
+                                                    </DataList.Value>
+                                                </div>
+
+                                                <div className="space-y-1">
+                                                    <DataList.Label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Status</DataList.Label>
+                                                    <DataList.Value className="text-sm font-semibold">
+                                                        <Badge
+                                                            size="1"
+                                                            color={badgeColorMap[getFormFillStatus(secondSource)]}
+                                                            className="font-semibold"
+                                                        >
+                                                            {getFormFillStatus(secondSource)}
+                                                        </Badge>
+
+                                                    </DataList.Value>
+                                                </div>
+
+                                                <div className="space-y-1">
+                                                    <DataList.Label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Relação</DataList.Label>
+                                                    <DataList.Value className="text-sm font-semibold text-gray-900">
+                                                        {secondSource.personalData?.relationship}
+                                                    </DataList.Value>
+                                                </div>
+                                            </div>
+
+                                            <Separator size="4" className="bg-gray-200/50 mb-4" />
+
+                                            <div className="grid grid-cols-1 gap-3">
+                                                <div className="space-y-1">
+                                                    <DataList.Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                        <Icon.Play size={16} weight="bold" />
+                                                        Data de Início
+                                                    </DataList.Label>
+                                                    <DataList.Value className="text-sm text-gray-600">
+                                                        {secondSource.adultForm?.startFillFormAt
+                                                            ? DateTime.fromISO(secondSource.adultForm.startFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
+                                                            : "Não iniciado"}
+                                                    </DataList.Value>
+                                                </div>
+
+                                                <Separator size="2" className="bg-gray-200/30" />
+
+                                                <div className="space-y-1">
+                                                    <DataList.Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                                        <Icon.Stop size={16} weight="bold" />
+                                                        Data de Finalização
+                                                    </DataList.Label>
+                                                    <DataList.Value className="text-sm text-gray-600">
+                                                        {secondSource.adultForm?.endFillFormAt
+                                                            ? DateTime.fromISO(secondSource.adultForm.endFillFormAt).toFormat("dd/LL/yyyy - HH:mm")
+                                                            : "Não finalizado"}
+                                                    </DataList.Value>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </DataList.Item>
+                                ))}
                             </DataList.Root>
-
-
                         </div>
 
                     </>

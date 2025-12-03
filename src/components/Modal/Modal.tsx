@@ -1,5 +1,5 @@
 import * as Icon from "@phosphor-icons/react";
-import { AlertDialog } from "@radix-ui/themes";
+import { AlertDialog, Dialog, ScrollArea } from "@radix-ui/themes";
 import { Button } from "../Button/Button";
 
 interface ModalProps extends React.PropsWithChildren {
@@ -9,7 +9,7 @@ interface ModalProps extends React.PropsWithChildren {
     accessibleDescription: string;
     className?: string;
     classNameChildren?: string;
-    onclickCancel?: () => void
+    onclickCancel?: () => void;
 }
 
 const Modal = ({
@@ -23,26 +23,53 @@ const Modal = ({
     onclickCancel
 }: ModalProps) => {
     return (
-        <AlertDialog.Root open={open} onOpenChange={setOpen}>
-            <AlertDialog.Content className={`relative bg-white rounded-md !p-0 z-50 ${className} !font-roboto`}>
-                <AlertDialog.Cancel className="absolute top-2 right-2 !font-roboto">
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+            <Dialog.Content className={`relative bg-white rounded-md !p-0 z-50 ${className} !font-roboto fixed w-[95vw] max-w-[900px]  overflow-hidden`}>
+                <Dialog.Close className="absolute top-2 right-2 !font-roboto z-10">
                     <Button
                         className="hover:cursor-pointer"
-                        aria-label="Close modal" title={""} color={"red"} size={"Small"}
-                        onClick={onclickCancel}>
+                        aria-label="Close modal"
+                        title={""}
+                        color={"red"}
+                        size={"Small"}
+                        onClick={onclickCancel}
+                    >
                         <Icon.X size={20} weight="bold" />
                     </Button>
-                </AlertDialog.Cancel>
+                </Dialog.Close>
 
+                <div className="flex flex-col h-full">
+                    <div className="flex-shrink-0">
+                        <Dialog.Title
+                            className={`text-xl font-bold max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 max-sm:py-4 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}
+                        >
+                            {title}
+                        </Dialog.Title>
 
-                <AlertDialog.Title className={`text-xl font-bold max-sm:!text-[18px] text-white !font-roboto bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-6 w-full flex justify-center items-center ${title ? '' : 'hidden'}`}>{title}</AlertDialog.Title>
+                        <Dialog.Description
+                            className={`${accessibleDescription ? '' : 'hidden'} px-6 py-4 !font-roboto text-sm max-sm:text-xs border-b`}
+                        >
+                            {accessibleDescription}
+                        </Dialog.Description>
+                    </div>
 
-                <AlertDialog.Description className={`${accessibleDescription ? '' : 'hidden'} px-6  mb-6 !font-roboto text-sm max-sm:text-xs`}>
-                    {accessibleDescription}
-                </AlertDialog.Description>
-                <div className={`px-6 pt-0 mb-6 ${classNameChildren}`}>{children}</div>
-            </AlertDialog.Content>
-        </AlertDialog.Root>
+                    <ScrollArea
+                        type="auto"
+                        scrollbars="vertical"
+                        className="flex-1"
+                        style={{
+                            height: '100%',
+                            maxHeight: 'calc(85vh - 120px)'
+                        }}
+                    >
+                        <div className={`px-6 py-4 max-sm:px-2 ${classNameChildren}`}>
+                            {children}
+                        </div>
+                    </ScrollArea>
+
+                </div>
+            </Dialog.Content>
+        </Dialog.Root>
     );
 };
 

@@ -343,6 +343,7 @@ const AnalysisPage = () => {
         setOpenModal(true)
         return;
     }
+
     const handleShowKAG = (participantID: string) => {
         const participant = sample.participants?.find(p => p._id === participantID);
         if (participant) {
@@ -446,8 +447,6 @@ const AnalysisPage = () => {
 
     ];
 
-    const showFilters = isDesktop || showSearch;
-
     const CloudWord = [
         { title: "Respostas subjetivas", value: "RES-SUB" },
         { title: "Autobiografia", value: "AUT-BIO" },
@@ -490,7 +489,7 @@ const AnalysisPage = () => {
 
     return (
 
-        <Box className="overflow-y-auto px-1 pb-8 analyse-page">
+        <Box className=" px-1 pb-8 analyse-page">
 
             <Notify
                 open={!!notificationData.title}
@@ -539,8 +538,6 @@ const AnalysisPage = () => {
                     </>
                 )
             }
-
-
 
             <Box className="w-full m-auto">
                 {isDesktop ? (
@@ -616,7 +613,6 @@ const AnalysisPage = () => {
                 )}
             </Box>
 
-
             <Flex gap="2" mt="4" justify="center" align="center">
 
                 <Pagination
@@ -627,6 +623,7 @@ const AnalysisPage = () => {
                 />
 
             </Flex>
+
             <GridComponent
                 className="gap-5 mt-5 m-auto w-full  max-xl:p-2"
                 children={
@@ -647,7 +644,6 @@ const AnalysisPage = () => {
                 columns={2}>
 
             </GridComponent>
-
 
         </Box>
 

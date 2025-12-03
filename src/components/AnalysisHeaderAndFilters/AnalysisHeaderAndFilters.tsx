@@ -196,13 +196,13 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
         <Modal
           open={openModalCompare}
           setOpen={setOpenModalCompare}
-          title="Comparação de Participantes"
+          title="Seleção necessária"
           accessibleDescription=""
         >
           <EmptyState
             icon={<Icon.UsersThree size={48} weight="bold" className="text-violet-600" />}
-            title="Seleção necessária"
-            description="Para comparar as respostas entre os avaliados, você deve selecionar pelo menos um participante."
+            title=""
+            description="Para comparar as respostas entre os avaliados ou gerar nuvens de palavras, você deve selecionar pelo menos um participante."
           />
         </Modal>
 
@@ -286,7 +286,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
             </Flex>
 
             {showNewComponent && (
-              <div className="space-y-6 mt-6">
+              <div className="space-y-2 mt-2">
                 {CloudWord.map((item, index) => {
                   if (isCheckedWC[index]) {
                     switch (item.value) {
@@ -315,7 +315,7 @@ const AnalysisHeaderAndFilters: React.FC<AnalysisHeaderAndFiltersProps> = ({
                         return (
                           <Box key={index} className="xl:w-full m-auto">
                             <p className="text-lg font-bold text-center mb-4">
-                              Autobiografia / Quantidade de Avaliados: {selectedParticipants.length}
+                              Autobiografia / Quantidade de Avaliados: {selectedParticipants.filter((participant) => participant.autobiography?.text).length}
                             </p>
                             <WordCloudGenerator
                               textBio={selectedParticipants.map((participant) => participant.autobiography?.text || '')}

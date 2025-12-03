@@ -58,7 +58,16 @@ const SamplesTable = ({
             </Flex>
 
             <Table.Root variant="ghost" className="w-full m-auto desktop rounded-2xl border border-gray-200/50 shadow-sm overflow-hidden">
-                {/* Header com gradiente */}
+                <Table.Header className="text-[15px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
+                    <Table.Row className="border-b border-violet-200/30">
+                        <Table.ColumnHeaderCell align="center" colSpan={7} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
+                            <Flex align="center" justify="center" gap="2">
+                                Lista de Solicitações
+                            </Flex>
+                        </Table.ColumnHeaderCell>
+
+                    </Table.Row>
+                </Table.Header>
                 <Table.Header className="text-[15px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
                     <Table.Row className="border-b border-violet-200/30">
                         <Table.ColumnHeaderCell align="center" colSpan={1} className="border-r border-violet-200/30 py-4 font-semibold text-violet-900">
@@ -138,42 +147,28 @@ const SamplesTable = ({
                                             {sample.sampleName}
                                         </Text>
                                         <Text size="1" className="text-gray-500 mt-1">
-                                            Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
+                                            Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
                                         </Text>
                                     </Flex>
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
-                                    <Text size="2" className="">
-                                        {sample.cepCode}
-                                    </Text>
+                                    {sample.cepCode}
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+
+                                    {sample.qttParticipantsRequested}
+                                </Table.Cell>
+                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
+                                    {sample.qttParticipantsAuthorized}
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
                                     <Badge
                                         size="1"
-                                        variant="soft"
-                                        color="orange"
-                                        className="bg-orange-100 text-orange-700 border-orange-200 font-semibold"
-                                    >
-                                        {sample.qttParticipantsRequested}
-                                    </Badge>
-                                </Table.Cell>
-                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
-                                    <Badge
-                                        size="1"
-                                        variant="soft"
-                                        color="green"
-                                        className="bg-green-100 text-green-700 border-green-200 font-semibold"
-                                    >
-                                        {sample.qttParticipantsAuthorized}
-                                    </Badge>
-                                </Table.Cell>
-                                <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
-                                    <Badge
-                                        size="1"
-                                        variant="soft"
+                                        variant="solid"
                                         color={`${sample.currentStatus === 'Autorizado' ? 'grass' :
                                             sample.currentStatus === 'Pendente' ? 'amber' : 'red'
                                             }`}
+                                        className="w-full justify-center"
                                     >
                                         {sample.currentStatus}
                                     </Badge>
@@ -187,7 +182,7 @@ const SamplesTable = ({
                                                 color="violet"
                                                 radius="full"
                                                 onClick={() => onClickToReviewSample(sample.sampleId)}
-                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                                className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                                             >
                                                 <Icon.Pencil size={14} weight="bold" />
                                             </IconButton>
@@ -199,7 +194,7 @@ const SamplesTable = ({
                                                 color="blue"
                                                 radius="full"
                                                 onClick={() => onClickToViewSampleReviews(sample)}
-                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                                className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                                             >
                                                 <Icon.MagnifyingGlass size={14} weight="bold" />
                                             </IconButton>
@@ -211,7 +206,7 @@ const SamplesTable = ({
                                                 color="amber"
                                                 radius="full"
                                                 onClick={() => onClickToViewSampleAttachments(sample.files)}
-                                                className="cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
+                                                className="!cursor-pointer transition-all hover:scale-110 hover:shadow-sm"
                                             >
                                                 <Icon.Clipboard size={14} weight="bold" />
                                             </IconButton>
@@ -236,9 +231,7 @@ const SamplesTable = ({
                 )}
             </Table.Root>
 
-            {/* Versão Mobile */}
             <div className="w-full mobo">
-                {/* Filtro Mobile */}
                 <div className="bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-2xl p-4 border border-violet-200/30 shadow-sm mb-4">
                     <Flex justify="center" align="center" gap="3">
                         <Icon.Funnel size={18} weight="bold" className="text-violet-600" />
@@ -270,9 +263,9 @@ const SamplesTable = ({
                             <DataList.Item
                                 key={sample.sampleId}
                                 className="w-full rounded-2xl mb-4 transition-all duration-500 ease-out transform
-            bg-gradient-to-br from-white to-violet-50 shadow-sm hover:shadow-md 
-            border border-violet-200/80 backdrop-blur-sm overflow-hidden
-            hover:border-violet-300/60"
+                                bg-gradient-to-br from-white to-violet-50 shadow-sm hover:shadow-md 
+                                border border-violet-200/80 backdrop-blur-sm overflow-hidden
+                                hover:border-violet-300/60"
                             >
                                 {/* Header com gradiente */}
                                 <div className="bg-gradient-to-r from-violet-500/5 to-purple-500/5 rounded-t-xl px-4 py-3 border-b border-violet-100/50">
@@ -307,26 +300,24 @@ const SamplesTable = ({
                                                         {sample.sampleName}
                                                     </Text>
                                                     <Text size="1" className="text-gray-500 mt-1">
-                                                        Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy")}
+                                                        Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
                                                     </Text>
                                                 </Flex>
                                             </DataList.Value>
                                         </div>
 
-                                        {/* CAAE */}
                                         <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-violet-100 shadow-sm">
                                             <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2">
                                                 <Icon.Certificate size={16} weight="bold" />
                                                 CAAE:
                                             </DataList.Label>
                                             <DataList.Value>
-                                                <Badge size="1" variant="soft" className="bg-blue-100 text-blue-700 border-blue-200 font-mono">
+                                                <Badge size="1" variant="soft" color="violet">
                                                     {sample.cepCode}
                                                 </Badge>
                                             </DataList.Value>
                                         </div>
 
-                                        {/* Participantes */}
                                         <div className="grid grid-cols-2 gap-3">
                                             <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-orange-100 shadow-sm">
                                                 <DataList.Label className="font-semibold text-gray-700 text-sm">
@@ -344,7 +335,6 @@ const SamplesTable = ({
                                                     size="1"
                                                     variant="soft"
                                                     color="green"
-                                                    className="bg-green-100 text-green-700 border-green-200 font-semibold"
                                                 >
                                                     {sample.qttParticipantsAuthorized}
                                                 </Badge>

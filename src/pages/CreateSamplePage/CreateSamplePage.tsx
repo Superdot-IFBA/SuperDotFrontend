@@ -17,6 +17,7 @@ import { validateFiles } from "../../validators/fileValidator";
 import { CustomFileError } from "../../errors/fileErrors";
 import * as Icon from "@phosphor-icons/react";
 import { Button } from "../../components/Button/Button";
+import { Badge, Text } from "@radix-ui/themes";
 
 const CreateSamplePage = () => {
     const [sampleFiles, setSampleFiles] = useState<SampleFile[]>(FILES_AVAILABLE_TO_CREATE_SAMPLE);
@@ -169,16 +170,22 @@ const CreateSamplePage = () => {
             />
 
 
-            <div className="container mx-auto px-4">
-                <header className="pt-8 pb-6 border-b border-gray-200 mb-8">
-                    <h2 className="heading-2 font-semibold text-gray-900">
-                        Grupo selecionado: {groupSelected}
+            <div className="container mx-auto">
+                <header className="pb-5 pt-3">
+                    <h2 className="heading-2 font-semibold text-gray-900 flex max-sm:flex-col gap-2 text-left max-sm:text-center max-sm:items-center">
+                        <Text className="text-neutral-600 text-lg max-sm:text-[20px]">
+                            Grupo selecionado:
+                        </Text>
+                        <Badge size={'1'} color="violet" radius='large' className="font-semibold w-fit">
+                            <Icon.UsersThree weight="bold" size={25} className="text-violet-600" />
+                            {groupSelected}
+                        </Badge>
                     </h2>
                 </header>
 
                 <Form.Root
                     onSubmit={onSubmit}
-                    className="mb-6  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full"
+                    className="mb-6  opacity-0 animate-fade-in animate-delay-100 animate-fill-forwards max-sm:w-full card-container p-4"
                 >
                     <h3 className="text-left text-primary animate-fade-in animate-delay-200">
                         Detalhes da Amostra
