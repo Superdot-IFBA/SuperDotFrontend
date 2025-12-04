@@ -245,7 +245,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                       size="2"
                       variant="soft"
                       color={`${participant.adultForm?.giftednessIndicators ? 'green' : 'red'}`}
-                      className={`w-full justify-center border ${participant.adultForm?.giftednessIndicators ? ' !border-green-500' : '!border-red-500'}`}
+                      className={`!px-6 justify-center border ${participant.adultForm?.giftednessIndicators ? ' !border-green-500' : '!border-red-500'}`}
                     >
                       {participant.adultForm?.giftednessIndicators ? "Sim" : "Não"}
                     </Badge>
@@ -293,11 +293,28 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                     <Flex direction="row" align="center" justify="center" gap="3">
                       <Badge
                         size="2"
-                        variant="soft"
-                        color={`${participant.giftdnessIndicatorsByResearcher ? 'green' : 'red'}`}
-                        className={`w-full justify-center border ${participant.giftdnessIndicatorsByResearcher ? ' !border-green-500' : '!border-red-500'}`}
+                        color={
+                          participant.giftdnessIndicatorsByResearcher === true
+                            ? "green"
+                            : participant.giftdnessIndicatorsByResearcher === false
+                              ? "red"
+                              : "gray"
+                        }
+                        className={`
+    !px-6 justify-center font-semibold border 
+    ${participant.giftdnessIndicatorsByResearcher === true
+                            ? "border-emerald-500"
+                            : participant.giftdnessIndicatorsByResearcher === false
+                              ? "border-red-500"
+                              : "border-gray-400 !px-4 !w-fit"
+                          }
+  `}
                       >
-                        {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                        {participant.giftdnessIndicatorsByResearcher === true
+                          ? "Sim"
+                          : participant.giftdnessIndicatorsByResearcher === false
+                            ? "Não"
+                            : "À definir"}
                       </Badge>
                       <IconButton
                         size="2"

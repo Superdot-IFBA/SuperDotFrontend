@@ -104,11 +104,28 @@ export const ParticipantBasicInfo: React.FC<ParticipantBasicInfoProps> = ({
                       <p className="text-xs text-gray-600 mb-2">Pesquisador</p>
                       <Badge
                         size="2"
-                        variant='surface'
-                        color={`${participant.giftdnessIndicatorsByResearcher ? 'green' : 'red'}`}
-
+                        color={
+                          participant.giftdnessIndicatorsByResearcher === true
+                            ? "grass"
+                            : participant.giftdnessIndicatorsByResearcher === false
+                              ? "red"
+                              : "gray"
+                        }
+                        className={`
+    w-full justify-center font-semibold border 
+    ${participant.giftdnessIndicatorsByResearcher === true
+                            ? "border-emerald-500"
+                            : participant.giftdnessIndicatorsByResearcher === false
+                              ? "border-red-500"
+                              : "border-gray-400"
+                          }
+  `}
                       >
-                        {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                        {participant.giftdnessIndicatorsByResearcher === true
+                          ? "Sim"
+                          : participant.giftdnessIndicatorsByResearcher === false
+                            ? "Não"
+                            : "À definir"}
                       </Badge>
                     </div>
                   </div>

@@ -356,13 +356,27 @@ const SecondsSourceCompare = () => {
                                         <Table.Cell justify="center" className="py-4">
                                             <Badge
                                                 size="2"
-                                                color={`${participant.giftdnessIndicatorsByResearcher ? 'grass' : 'red'}`}
-                                                className={`w-full justify-center font-semibold border ${participant.giftdnessIndicatorsByResearcher
-                                                    ? ' border-emerald-500'
-                                                    : ' border-red-500'
-                                                    }`}
+                                                color={
+                                                    participant.giftdnessIndicatorsByResearcher === true
+                                                        ? "grass"
+                                                        : participant.giftdnessIndicatorsByResearcher === false
+                                                            ? "red"
+                                                            : "gray"
+                                                }
+                                                className={`w-full justify-center font-semibold border
+                                                    ${participant.giftdnessIndicatorsByResearcher === true
+                                                        ? "border-emerald-500"
+                                                        : participant.giftdnessIndicatorsByResearcher === false
+                                                            ? "border-red-500"
+                                                            : "border-gray-400"
+                                                    }
+                                                    `}
                                             >
-                                                {participant.giftdnessIndicatorsByResearcher ? "Sim" : "Não"}
+                                                {participant.giftdnessIndicatorsByResearcher === true
+                                                    ? "Sim"
+                                                    : participant.giftdnessIndicatorsByResearcher === false
+                                                        ? "Não"
+                                                        : "À definir"}
                                             </Badge>
                                         </Table.Cell>
                                     </Table.Row>
@@ -658,7 +672,7 @@ const SecondsSourceCompare = () => {
                                                             case "Sempre":
                                                             case "Frequentemente":
                                                                 return `${baseClass} bg-emerald-500 text-white border border-emerald-600 hover:bg-emerald-600`;
-                                                            case "Ás vezes":
+                                                            case "Às vezes":
                                                             case "Raramente":
                                                             case "Nunca":
                                                                 return `${baseClass} bg-red-500 text-white border border-red-600 hover:bg-red-600`;
@@ -691,7 +705,7 @@ const SecondsSourceCompare = () => {
                                                         case "Sempre":
                                                         case "Frequentemente":
                                                             return `${baseClass} bg-emerald-500 text-white border border-emerald-600 hover:bg-emerald-600`;
-                                                        case "Ás vezes":
+                                                        case "Às vezes":
                                                         case "Raramente":
                                                         case "Nunca":
                                                             return `${baseClass} bg-red-500 text-white border border-red-600 hover:bg-red-600`;
@@ -823,7 +837,7 @@ const SecondsSourceCompare = () => {
                                                                     case "Sempre":
                                                                     case "Frequentemente":
                                                                         return `${baseClass} bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm`;
-                                                                    case "Ás vezes":
+                                                                    case "Às vezes":
                                                                     case "Raramente":
                                                                     case "Nunca":
                                                                         return `${baseClass} bg-red-100 text-red-800 border border-red-200 shadow-sm`;
@@ -863,7 +877,7 @@ const SecondsSourceCompare = () => {
                                                                     case "Sempre":
                                                                     case "Frequentemente":
                                                                         return `${baseClass} bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm`;
-                                                                    case "Ás vezes":
+                                                                    case "Às vezes":
                                                                     case "Raramente":
                                                                     case "Nunca":
                                                                         return `${baseClass} bg-red-100 text-red-800 border border-red-200 shadow-sm`;

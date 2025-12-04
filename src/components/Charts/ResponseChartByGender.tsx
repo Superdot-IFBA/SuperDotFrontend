@@ -44,7 +44,7 @@ const ResponseChartByGender: React.FC<ResponseChartByGenderProps> = ({ participa
                   sempreFeminino++;
                 }
                 break;
-              case 'Ás vezes':
+              case 'Às vezes':
                 if (participant.personalData.gender === "Masculino") {
                   asvezesMasculino++;
                 } else if (participant.personalData.gender === "Feminino") {
@@ -132,7 +132,7 @@ const ResponseChartByGender: React.FC<ResponseChartByGenderProps> = ({ participa
       },
     },
     xaxis: {
-      categories: ['Frequentemente', 'Sempre', 'Ás vezes', 'Raramente', 'Nunca'],
+      categories: ['Frequentemente', 'Sempre', 'Às vezes', 'Raramente', 'Nunca'],
     },
     legend: {
       position: 'right',
