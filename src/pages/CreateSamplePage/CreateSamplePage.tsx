@@ -242,7 +242,9 @@ const CreateSamplePage = () => {
                                 errorMessage={errors.countryRegion?.message}
                                 {...register("countryRegion")}
                                 className="md:flex-1 w-full md:w-auto mb-2"
+                                defaultValue={""}
                             >
+                                <option value="">Selecione uma região</option>
                                 <option value="Norte">Norte</option>
                                 <option value="Nordeste">Nordeste</option>
                                 <option value="Centro-Oeste">Centro-Oeste</option>
@@ -274,7 +276,7 @@ const CreateSamplePage = () => {
                         <h3 className="text-left text-primary">Instituição da Amostra</h3>
                         <Separator.Root className="my-6 h-px w-full bg-black animate-grow-width" />
 
-                        <div className="flex justify-center gap-2 max-lg:flex-col">
+                        <div className="flex justify-center gap-2 max-lg:flex-col max-lg:mb-4">
                             <InputField
                                 label="NOME"
                                 required={true}
@@ -283,12 +285,14 @@ const CreateSamplePage = () => {
                             />
 
                             <SelectField
-                                className="max-sm:mb-12"
+                                className2="w-[300px]"
                                 label="TIPO"
                                 required={true}
+                                defaultValue=""
                                 errorMessage={errors.instituition?.instType?.message}
                                 {...register("instituition.instType")}
                             >
+                                <option value="">Selecione</option>
                                 <option>Pública</option>
                                 <option>Particular</option>
                             </SelectField>
@@ -301,7 +305,7 @@ const CreateSamplePage = () => {
                         sampleFiles={sampleFiles}
                         setSampleFiles={setSampleFiles}
                     />
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-500 mt-5">
                         <span className="text-red-500">*</span> Campos obrigatórios
                     </div>
                     <Form.Submit asChild className="mt-10">

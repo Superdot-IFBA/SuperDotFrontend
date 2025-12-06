@@ -301,12 +301,12 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
                               : "gray"
                         }
                         className={`
-    !px-6 justify-center font-semibold border 
+     justify-center font-semibold border 
     ${participant.giftdnessIndicatorsByResearcher === true
-                            ? "border-emerald-500"
+                            ? "border-emerald-500 !px-6"
                             : participant.giftdnessIndicatorsByResearcher === false
-                              ? "border-red-500"
-                              : "border-gray-400 !px-4 !w-fit"
+                              ? "border-red-500 !px-6"
+                              : "border-gray-400 !px-4"
                           }
   `}
                       >

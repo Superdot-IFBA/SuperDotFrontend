@@ -19,6 +19,7 @@ import { GridComponent } from "../../components/Grid/Grid";
 import { Button } from "../../components/Button/Button";
 import { AnimatePresence, motion } from "framer-motion";
 import EmptyState from "../../components/EmptyState/EmptyState";
+import TruncatedText from "../../components/TruncatedText/TruncatedText";
 
 const MySamplesPage = () => {
     const {
@@ -371,14 +372,32 @@ const MySamplesPage = () => {
                                                     <span className="flex items-center gap-1.5 text-gray-600">
                                                         <Icon.ClipboardText size={13} /> Amostra:
                                                     </span>
-                                                    <span className="font-semibold truncate">{sample.sampleTitle}</span>
+                                                    <TruncatedText
+                                                        text={sample.sampleTitle}
+                                                        maxLength={20}
+                                                        className="text-gray-900 font-medium truncate"
+                                                    />
                                                 </div>
 
                                                 <div className="flex justify-between items-center px-2 py-1.5 border rounded-lg">
                                                     <span className="flex items-center gap-1.5 text-gray-600">
                                                         <Icon.MagnifyingGlass size={13} /> Pesquisa:
                                                     </span>
-                                                    <span className="font-semibold truncate">{sample.researchTitle}</span>
+                                                    <TruncatedText
+                                                        text={sample.researchTitle}
+                                                        maxLength={20}
+                                                        className="text-gray-900 font-medium truncate"
+                                                    />
+                                                </div>
+                                                <div className="flex justify-between items-center px-2 py-1.5 border rounded-lg">
+                                                    <span className="flex items-center gap-1.5 text-gray-600">
+                                                        <Icon.GraduationCap size={13} /> Instituição:
+                                                    </span>
+                                                    <TruncatedText
+                                                        text={sample.instituition.name}
+                                                        maxLength={20}
+                                                        className="text-gray-900 font-medium truncate"
+                                                    />
                                                 </div>
                                             </div>
 
@@ -408,7 +427,12 @@ const MySamplesPage = () => {
                                                 <span className="flex items-center gap-1.5 text-gray-600">
                                                     <Icon.Certificate size={13} /> CEP
                                                 </span>
-                                                {sample.researchCep.cepCode}
+                                                <TruncatedText
+                                                    text={sample.researchCep.cepCode}
+                                                    maxLength={20}
+                                                    className="text-gray-900 font-medium truncate"
+                                                />
+
                                             </div>
 
                                             <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-1">

@@ -6,6 +6,7 @@ import SkeletonTableBody from "../../Skeletons/SkeletonTableBody";
 import { useEffect, useState } from "react";
 import SkeletonDataList from "../../Skeletons/SkeletonDataList";
 import { Button } from "../../Button/Button";
+import TruncatedText from "../../TruncatedText/TruncatedText";
 
 
 interface UsersTableProps {
@@ -94,7 +95,11 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
                                     <Text weight="medium" className="text-gray-700">
-                                        {user.email}
+                                        <TruncatedText
+                                            text={user.email}
+                                            maxLength={20}
+                                            className="text-gray-900 font-medium truncate"
+                                        />
                                     </Text>
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4 ">
@@ -183,7 +188,11 @@ const UsersTable = ({ data, currentPage, setCurrentPage, onClickPencil }: UsersT
                                                 E-mail:
                                             </DataList.Label>
                                             <DataList.Value className="text-gray-700">
-                                                {user.email}
+                                                <TruncatedText
+                                                    text={user.email}
+                                                    maxLength={20}
+                                                    className="text-gray-900 font-medium truncate"
+                                                />
                                             </DataList.Value>
                                         </div>
 

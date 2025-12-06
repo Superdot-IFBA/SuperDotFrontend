@@ -20,7 +20,7 @@ export const PasswordValidationCard = ({ password }: { password: string }) => {
     },
     {
       label: 'Símbolo especial',
-      isValid: /[@$!%*?&]/.test(password),
+      isValid: /[^A-Za-z0-9]/.test(password),
     },
   ];
 

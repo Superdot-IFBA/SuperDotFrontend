@@ -1,5 +1,5 @@
 import * as Icon from "@phosphor-icons/react";
-import { AlertDialog, Dialog, ScrollArea } from "@radix-ui/themes";
+import { Dialog, ScrollArea } from "@radix-ui/themes";
 import { Button } from "../Button/Button";
 
 interface ModalProps extends React.PropsWithChildren {
@@ -24,7 +24,7 @@ const Modal = ({
 }: ModalProps) => {
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Content className={`relative bg-white rounded-md !p-0 z-50 ${className} !font-roboto fixed w-[95vw] max-w-[900px]  overflow-hidden`}>
+            <Dialog.Content className={`relative bg-white rounded-md !p-0 z-50 ${className} !font-roboto fixed w-[95vw] max-w-[900px] overflow-hidden`}>
                 <Dialog.Close className="absolute top-2 right-2 !font-roboto z-10">
                     <Button
                         className="hover:cursor-pointer"

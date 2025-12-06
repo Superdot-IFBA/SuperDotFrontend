@@ -2,13 +2,14 @@ import Pagination from "../Pagination/Pagination";
 import { PAGE_SIZE } from "../../../api/researchers.api";
 import { PageSampleSummary, SampleSummary } from "../../../api/sample.api";
 import { SampleStatus } from "../../../utils/consts.utils";
-import { Box, Flex, IconButton, Select, Table, Tooltip, Text, DataList, Separator, Badge } from "@radix-ui/themes";
+import { Flex, IconButton, Select, Table, Tooltip, Text, DataList, Badge } from "@radix-ui/themes";
 import * as Icon from "@phosphor-icons/react";
 import SkeletonTableBody from "../../Skeletons/SkeletonTableBody";
 import SkeletonDataList from "../../Skeletons/SkeletonDataList";
 import EmptyState from "../../EmptyState/EmptyState";
 import { Button } from "../../Button/Button";
 import { DateTime } from "luxon";
+import TruncatedText from "../../TruncatedText/TruncatedText";
 
 
 interface SamplesTableProps {
@@ -49,6 +50,8 @@ const SamplesTable = ({
             return fullName;
         }
     };
+
+
     return (
         <>
             <Flex direction="column" className="w-full mb-6 px-4 sm:px-6 lg:px-8">
@@ -143,16 +146,22 @@ const SamplesTable = ({
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
                                     <Flex direction="column" className="text-center">
-                                        <Text weight="medium" className="text-gray-900">
-                                            {sample.sampleName}
-                                        </Text>
+                                        <TruncatedText
+                                            text={sample.sampleName}
+                                            maxLength={20}
+                                            className="text-gray-900 font-medium truncate"
+                                        />
                                         <Text size="1" className="text-gray-500 mt-1">
                                             Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
                                         </Text>
                                     </Flex>
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
-                                    {sample.cepCode}
+                                    <TruncatedText
+                                        text={sample.cepCode}
+                                        maxLength={20}
+                                        className="text-gray-900 font-medium truncate"
+                                    />
                                 </Table.Cell>
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
 
@@ -284,11 +293,15 @@ const SamplesTable = ({
                                                 Pesquisador:
                                             </DataList.Label>
                                             <DataList.Value className="text-gray-900 font-medium">
-                                                {sample.researcherName}
+                                                <TruncatedText
+                                                    text={getFirstAndLastName(sample.researcherName)}
+                                                    maxLength={18}
+                                                    className="text-gray-900 font-medium truncate ml-2"
+                                                />
+
                                             </DataList.Value>
                                         </div>
 
-                                        {/* Amostra */}
                                         <div className="p-3 bg-white rounded-lg border border-violet-100 shadow-sm flex justify-between">
                                             <DataList.Label className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
                                                 <Icon.ClipboardText size={16} weight="bold" />
@@ -296,9 +309,11 @@ const SamplesTable = ({
                                             </DataList.Label>
                                             <DataList.Value>
                                                 <Flex direction="column" justify={"end"} align="center" className="text-center">
-                                                    <Text weight="medium" className="text-gray-900">
-                                                        {sample.sampleName}
-                                                    </Text>
+                                                    <TruncatedText
+                                                        text={sample.sampleName}
+                                                        maxLength={20}
+                                                        className="text-gray-900 font-medium truncate"
+                                                    />
                                                     <Text size="1" className="text-gray-500 mt-1">
                                                         Criada em: {sample.createdAt && DateTime.fromISO(sample.createdAt).toFormat("dd/LL/yyyy - HH:mm")}
                                                     </Text>
@@ -313,7 +328,11 @@ const SamplesTable = ({
                                             </DataList.Label>
                                             <DataList.Value>
                                                 <Badge size="1" variant="soft" color="violet">
-                                                    {sample.cepCode}
+                                                    <TruncatedText
+                                                        text={sample.cepCode}
+                                                        maxLength={20}
+                                                        className="text-gray-900 font-medium truncate"
+                                                    />
                                                 </Badge>
                                             </DataList.Value>
                                         </div>

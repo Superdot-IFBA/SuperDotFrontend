@@ -468,7 +468,7 @@ const CompareParticipantsSelected = () => {
                             case 'Sempre':
                             case 'Frequentemente':
                               return `${baseClass} bg-emerald-500 text-white border-emerald-600 hover:bg-emerald-600 `;
-                            case 'Às vezes':
+                            case 'Ás vezes':
                             case 'Raramente':
                             case 'Nunca':
                               return `${baseClass} bg-red-500 text-white border-red-600 hover:bg-red-600 `;

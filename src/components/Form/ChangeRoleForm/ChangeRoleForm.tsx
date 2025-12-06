@@ -60,7 +60,6 @@ const ChangeRoleForm = ({ userId, onFinish, currentUserRole }: ChangeRoleFormPro
                     label="Perfil"
                     {...register("newRole")}
                 >
-
                     <option>Pesquisador</option>
                     <option>Revisor</option>
                     <option>Administrador</option>

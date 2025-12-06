@@ -253,7 +253,7 @@ export default function InstrumentResponsesList() {
               </DataList.Label>
               <DataList.Value>
                 <Badge size="2" color="green" className="font-bold text-lg">
-                  132
+                  242
                 </Badge>
               </DataList.Value>
             </div>
@@ -264,7 +264,7 @@ export default function InstrumentResponsesList() {
               </DataList.Label>
               <DataList.Value>
                 <Badge size="2" color="cyan" className="font-bold text-lg">
-                  138
+                  246
                 </Badge>
               </DataList.Value>
             </div>
