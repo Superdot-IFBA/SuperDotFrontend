@@ -484,7 +484,8 @@ const CompareParticipantsSelected = () => {
                             className="border-r border-gray-200/30 py-4 last:border-r-0"
                           >
                             <div className={answerStyle()}>
-                              {processedAnswer || '—'}
+
+                              {processedAnswer == "Ás vezes" ? "Às vezes" : processedAnswer || '—'}
                             </div>
                           </Table.Cell>
                         );
@@ -562,7 +563,7 @@ const CompareParticipantsSelected = () => {
                                 {!processedAnswer ? (
                                   <p className="text-red-500">Nenhuma resposta encontrada.</p>
                                 ) : (
-                                  processedAnswer
+                                  processedAnswer == "Ás vezes" ? "Às vezes" : processedAnswer
                                 )}
                               </DataList.Value>
                             </div>

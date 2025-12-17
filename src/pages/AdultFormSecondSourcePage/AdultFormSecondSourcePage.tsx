@@ -278,7 +278,10 @@ const AdultFormSecondSourcePage = () => {
                                     </Flex>
                                 </header>
 
-                                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto z-10 mt-4">
+                                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto z-10 mt-4" style={{
+                                    scrollbarWidth: 'thin',
+                                    scrollbarColor: '#D1D5DB transparent',
+                                }}>
                                     <Stepper ref={stepperRef}
                                         className="w-[100%] max-sm:w-full m-auto "
                                         initialStep={1}
@@ -296,7 +299,7 @@ const AdultFormSecondSourcePage = () => {
                                         {stepsInfo.map((stepInfo) => (
                                             <Step key={stepInfo.step}>
 
-                                                <Flex className="w-full card-container-variante-border  font-roboto rounded-lg mb-5  mt-2">
+                                                <Flex className="w-full card-container-variante-border  font-roboto rounded-lg mb-5 mt-2">
                                                     <Flex direction="column" className={`w-full p-6 max-sm:p-4 space-y-4 bg-glass`}>
 
                                                         {currentStep === EAdultFormSteps.PARTICIPANT_DATA && (

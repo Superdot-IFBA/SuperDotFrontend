@@ -71,13 +71,7 @@ export const ProfileEdit = ({
     setTimeout(() => clearError(), 5000);
   };
 
-  const showSuccess = () => {
-    setNotificationData({
-      title: "Perfil atualizado com sucesso!",
-      description: "testrwe",
-      type: "success",
-    });
-  };
+
 
   const validateForm = (): boolean => {
     clearError();
@@ -148,14 +142,7 @@ export const ProfileEdit = ({
         });
       }
 
-      if (currentUser.profilePhoto) {
-        formData.append("existingProfilePhoto", currentUser.profilePhoto);
-        setNotificationData({
-          title: 'Nome atualizado!',
-          description: 'Seu nome foi alterado com sucesso.',
-          type: 'success',
-        });
-      }
+
 
       if (newPassword) {
         formData.append("currentPassword", currentPassword);
@@ -239,9 +226,7 @@ export const ProfileEdit = ({
         description={notificationData.description}
         type={notificationData.type}
       />
-      <div className="bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-8 w-full flex justify-center items-center">
-        <h2 className="heading-2 !text-white">Configurações da Conta</h2>
-      </div>
+
       <div className="bg-white card-container overflow-hidden max-w-3xl mx-auto">
 
         {error.message && (

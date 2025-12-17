@@ -293,10 +293,8 @@ const ParticipantsRegistration = () => {
                                     size="Large"
                                     className="w-full md:w-auto bg-am"
                                     children={<Icon.PlusCircle size={20} />}
-                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Participantes"}
-                                    color={"green"}                                >
-
-
+                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Avaliados"}
+                                    color={"green"}>
                                 </Button>
                             )}
                         </div>

@@ -93,7 +93,7 @@ const DesktopTableView: React.FC<DesktopTableViewProps> = ({
 }) => {
   return (
     <Box className="w-full !overflow-x-auto rounded-2xl shadow-sm border border-gray-200/50 bg-white">
-      <Table.Root variant="ghost" className="desktop min-w-[1000px]">
+      <Table.Root variant="ghost" className="desktop">
         <Table.Header className="text-[14px] bg-gradient-to-r from-violet-500/10 to-purple-500/10 backdrop-blur-sm">
           <Table.Row className="border-b border-violet-200/50">
             <Table.ColumnHeaderCell colSpan={4} className="border-l-0 border-r border-violet-200/30" align="center">

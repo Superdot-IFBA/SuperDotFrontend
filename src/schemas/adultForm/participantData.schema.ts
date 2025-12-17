@@ -41,7 +41,7 @@ export const participantDataSchema = object({
     addressData: object({
         city: string().required("Cidade é um campo obrigatório."),
         district: string().required("Bairro é um campo obrigatório."),
-        street: string().required("Nome da rua é um campo obrigatório."),
+        street: string().required("Nome do logradouro é um campo obrigatório."),
         houseNumber: string().required("Número da casa é um campo obrigatório."),
     }),
 });

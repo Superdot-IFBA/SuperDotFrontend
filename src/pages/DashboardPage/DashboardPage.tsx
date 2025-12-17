@@ -499,7 +499,7 @@ function DashBoardPage() {
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-span-12 lg:col-span-8">
-                        <div className="grid grid-cols-1 max-md:grid-cols-1 xl:grid-cols-2 gap-4 max-md:gap-2 mb-6">
+                        <div className="grid grid-cols-2 max-sm:grid-cols-1 xl:grid-cols-2 gap-4 max-md:gap-2 mb-6">
                             <Dcard
                                 loading={loading}
                                 title="Total de Amostras"

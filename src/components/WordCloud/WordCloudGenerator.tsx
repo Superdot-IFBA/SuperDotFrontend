@@ -87,6 +87,7 @@ const WordCloudGenerator: React.FC<WordCloudGeneratorProps> = ({ textBio = [] })
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         exitFullScreen();
+        setIsFullScreen(false);
       }
     };
 
@@ -198,7 +199,7 @@ const WordCloudGenerator: React.FC<WordCloudGeneratorProps> = ({ textBio = [] })
       </div>
 
       {!isFullScreen && (
-        <div className={`overlay-message max-sm:w-[80%]`}>
+        <div className={`overlay-message `}>
           *Clique para tela cheia
         </div>
       )}

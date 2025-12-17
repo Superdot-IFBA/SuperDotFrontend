@@ -20,7 +20,7 @@ const FourInput = ({ values, onChange }: FourInputProps) => {
     };
 
     return (
-        <div className="mx-auto mt-8 grid grid-cols-1 justify-center gap-5 w-[50%] max-xl:w-[90%]">
+        <div className="mx-auto mt-2 grid grid-cols-1 justify-center gap-5 w-[50%] max-xl:w-[90%]">
             {[...Array(4).keys()].map((idx) => (
                 <input
                     key={idx}

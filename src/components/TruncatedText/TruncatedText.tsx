@@ -1,3 +1,4 @@
+import * as Tooltip from "@radix-ui/react-tooltip";
 import React from "react";
 
 interface TruncatedTextProps {
@@ -11,13 +12,30 @@ const TruncatedText: React.FC<TruncatedTextProps> = ({
   maxLength = 20,
   className = "",
 }) => {
-  const truncated = text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-  const tooltip = `${text}`;
+  const truncated =
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 
   return (
-    <span title={tooltip} className={className}>
-      {truncated}
-    </span>
+    <Tooltip.Provider delayDuration={200}>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <span className={`${className} cursor-pointer`}>
+            {truncated}
+          </span>
+        </Tooltip.Trigger>
+
+        <Tooltip.Portal>
+          <Tooltip.Content
+            side="top"
+            align="center"
+            className="z-50 rounded-md bg-gray-900 px-3 py-1.5 text-sm text-white shadow-lg"
+          >
+            {text}
+            <Tooltip.Arrow className="fill-gray-900" />
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
   );
 };
 

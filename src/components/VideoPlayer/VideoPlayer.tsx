@@ -119,6 +119,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       <Box className={`p-8 bg-gray-100 rounded-lg text-center ${className}`}>
         <Icon.WarningCircle size={48} className="text-red-500 mb-4" />
         <Text className="text-red-700 font-semibold">Erro no vídeo</Text>
+        <br></br>
         <Text size="2" className="text-red-600">{error}</Text>
       </Box>
     );

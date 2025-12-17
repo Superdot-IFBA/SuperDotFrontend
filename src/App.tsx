@@ -98,13 +98,10 @@ function InnerLayout() {
                 <SideBar userRole={userRole} />
             </Box>
 
-            {isAnalysisPage ? (
-                content
-            ) : (
-                <ScrollArea type="scroll" scrollbars="vertical" size="2" radius="none" className="w-full max-sm:hidden">
-                    {content}
-                </ScrollArea>
-            )}
+
+            <ScrollArea type="always" scrollbars="both" size="2" radius="none" className="w-full max-sm:hidden">
+                {content}
+            </ScrollArea>
 
             <BackToTop />
         </Flex>

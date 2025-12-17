@@ -6,7 +6,7 @@ import FiveOption from "../FiveOption/FiveOption";
 import FourSelect from "../FourSelect/FourSelect";
 import { useEffect, useRef, useState } from "react";
 import { Flex } from "@radix-ui/themes";
-import check from '../../assets/concluido.png'
+import check from '../../assets/concluido.png';
 import Stepper, { Step } from "../NewStepper/NewStteper";
 
 interface RenderQuestionsProps {
@@ -15,178 +15,179 @@ interface RenderQuestionsProps {
     handlerSaveAndContinue: () => void;
 }
 
-/*
- * Component to render all types of questions one by one
- */
 const RenderQuestions = ({ questions, setQuestions, handlerSaveAndContinue }: RenderQuestionsProps) => {
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [completed, setCompletedState] = useState(false);
-    const [disableButton, setDisableButton] = useState(false);
-    const stepperRef = useRef<{
-        handleNext: () => void;
-        handleBack: () => void;
-    }>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [completed, setCompleted] = useState(false);
+
+    const stepperRef = useRef<any>(null);
 
     useEffect(() => {
-        setCurrentQuestionIndex(0);
+        setCurrentIndex(0);
     }, [questions]);
 
+    const currentQuestion = questions[currentIndex];
 
-
-    const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion || currentQuestionIndex < 0 || currentQuestionIndex >= questions.length) {
+    if (!currentQuestion) {
         return <div>Carregando perguntas...</div>;
     }
 
+    const isAnswered = (q: IQuestion): boolean => {
+        if (!q) return false;
 
-    useEffect(() => {
-        if (currentQuestion?.questionType === EQuestionType.FOUR_INPUT) {
-            const values = currentQuestion.answer as string[];
-            // Verifica se o array existe, tem 4 elementos e todos estão preenchidos
-            const isDisabled = !(values && values.length === 4 && values.every(value => value.trim() !== ''));
-            setDisableButton(isDisabled);
+        if (q.parentQuestion) {
+            const parent = questions.find(p => p._id === q.parentQuestion?.parentId);
+
+            if (!parent) return false;
+
+            const requiredValue = q.parentQuestion.isRequiredOnParentValue;
+            const parentAnswer = parent.answer;
+
+
+            if (Array.isArray(parentAnswer) && !parentAnswer.includes(requiredValue)) {
+                return true;
+            }
+
+            if (typeof parentAnswer === "string" && parentAnswer !== requiredValue) {
+                return true;
+            }
         }
-    }, [currentQuestion, questions, currentQuestionIndex]);
+
+        if (typeof q.answer === "string") {
+            return q.answer.trim() !== "";
+        }
+
+        if (Array.isArray(q.answer)) {
+            return q.answer.length > 0 && q.answer.every(v => typeof v === "string" && v.trim() !== "");
+
+        }
+
+        return false;
+    };
+
+    const isCurrentDisabled = !isAnswered(currentQuestion);
+
+
+    const updateStringAnswer = (id: string, value: string) => {
+        setQuestions(questions.map(q => q._id === id ? { ...q, answer: value } : q));
+    };
+
+    const updateArrayAnswer = (id: string, value: string[]) => {
+        setQuestions(questions.map(q => q._id === id ? { ...q, answer: value } : q));
+    };
+
+
+    const shouldRenderChild = (q: IQuestion): boolean => {
+        if (!q.parentQuestion) return true;
+
+        const parent = questions.find(p => p._id === q.parentQuestion?.parentId);
+        if (!parent) return false;
+
+        const requiredValue = q.parentQuestion.isRequiredOnParentValue;
+        const parentAnswer = parent.answer;
+
+        if (Array.isArray(parentAnswer)) return parentAnswer.includes(requiredValue);
+        if (typeof parentAnswer === "string") return parentAnswer === requiredValue;
+
+        return false;
+    };
+
 
     useEffect(() => {
         if (completed) {
-            setCompletedState(false);
+            setCompleted(false);
             handlerSaveAndContinue();
         }
-    }, [completed, handlerSaveAndContinue]);
-
-    if (!questions || questions.length === 0) {
-        return <div>Sem perguntas para exibir.</div>;
-    }
-
-
-    const answerQuestionWithWithoutArray = (questionId: string, answer: string) => {
-        setQuestions(
-            questions.map((question) => {
-                if (question._id === questionId) return { ...question, answer: answer };
-                else return question;
-            })
-        );
-    };
-
-    const answerQuestionWithArray = (questionId: string, answer: string | string[]) => {
-        if (Array.isArray(answer)) {
-
-            setQuestions(
-                questions.map((question) => {
-                    if (question._id === questionId) return { ...question, answer: answer };
-
-                    else return question;
-                })
-            );
-            return;
-        }
-    };
-
-    const renderChildQuestion = (childQuestion: IQuestion) => {
-        if (!childQuestion.parentQuestion) return true;
-
-        const parentQuestion = questions.find((q) => q._id === childQuestion.parentQuestion?.parentId);
-        return parentQuestion?.answer?.includes(childQuestion.parentQuestion.isRequiredOnParentValue);
-    };
-
-
-
+    }, [completed]);
 
     return (
         <>
-            <Stepper ref={stepperRef}
+            <Stepper
+                ref={stepperRef}
                 initialStep={1}
-                backButtonText="Voltar"
+                onFinalStepCompleted={() => setCompleted(true)}
                 nextButtonText="Próximo"
+                backButtonText="Voltar"
                 stepContainerClassName="hidden"
-                onFinalStepCompleted={() => setCompletedState(true)}
                 className="h-[450px] overflow-hidden"
                 contentClassName="!h-[400px]"
-                nextButtonProps={{ className: disableButton ? "disabled:bg-neutral-dark disabled:hover:cursor-not-allowed" : "" }}
-                disableButton={disableButton}
+                disableButton={isCurrentDisabled}
+                nextButtonProps={{
+                    className: isCurrentDisabled
+                        ? "disabled:bg-neutral-dark disabled:hover:cursor-not-allowed"
+                        : ""
+                }}
                 completedStepContent={
-                    <Flex direction={"column"} align={"center"} className="gap-2">
-                        <img className="m-auto w-72 rounded-md mb-5" src={check} alt="check-img"></img>
+                    <Flex direction="column" align="center" className="gap-2">
+                        <img className="m-auto w-72 rounded-md mb-5" src={check} alt="check-img" />
                     </Flex>
                 }
+                onStepChange={(i) => setCurrentIndex(i - 1)}
             >
-                {questions.map((question, index) => (
-                    <Step key={question._id} >
-                        <p className="text-[18px] w-60% max-md:text-[16px] max-md:w-full m-auto">{question.statement}</p>
+                {questions
+                    .filter(q => {
+                        if (!q.parentQuestion) return true;
+                        return shouldRenderChild(q);
+                    })
+                    .map((q) => (
+                        <Step key={q._id}>
+                            <p className="text-[18px] max-md:text-[16px] w-[80%] max-md:w-full m-auto">
+                                {q.statement}
+                            </p>
 
-                        {question.questionType === EQuestionType.FOUR_INPUT && (
-                            <Flex direction={"column"} align={"center"} gap={"2"} className="mt-4">
+
+                            {q.questionType === EQuestionType.FOUR_INPUT && (
                                 <FourInput
-                                    values={question.answer as string[]}
-                                    onChange={(values) => {
-                                        setDisableButton(true);
-                                        answerQuestionWithArray(question._id, values);
-                                        if (values.length !== 4 || values.some(value => value.trim() === '')) {
-                                            setDisableButton(true);
-                                        } else {
-                                            setDisableButton(false);
-                                        }
-                                    }}
+                                    values={q.answer as string[]}
+                                    onChange={(v) => updateArrayAnswer(q._id, v)}
                                 />
-                            </Flex>
-                        )}
+                            )}
 
-                        {question.questionType === EQuestionType.MULTIPLE_SELECT && (
-                            <Flex direction={"column"} align={"center"} gap={"2"} className="mt-4">
-                                <MultipleSelect
-                                    options={question.options?.map((option) => option.value) as string[]}
-                                    placeholder="Caso se destaque, selecione uma ou várias opções"
-                                    values={question.answer as string[]}
-                                    onChange={(values) => {
-                                        answerQuestionWithArray(question._id, values);
-                                    }}
-                                />
-                            </Flex>
-                        )}
-
-                        {question.questionType === EQuestionType.ONE_INPUT &&
-                            question.parentQuestion &&
-                            renderChildQuestion(question) && (
-                                <Flex direction={"column"} align={"center"} gap={"2"} className="mt-4">
-                                    <div className="mx-auto mt-4 grid grid-cols-1 justify-center gap-5 w-[50%]">
-                                        <input
-                                            key={question._id}
-                                            placeholder="Digite aqui"
-                                            value={question.answer}
-                                            onChange={(e) => answerQuestionWithWithoutArray(question._id, e.target.value)}
-                                        />
-                                    </div>
+                            {/* MULTIPLE SELECT */}
+                            {q.questionType === EQuestionType.MULTIPLE_SELECT && (
+                                <Flex direction="column" align="center" gap="2" className="mt-4">
+                                    <MultipleSelect
+                                        options={q.options?.map(o => o.value) || []}
+                                        values={q.answer as string[]}
+                                        onChange={(v) => updateArrayAnswer(q._id, v)}
+                                        placeholder="Selecione aqui"
+                                    />
                                 </Flex>
                             )}
 
-                        {question.questionType === EQuestionType.FIVE_OPTION && (
-                            <FiveOption
-                                options={question.options?.map((option) => option.value) as string[]}
-                                value={question.answer as string}
-                                onSelect={(v) => {
-                                    answerQuestionWithWithoutArray(question._id, v);
+                            {/* ONE INPUT */}
+                            {q.questionType === EQuestionType.ONE_INPUT && (
+                                <Flex direction="column" align="center" gap="2" className="mt-4">
+                                    <input
+                                        value={q.answer}
+                                        placeholder="Digite aqui"
+                                        onChange={(e) => updateStringAnswer(q._id, e.target.value)}
+                                        className="border px-3 py-2 rounded-md w-[50%]"
+                                    />
+                                </Flex>
+                            )}
 
-                                }}
-                            />
-                        )}
+                            {/* FIVE OPTION */}
+                            {q.questionType === EQuestionType.FIVE_OPTION && (
+                                <FiveOption
+                                    options={q.options?.map(o => o.value) || []}
+                                    value={q.answer as string}
+                                    onSelect={(v) => updateStringAnswer(q._id, v)}
+                                />
+                            )}
 
-                        {question.questionType === EQuestionType.FOUR_SELECT && (
-                            <FourSelect
-                                options={question.options?.map((option) => option.value) as string[]}
-                                values={question.answer as string[]}
-                                onChange={(v) => {
-                                    answerQuestionWithArray(question._id, v);
+                            {/* FOUR SELECT */}
+                            {q.questionType === EQuestionType.FOUR_SELECT && (
+                                <FourSelect
+                                    options={q.options?.map(o => o.value) || []}
+                                    values={q.answer as string[]}
+                                    onChange={(v) => updateArrayAnswer(q._id, v)}
+                                />
+                            )}
 
-                                }}
-                            />
-                        )}
-                    </Step>
-                ))}
+                        </Step>
 
+                    ))}
             </Stepper>
-
-
         </>
     );
 };

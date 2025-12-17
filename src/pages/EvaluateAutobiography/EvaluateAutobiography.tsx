@@ -629,8 +629,9 @@ const EvaluateAutobiography: React.FC = () => {
                                 {participant?.autobiography?.text && participant?.autobiography?.videoUrl ? (
                                     <Tabs.Root defaultValue="video"
                                         className="p-4 h-[60vh] overflow-visible"
+
                                     >
-                                        <Tabs.List className="flex gap-3 border-b pb-2 ">
+                                        <Tabs.List className="flex gap-3 border-b pb-2 max-sm:flex-col max-sm:gap-1">
                                             <Tabs.Trigger value="video" className="data-[state=active]:text-violet-600 data-[state=active]:font-semibold !cursor-pointer">
                                                 <Flex className="flex items-center gap-2">
                                                     <Icon.Video size={20} className="text-violet-600" /> Autobiografia em Vídeo

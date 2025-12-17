@@ -274,9 +274,9 @@ const SecondSourceDataStep = ({
                     />
                     <InputField
                         {...register("personalData.street")}
-                        label="Rua"
+                        label="Logradouro"
                         required={true}
-                        placeholder="Informe o nome da sua rua"
+                        placeholder="Informe o nome do seu logradouro"
                         errorMessage={errors.personalData?.street?.message}
                     />
                 </div>

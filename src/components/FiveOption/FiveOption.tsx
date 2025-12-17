@@ -8,7 +8,7 @@ interface FiveOptionProps {
 
 const FiveOption = ({ options, value, onSelect }: FiveOptionProps) => {
     return (
-        <Flex direction={"column"} align={"center"} justify={"center"} className="mt-8 gap-3">
+        <Flex direction={"column"} align={"center"} justify={"center"} className="mt-2 gap-3">
             {options?.map((option) => (
                 <Button
                     size="Large"

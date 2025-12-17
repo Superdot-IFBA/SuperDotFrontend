@@ -30,7 +30,6 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ headerConfig }) => {
     icon: <Icon.MagnifyingGlass size={20} />,
   };
 
-  // Gera os crumbs normais
   let crumbs: Crumb[] = pathnames.map((segment, index) => {
     const path = "/app/" + pathnames.slice(0, index + 1).join("/");
     const config = headerConfig[pathnames.slice(0, index + 1).join("/")] || { title: segment };
@@ -39,17 +38,16 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ headerConfig }) => {
 
   const currentPath = location.pathname.replace(/^\/app\//, "");
 
-  // Insere o breadcrumb virtual se a rota estiver no array
+
   if (virtualParentsRoutes.includes(currentPath)) {
-    // Insere o virtual parent **antes do último crumb**
-    const lastCrumb = crumbs.pop(); // remove o último
-    crumbs.push(virtualParentCrumb); // insere o virtual parent
-    if (lastCrumb) crumbs.push(lastCrumb); // volta o último
+
+    const lastCrumb = crumbs.pop();
+    crumbs.push(virtualParentCrumb);
+    if (lastCrumb) crumbs.push(lastCrumb);
   }
 
   return (
-    <nav className="flex items-center space-x-2 text-sm mt-1">
-      {/* Dashboard */}
+    <nav className="flex items-center space-x-2 text-[12px] mt-1 desktop-flex">
       <Link
         to="/app/home"
         className={`flex items-center gap-1 hover:underline ${location.pathname === "/app/home" ? "text-primary font-bold" : "text-gray-500"
@@ -74,8 +72,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ headerConfig }) => {
 
             {isLast ? (
               <span className="flex items-center gap-1 text-primary font-bold truncate">
-                {crumb.icon && React.cloneElement(crumb.icon, { className: "w-4 h-4 text-gray-400" })}
-                {crumb.label}
+
+                {crumb.label === "home" ? '' : crumb.label}
               </span>
             ) : isVirtual ? (
               <span

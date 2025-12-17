@@ -13,7 +13,7 @@ export const secondSourceDataSchema = object({
             .oneOf(RELATIONSHIP_TIME_ARRAY, "Selecione uma opção válida.")
             .required("Tempo da relação é um campo obrigatório."),
         job: string().required("Profissão é um campo obrigatório."),
-        street: string().required("Nome da rua é um campo obrigatório."),
+        street: string().required("Nome do logradouro é um campo obrigatório."),
         district: string().required("Bairro é um campo obrigatório."),
         countryCity: string().required("Cidade é um campo obrigatório."),
         phone: string().max(11).required("Número de telefone é um campo obrigatório.").trim(),

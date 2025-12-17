@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import * as Icon from "@phosphor-icons/react";
-import { Flex, Text, Box } from "@radix-ui/themes";
+import { Flex, Text, Box, ScrollArea } from "@radix-ui/themes";
 import { SampleSummary, paginateAllSamples } from "../../api/sample.api";
 import { PAGE_SIZE } from "../../api/researchers.api";
 import { Button } from "../Button/Button";
+import TruncatedText from "../TruncatedText/TruncatedText";
 
 interface SampleResearcherSearchProps {
   onSelect: (sample: { researcherName: string; sampleId: string; sampleName: string } | null) => void;
@@ -96,7 +97,7 @@ export function SampleResearcherSearch({ onSelect }: SampleResearcherSearchProps
   };
 
   return (
-    <Flex align="center" className="w-full max-sm:flex-col" gap="4">
+    <Flex align="center" className="w-full max-sm:flex-col max-md:flex-col" gap="4">
       <div className="mr-4 text-gray-800 font-semibold text-xl justify-center max-sm:text-center max-sm:mr-0 max-sm:mb-2">
         {selectedSample
           ? <Flex align="center" gap="2">
@@ -110,7 +111,7 @@ export function SampleResearcherSearch({ onSelect }: SampleResearcherSearchProps
         }
       </div>
 
-      <div className="relative ml-auto w-[600px] max-sm:w-full z-20" ref={searchRef}>
+      <div className="relative ml-auto w-[600px] max-sm:w-full max-md:w-full z-20" ref={searchRef}>
         {/* Search Input */}
         <div className="relative">
           <input
@@ -138,9 +139,11 @@ export function SampleResearcherSearch({ onSelect }: SampleResearcherSearchProps
           )}
         </div>
 
-        {/* Dropdown */}
         {showDropdown && (
-          <div className="absolute z-20 w-full mt-2 bg-white  border-gray-100 rounded-xl shadow-xl max-h-80 overflow-y-auto backdrop-blur-sm">
+          <div className="absolute z-20 w-full mt-2 bg-white  border-gray-100 rounded-xl shadow-xl max-h-80 overflow-y-scroll backdrop-blur-sm" style={{
+            scrollbarWidth: 'thin',
+
+          }}>
             {isLoading ? (
               <div className="p-6 text-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-500 mx-auto"></div>
@@ -148,6 +151,7 @@ export function SampleResearcherSearch({ onSelect }: SampleResearcherSearchProps
               </div>
             ) : filteredSamples.length > 0 ? (
               filteredSamples.map((sample, index) => (
+
                 <div
                   key={sample.sampleId}
                   className={`p-4 cursor-pointer transition-all duration-200 hover:bg-violet-50 border-b border-gray-50 last:border-b-0 ${index === 0 ? 'rounded-t-xl' : ''
@@ -164,13 +168,14 @@ export function SampleResearcherSearch({ onSelect }: SampleResearcherSearchProps
                           {getFirstAndLastName(sample.researcherName)}
                         </Text>
                         <Text size="1" className="text-gray-500">
-                          {sample.sampleName}
+                          <TruncatedText text={sample.sampleName} maxLength={20} />
                         </Text>
                       </Flex>
                     </Flex>
                     <Icon.CaretRight size={16} className="text-gray-400" />
                   </Flex>
                 </div>
+
               ))
             ) : (
               <div className="p-6 text-center">

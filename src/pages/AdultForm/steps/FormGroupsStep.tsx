@@ -17,7 +17,7 @@ import { IParticipant } from "../../../interfaces/participant.interface";
 import { AxiosResponse } from "axios";
 import { ISecondSource } from "../../../interfaces/secondSource.interface";
 import { Button } from "../../../components/Button/Button";
-import { Badge, Box, Card, Flex, Inset, Strong } from "@radix-ui/themes";
+import { Badge, Box, Card, Flex, Inset, Progress, Strong } from "@radix-ui/themes";
 import Modal from "../../../components/Modal/Modal";
 import Criatividade from "../../../assets/Criatividade.png"
 import Lideranca from "../../../assets/lideranca.png"
@@ -61,6 +61,8 @@ const FormGroupsStep = ({
     const [currentGroup, setCurrentGroup] = useState<IQuestionsGroup>({} as IQuestionsGroup);
     const [openModal, setOpenModal] = useState(false);
     const [completQuestions, setCompletQuestions] = useState(false);
+    const [answeredCount, setAnsweredCount] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
 
     const handleShowQuestions = () => {
         setOpenModal(true)
@@ -68,18 +70,51 @@ const FormGroupsStep = ({
     }
 
     useEffect(() => {
-        const validateInitialCompletion = () => {
-            if (currentGroup.questions) {
-                const isCompleted = allQuestionsHaveAnswers(currentGroup.questions);
-                setCompletQuestions(isCompleted);
-                if (onCompletionChange) {
-                    onCompletionChange(isCompleted);
-                }
-            }
+        if (!currentGroup.questions) return;
+
+        const shouldRenderChild = (q: IQuestion, all: IQuestion[]) => {
+            if (!q.parentQuestion) return true;
+
+            const parent = all.find(p => p._id === q.parentQuestion?.parentId);
+            if (!parent) return false;
+
+            const requiredValue = q.parentQuestion.isRequiredOnParentValue;
+            const parentAnswer = parent.answer;
+
+            if (Array.isArray(parentAnswer)) return parentAnswer.includes(requiredValue);
+            if (typeof parentAnswer === "string") return parentAnswer === requiredValue;
+
+            return false;
         };
 
-        validateInitialCompletion();
-    }, [currentGroup]);
+        const isAnswered = (q: IQuestion): boolean => {
+            if (!q.answer) return false;
+
+            if (typeof q.answer === "string") {
+                return q.answer.trim() !== "";
+            }
+
+            if (Array.isArray(q.answer)) {
+                return q.answer.length > 0 && q.answer.every(v => typeof v === "string" && v.trim() !== "");
+            }
+
+            return false;
+        };
+
+        const visibleQuestions = currentGroup.questions.filter(q =>
+            !q.parentQuestion || shouldRenderChild(q, currentGroup.questions)
+        );
+
+        const total = visibleQuestions.length;
+        const answered = visibleQuestions.filter(isAnswered).length;
+
+        setTotalCount(total);
+        setAnsweredCount(answered);
+
+        setCompletQuestions(answered === total);
+        onCompletionChange?.(answered === total);
+
+    }, [currentGroup.questions]);
 
     useEffect(() => {
         if (onCompletionChange) {
@@ -143,6 +178,7 @@ const FormGroupsStep = ({
 
             if (!question.required) return true;
             if (!question.answer) return false;
+
 
             switch (question.questionType) {
                 case EQuestionType.FIVE_OPTION:
@@ -288,6 +324,11 @@ const FormGroupsStep = ({
         });
     };
 
+    const percentage =
+        totalCount > 0
+            ? Math.round((answeredCount / totalCount) * 100)
+            : 0;
+
 
     return (
         <>
@@ -309,7 +350,7 @@ const FormGroupsStep = ({
                 } />
 
             <Box maxWidth="" >
-                <Card size="1" className={`card-container-variante-border group group/item transition-all pt-4 px-5`}>
+                <Card size="1" className={`card-container-variante-border group group/item transition-all pt-4 px-5 ${completed ? "" : ""}`}>
                     <Inset clip="padding-box" side="top" pb="current">
                         <img
                             src={currentGroup?.groupName === "Características Gerais" ? Gerais : currentGroup?.groupName === "Criatividade" ? Criatividade : currentGroup?.groupName === "Liderança" ? Lideranca : currentGroup?.groupName === "Comprometimento da Tarefa" ? Comprometimento : currentGroup?.groupName === "Habilidade Acima da Média" ? Habilidades : Atividade}
@@ -325,15 +366,27 @@ const FormGroupsStep = ({
                         />
                     </Inset>
                     <Flex direction="column" gap="1" className="">
-                        <p className="">
-                            <Strong className="!font-roboto">{currentGroup?.groupName}</Strong>
-                        </p>
-                        {completQuestions ?
-                            <Badge size="2" color="green" variant="solid" className={`${completed ? "" : "invisible"} w-full justify-center h-[20px] absolute top-0 left-0 right-0 `}>
-                                Concluído!
-                            </Badge> : <></>}
+                        <div className="flex items-center justify-between w-full">
+                            <div>
+                                <p className="">
+                                    <Strong className="!font-roboto">{currentGroup?.groupName}</Strong>
+                                </p>
+                                <p className="text-sm text-gray-400">{answeredCount}/{totalCount} perguntas respondidas</p>
+                            </div>
+                            <Box className={`w-full justify-center h-[20px] absolute top-0 left-0 right-0`}>
+                                <Progress variant="surface" size={"3"} color="grass" value={answeredCount} max={totalCount} className="!h-5" />
 
-                        <Button color={`${completed ? "yellow" : "primary"}`} title={`${completed ? "À Revisar" : "Responder"}`} size={"Extra Small"} onClick={() => handleShowQuestions()} />
+                            </Box>
+                            <p className={`absolute top-0 left-0 right-0 translate-x-1/2 font-semibold text-white`}>
+                                {percentage}%
+                            </p>
+                            {completQuestions ?
+                                <Badge size="2" color="green" variant="solid" className={`${completed ? "" : "invisible"} w-full justify-center h-[20px] absolute top-0 left-0 right-0 `}>
+                                    Concluído!
+                                </Badge> : <></>}
+
+                        </div>
+                        <Button color={`${completed ? "yellow" : "primary"}`} title={`${completed ? "Revisar" : "Responder"}`} size={"Extra Small"} onClick={() => handleShowQuestions()} />
                     </Flex>
                 </Card>
             </Box>

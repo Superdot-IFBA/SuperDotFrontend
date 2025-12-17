@@ -68,7 +68,7 @@ const AnalysisPage = () => {
         reset();
     };
 
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
     const participantsWithPunctuation = sample.participants?.filter(participant =>
         participant.adultForm?.totalPunctuation !== undefined
     ) || [];
@@ -489,7 +489,7 @@ const AnalysisPage = () => {
 
     return (
 
-        <Box className=" px-1 pb-8 analyse-page">
+        <Box id="analyzePage" className="px-1 pb-8" >
 
             <Notify
                 open={!!notificationData.title}

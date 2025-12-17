@@ -52,6 +52,9 @@ thead.multi-rows th {
 }
 
 /** CUSTOM ELEMENTS **/
+.rt-ScrollAreaViewport > * {
+    width: 100% !important;
+}
 
 .rt-BaseDialogOverlay::before {
     background-color: rgba(0, 0, 0, 0.2) !important;

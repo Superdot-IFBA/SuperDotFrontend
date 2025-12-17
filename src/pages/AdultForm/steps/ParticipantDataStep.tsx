@@ -421,9 +421,9 @@ const ParticipantDataStep = ({
                     />
                     <InputField
                         {...register("addressData.street")}
-                        label="Rua"
+                        label="Longradouro"
                         required={true}
-                        placeholder="Informe o nome da sua rua"
+                        placeholder="Informe o nome do seu logradouro"
                         errorMessage={errors.addressData?.street?.message}
                     />
                     <InputField

@@ -157,7 +157,7 @@ export function UserInfo({ sampleFile, className, variant = 'full' }: UserInfoPr
         <Modal
           open={openProfileModal}
           setOpen={setOpenProfileModal}
-          title=""
+          title="Configurações da Conta"
           accessibleDescription=""
           classNameChildren="!p-0"
         >

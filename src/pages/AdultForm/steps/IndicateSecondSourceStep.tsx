@@ -146,6 +146,16 @@ const IndicateSecondSourceStep = ({
      * @param {string} sourceEmail - The sourceEmail parameter is a string that represents the email of
      * the source to be deleted.
      */
+
+    const handleEditSourceIndicated = (people: any) => {
+        setRelationship(people.personalData.relationship);
+        setFullName(people.personalData.fullName);
+        setEmail(people.personalData.email);
+        setTeacherSubject(people.teacherSubject || "");
+
+        const cleaned = formData.secondSources?.filter(p => p.personalData?.email !== people.personalData.email);
+        setFormData({ ...formData, secondSources: cleaned });
+    };
     const handleDeleteSourceIndicated = (sourceEmail: string) => {
         const sourceCleaned = formData.secondSources?.filter((people) => people.personalData?.email !== sourceEmail);
         setFormData({ ...formData, secondSources: sourceCleaned });
@@ -290,7 +300,7 @@ const IndicateSecondSourceStep = ({
                                 {formData.secondSources?.map((people) => (
                                     <DataList.Item className="w-full p-3 rounded-lg mb-5 card-container" key={people.personalData?.email}>
 
-                                        <p className="text-[16px] font-bold text-center">Informações do participante (SF) </p>
+                                        <p className="text-[16px] font-bold text-center">Informações do participante (Segunda Fonte) </p>
                                         <Separator size={"4"} className="my-2" />
 
                                         <DataList.Label minWidth="88px" >Tipo de relação</DataList.Label>
@@ -313,8 +323,28 @@ const IndicateSecondSourceStep = ({
                                         <DataList.Value >{people.teacherSubject ? people.teacherSubject : "Não possui."}</DataList.Value>
                                         <Separator size={"4"} className="mb-2" />
 
-                                        <DataList.Label color="red"
-                                            onClick={() => people.personalData?.email && handleDeleteSourceIndicated(people.personalData.email)} minWidth="88px" className="flex justify-center rounded-lg mb-2 border border-red-500 cursor-pointer hover:bg-red-100 items-center">Remover</DataList.Label>
+                                        <Flex className="w-full gap-3 mt-2">
+
+                                            <Button
+                                                size="Small"
+                                                color="blue"
+                                                className="flex-1"
+                                                onClick={() => handleEditSourceIndicated(people)}
+                                                children={<Flex align="center" gap="2">
+                                                    <Icon.PencilSimple size={16} />
+
+                                                </Flex>} title={"Editar"} />
+
+                                            <Button
+                                                size="Small"
+                                                color="red"
+                                                className="flex-1"
+                                                onClick={() => people.personalData?.email && handleDeleteSourceIndicated(people.personalData.email)}
+                                                children={<Flex align="center" gap="2">
+                                                    <Icon.Trash size={16} />
+
+                                                </Flex>} title={"Remover"} />
+                                        </Flex>
                                     </DataList.Item>
 
                                 ))}
