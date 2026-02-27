@@ -8,7 +8,6 @@ interface ChartContainerProps {
   loading: boolean;
   children: React.ReactNode;
   tooltip?: string;
-  fullHeight?: boolean;
   className?: string;
   actionButtons?: React.ReactNode;
   error?: string | null;
@@ -19,12 +18,11 @@ const ChartContainer = ({
   loading,
   children,
   tooltip,
-  fullHeight = false,
   className = "",
   actionButtons,
   error,
 }: ChartContainerProps) => (
-  <div className={`${fullHeight ? "h-full" : "h-80"} ${className}`}>
+  <div className={`${className}`}>
     <Skeleton loading={loading} className="h-full rounded-xl">
       <div className={`
         bg-white p-4 rounded-xl shadow-lg border border-gray-100 

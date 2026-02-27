@@ -153,8 +153,6 @@ const ParticipantsRegistration = () => {
         window.prompt('Copie o texto abaixo (Ctrl+C):', urlParticipantForm);
     };
 
-
-
     const getFormFillStatus = (secondSource: DeepPartial<ISecondSource>): TFormFillStatus => {
         if (!secondSource.adultForm?.startFillFormAt) {
             return "Não iniciado";
@@ -291,9 +289,9 @@ const ParticipantsRegistration = () => {
                             {sample?.participants?.length !== sample?.qttParticipantsAuthorized && (
                                 <Button
                                     size="Large"
-                                    className="w-full md:w-auto bg-am"
+                                    className="w-full  bg-am md:!text-[13px] md:!h-12"
                                     children={<Icon.PlusCircle size={20} />}
-                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Avaliados"}
+                                    onClick={() => setModalIndicateParticipantsOpen(true)} title={"Adicionar Participantes"}
                                     color={"green"}>
                                 </Button>
                             )}
