@@ -148,7 +148,7 @@ const SamplesTable = ({
                                     <Flex direction="column" className="text-center">
                                         <TruncatedText
                                             text={sample.sampleName}
-                                            maxLength={20}
+                                            maxLength={15}
                                             className="text-gray-900 font-medium truncate"
                                         />
                                         <Text size="1" className="text-gray-500 mt-1">
@@ -159,7 +159,7 @@ const SamplesTable = ({
                                 <Table.Cell justify="center" className="border-r border-gray-200/30 py-4">
                                     <TruncatedText
                                         text={sample.cepCode}
-                                        maxLength={20}
+                                        maxLength={15}
                                         className="text-gray-900 font-medium truncate"
                                     />
                                 </Table.Cell>

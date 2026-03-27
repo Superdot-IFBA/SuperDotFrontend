@@ -4,7 +4,7 @@ interface BackgroundComponentProps {
 }
 export const BackgroundComponent: React.FC<BackgroundComponentProps> = ({ children, classNameCard }) => {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-violet-600 via-purple-500 to-primary flex items-center justify-center  overflow-hidden">
+    <div className="h-screen w-full bg-gradient-to-br from-violet-600 via-purple-500 to-primary flex items-center justify-center  overflow-hidden">
       {/* Esferas de fundo principais */}
       <div className="absolute inset-0 flex items-center justify-center  overflow-hidden">
         <div className="absolute transform -translate-x-1/2 -translate-y-1/2 

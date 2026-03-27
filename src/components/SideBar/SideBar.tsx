@@ -186,7 +186,7 @@ const SideBar = ({ userRole }: SideBarProps) => {
 
 
             {/* Mobile Menu */}
-            <div className="fixed top-0 !right-0 w-full bg-gradient-to-b from-violet-500 to-primary z-50 px-2 flex justify-between items-center xl:hidden h-[54px]">
+            <div className="fixed top-0 !right-0 w-full bg-gradient-to-b from-violet-500 to-primary z-50 px-4 flex justify-between items-center xl:hidden h-[54px]">
                 <p className="text-white font-bold">SUPERDOT</p>
                 <button
                     onClick={() => {
@@ -195,7 +195,7 @@ const SideBar = ({ userRole }: SideBarProps) => {
                     }}
                     className="relative z-50 text-white group transition-all duration-300 hover:scale-[1.15]"
                 >
-                    <div className="relative w-6 h-6 ml-3 mt-2">
+                    <div className="relative w-6 h-6">
                         {/* Ícone X */}
                         <Icon.X
                             size={24}

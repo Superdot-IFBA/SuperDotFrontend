@@ -374,7 +374,7 @@ const MySamplesPage = () => {
                                                     </span>
                                                     <TruncatedText
                                                         text={sample.sampleTitle}
-                                                        maxLength={20}
+                                                        maxLength={15}
                                                         className="text-gray-900 font-medium truncate"
                                                     />
                                                 </div>
@@ -385,7 +385,7 @@ const MySamplesPage = () => {
                                                     </span>
                                                     <TruncatedText
                                                         text={sample.researchTitle}
-                                                        maxLength={20}
+                                                        maxLength={15}
                                                         className="text-gray-900 font-medium truncate"
                                                     />
                                                 </div>
@@ -395,7 +395,7 @@ const MySamplesPage = () => {
                                                     </span>
                                                     <TruncatedText
                                                         text={sample.instituition.name}
-                                                        maxLength={20}
+                                                        maxLength={15}
                                                         className="text-gray-900 font-medium truncate"
                                                     />
                                                 </div>
@@ -429,7 +429,7 @@ const MySamplesPage = () => {
                                                 </span>
                                                 <TruncatedText
                                                     text={sample.researchCep.cepCode}
-                                                    maxLength={20}
+                                                    maxLength={15}
                                                     className="text-gray-900 font-medium truncate"
                                                 />
 

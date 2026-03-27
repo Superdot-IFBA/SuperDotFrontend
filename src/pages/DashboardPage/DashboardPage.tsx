@@ -262,93 +262,94 @@ function DashBoardPage() {
         }
     };
 
-    const ageDistributionOptions: ApexOptions = {
-        chart: {
-            type: 'bar',
-            height: 350,
-            toolbar: {
-                show: true
-            }
-        },
-        colors: ['#546E7A'],
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '70%',
-                borderRadius: 4
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: dados?.ageDistribution?.labels || [],
-            title: {
-                text: ''
-            }
-        },
-        yaxis: {
-            title: {
-                text: ''
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (val: number) {
-                    return val;
-                }
-            }
-        }
-    };
+    // const ageDistributionOptions: ApexOptions = {
+    //     chart: {
+    //         type: 'bar',
+    //         height: 350,
+    //         toolbar: {
+    //             show: true
+    //         }
+    //     },
+    //     colors: ['#546E7A'],
+    //     plotOptions: {
+    //         bar: {
+    //             horizontal: false,
+    //             columnWidth: '70%',
+    //             borderRadius: 4
+    //         },
+    //     },
+    //     dataLabels: {
+    //         enabled: false
+    //     },
+    //     xaxis: {
+    //         categories: dados?.ageDistribution?.labels || [],
+    //         title: {
+    //             text: ''
+    //         }
+    //     },
+    //     yaxis: {
+    //         title: {
+    //             text: ''
+    //         }
+    //     },
+    //     tooltip: {
+    //         y: {
+    //             formatter: function (val: number) {
+    //                 return val;
+    //             }
+    //         }
+    //     }
+    // };
 
-    const knowledgeAreaDistributionOptions: ApexOptions = {
-        chart: {
-            type: 'bar',
-            height: 350,
-            toolbar: {
-                show: true
-            }
-        },
-        colors: ['#2E93fA'],
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                borderRadius: 4,
-                dataLabels: {
-                    position: 'top'
-                }
-            }
-        },
-        dataLabels: {
-            enabled: true,
-            formatter: function (val: string) {
-                return val;
-            },
-            offsetY: -20,
-            style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-            }
-        },
-        xaxis: {
-            categories: dados?.knowledgeAreaDistribution?.labels || [],
-            title: {
-                text: ''
-            }
-        },
-        yaxis: {
-            labels: {
-                show: false
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (val: number) {
-                    return val;
-                }
-            }
-        }
-    };
+    // const knowledgeAreaDistributionOptions: ApexOptions = {
+    //     chart: {
+    //         type: 'bar',
+    //         height: 350,
+    //         toolbar: {
+    //             show: true
+    //         }
+    //     },
+    //     colors: ['#2E93fA'],
+    //     plotOptions: {
+    //         bar: {
+    //             horizontal: false,
+    //             borderRadius: 4,
+    //             dataLabels: {
+    //                 position: 'top'
+    //             }
+    //         }
+    //     },
+    //     dataLabels: {
+    //         enabled: true,
+    //         formatter: function (val: string) {
+    //             return val;
+    //         },
+    //         offsetY: -20,
+    //         style: {
+    //             fontSize: '12px',
+    //             colors: ["#304758"]
+    //         }
+    //     },
+    //     xaxis: {
+    //         categories: dados?.knowledgeAreaDistribution?.labels || [],
+    //         title: {
+    //             text: ''
+    //         }
+    //     },
+    //     yaxis: {
+    //         labels: {
+    //             show: false
+    //         }
+    //     },
+    //     tooltip: {
+    //         y: {
+    //             formatter: function (val: number) {
+    //                 return val;
+    //             }
+    //         }
+    //     }
+    // };
+
     const participantProgressOptions: ApexOptions = {
         chart: {
             type: 'donut',
@@ -536,7 +537,6 @@ function DashBoardPage() {
                                 title="Progresso Mensal"
                                 loading={loading}
                                 tooltip="Evolução mensal de amostras e participantes"
-                                className="h-80"
                             >
                                 <ApexChart
                                     options={lineChartOptions}
@@ -550,7 +550,6 @@ function DashBoardPage() {
                                 title="Status das Coletas"
                                 loading={loading}
                                 tooltip="Porcentagem de coletas Autorizadas"
-                                className="h-80"
                             >
                                 <ApexChart
                                     options={radialChartOptions}
@@ -566,7 +565,6 @@ function DashBoardPage() {
                                 title="Distribuição por Instituição"
                                 loading={loading}
                                 tooltip="Amostras coletadas por instituição participante"
-                                className="h-80"
                             >
                                 <ApexChart
                                     options={barChartOptions}
@@ -580,7 +578,6 @@ function DashBoardPage() {
                                 title="Distribuição por Região"
                                 loading={loading}
                                 tooltip="Amostras coletadas por região do país"
-                                className="h-80"
                             >
                                 <ApexChart
                                     options={regionalDistributionOptions}
@@ -597,7 +594,6 @@ function DashBoardPage() {
                             title="Distribuição por Gênero"
                             loading={loading}
                             tooltip="Distribuição dos participantes por gênero"
-                            className="h-80"
                         >
                             <ApexChart
                                 options={genderChartOptions}
@@ -611,7 +607,6 @@ function DashBoardPage() {
                             title="Status de Preenchimento"
                             loading={loading}
                             tooltip="Distribuição dos participantes por status de preenchimento"
-                            className="h-80"
                         >
                             <ApexChart
                                 options={participantProgressOptions}

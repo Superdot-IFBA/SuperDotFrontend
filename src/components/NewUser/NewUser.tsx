@@ -34,22 +34,19 @@ const WelcomeModal = () => {
     <Modal
       open={open}
       setOpen={setOpen}
-      title=""
+      title="Acesso liberado"
       accessibleDescription=""
       className="relative flex flex-col justify-center items-center bg-white rounded-2xl shadow-xl overflow-hidden border-none  max-w-lg"
       onclickCancel={handleClose}
       classNameChildren="!p-0"
     >
-      <div className="bg-gradient-to-br from-violet-600 via-purple-500 to-primary py-8 w-full flex justify-center items-center">
-        <Icon.CheckCircle size={80} weight="duotone" className="text-white" />
+      <div className=" w-full flex justify-center items-center pb-5">
+        <Icon.CheckCircle size={60} weight="duotone" className="text-green-500" />
       </div>
 
-      <div className="px-8 py-6 text-center">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">
-          Acesso liberado ao SuperDot
-        </h2>
+      <div className="px-8 text-center">
 
-        <p className="text-[15px] text-gray-600 leading-relaxed mb-4">
+        <p className="text-[15px] text-gray-600 leading-relaxed mb-4 text-justify">
           Agora você tem acesso ao{" "}
           <strong className="font-semibold text-gray-900">SuperDot</strong> — uma
           plataforma inovadora voltada à identificação de pessoas com{" "}
@@ -64,21 +61,21 @@ const WelcomeModal = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDocumentationClick}
-            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-500 to-violet-700 text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition-all"
+            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-500 to-violet-700 text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition-all max-sm:text-[14px]"
           >
             <Icon.Rocket size={22} weight="fill" />
             Começar pela Documentação
           </a>
         </div>
 
-        <div className="mt-5 flex justify-center items-center gap-2 text-sm text-gray-500">
+        <div className="mt-5 flex justify-center items-center gap-2 text-sm text-gray-500 mb-3">
           <input
             type="checkbox"
             checked={checked}
             onChange={(e) => setChecked(e.target.checked)}
             className="w-4 h-4 accent-violet-600 rounded focus:ring-violet-500"
           />
-          <label className="cursor-pointer">
+          <label className="cursor-pointer max-sm:text-[13px]">
             Não mostrar esta mensagem novamente
           </label>
         </div>
